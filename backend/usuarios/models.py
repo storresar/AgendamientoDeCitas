@@ -12,5 +12,5 @@ class usuario(AbstractUser):
         (3, 'Administrador'),
     )
 
-    rol = models.ForeignKey(tipo_usuario, on_delete=models.CASCADE)
+    rol = models.ForeignKey(tipo_usuario, on_delete=models.CASCADE,null=True)
 
