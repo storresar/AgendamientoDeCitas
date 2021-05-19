@@ -12,7 +12,7 @@ class tipo_usuario(models.Model):
 class usuario(AbstractUser):
     rol = models.ForeignKey(tipo_usuario, on_delete=models.CASCADE,null=True)
     fecha_nacimiento = models.DateField(null=True)
-
+    
     def getEdad(self):
         return int((datetime.now().date() - self.fechaNacimiento).days / 365.25)
     
