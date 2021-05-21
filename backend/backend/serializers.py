@@ -6,7 +6,6 @@ class token_serializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-        print(user)
         token['username'] = str(user)
         return token
 
