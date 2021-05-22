@@ -8,6 +8,7 @@ export default new Vuex.Store({
   state: {
     usuario: '',
     token: '',
+    listaUsuarios: [],
   },
   mutations: {
     storeToken(state, pToken){
@@ -15,6 +16,10 @@ export default new Vuex.Store({
     },
     setUsuario(state, usuario){
       state.usuario = usuario
+    },
+    setListaUsuarios(state, usuarios){
+      state.listaUsuarios = usuarios.filter((usuario) => usuario.id != state.usuario.id)
+      console.log(state.listaUsuarios)
     }
   },
   actions: {
@@ -27,6 +32,14 @@ export default new Vuex.Store({
         if (datosUsuario.rol === 3){
           router.push({name: 'Admin'})
         }
+      }
+    },
+    async getListaUsuarios(context){
+      const req = await fetch('http://127.0.0.1:8000/api/usuarios/')
+      console.log(req)
+      if (req.status === 200){
+        const datosUsuario = await req.json()
+        context.commit('setListaUsuarios', datosUsuario)
       }
     },
     async aunteticar(context, datos){
@@ -46,8 +59,28 @@ export default new Vuex.Store({
         await context.dispatch('getUsuario', datos)
       }
       if (req.status === 401){
-        alert("Usuario invalido")
+        throw 'Error de Autenticación'
       }
-    }
+    },
+    async eliminarUsuario(context, nombreUsuario){
+      const req = await fetch(`http://127.0.0.1:8000/api/usuarios/${nombreUsuario}`, {
+        method : 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: datos.usuario,
+          password: datos.contraseña
+        })
+      })
+      if (req.status === 200){
+        const token = await req.json()
+        context.commit('storeToken', token)
+        await context.dispatch('getUsuario', datos)
+      }
+      if (req.status === 401){
+        throw 'Error de Autenticación'
+      }
+    },
   },
 })

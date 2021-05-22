@@ -48,7 +48,15 @@
             </div>
         </div>
         <div id="usuarios" style="display: none;">
-            ESTE ES EL PANEL DE GESTION DE USUARIOS
+            <table v-for="usuario in listaUsuarios" :key="usuario.id">
+                <tr>
+                    <td>{{usuario.id}}</td>
+                    <td>{{usuario.first_name}} {{usuario.last_name}}</td>
+                    <td>{{usuario.email}}</td>
+                    <td><button><i class="fa fa-pencil"></i>Modificar</button></td>
+                    <td><button><i class="fa fa-times"></i>Eliminar</button></td>
+                </tr>
+            </table>
         </div>
         <div id="auditoria" style="display: none;">
             ESTE ES EL PANEL DE AUDITORIA
@@ -60,12 +68,12 @@
 
 <script>
 
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
 
     computed:{
-        ...mapState(['usuario'])
+        ...mapState(['usuario', 'listaUsuarios'])
     },
     methods:{
         showDivInfo(){
@@ -79,9 +87,12 @@ export default {
             document.getElementById('usuarios').style.display='';
             document.getElementById('citas').style.display='none';
             document.getElementById('modificar').style.display='none';
-        }
+        },
+        ...mapActions(['getListaUsuarios']),
+    },
+    mounted(){
+        this.getListaUsuarios()
     }
-
 }
 </script>
 
@@ -148,7 +159,7 @@ ul li:hover a{
 }
 .info{
     position: fixed;
-    height: 80%;
+    max-height: 40em;
     width: 30%;
     right: 45%;
     top: 10%;
@@ -171,6 +182,7 @@ ul li:hover a{
     font-size: 22px;
     margin-top: 5%;
     color:beige;
+    margin-bottom: 2em;
 }
 
 </style>

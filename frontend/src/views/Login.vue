@@ -23,11 +23,11 @@ export default {
         ...mapActions(['aunteticar']),
         mandarDatos(){
             const datos = {usuario:this.nombre, contraseña:this.clave}
-            this.aunteticar(datos)
+            this.aunteticar(datos).catch(msg => this.$alert(msg,'Error','warning'))
         },
     },
     watch:{
-            check: function(antiguo,nuevo){
+            check: function(antiguo){
                 var tipo = document.getElementById("clave");
                 if(antiguo) {
                     tipo.type = "text";
