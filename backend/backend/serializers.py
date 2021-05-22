@@ -2,13 +2,13 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView 
 
 
-class token_serializer(TokenObtainPairSerializer):
+class Token_serializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
         token['username'] = str(user)
         return token
 
-class token_view(TokenObtainPairView):
+class Token_view(TokenObtainPairView):
 
-    serializer_class = token_serializer
+    serializer_class = Token_serializer

@@ -17,4 +17,18 @@ class usuario_viewset(viewsets.ModelViewSet):
         serializer = usuario_serializer(user)
         return Response(serializer.data)
 
+    def update(self, request, pk=None):
+        queryset = usuario.objects.filter(username=pk)
+        user = get_object_or_404(queryset)
+        serializer = usuario_serializer(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+
+    def destroy(self, request, pk=None):
+        queryset = usuario.objects.filter(username=pk)
+        user = get_object_or_404(queryset)
+        user.delete()
+        return self.list(request)
     
