@@ -33,7 +33,7 @@
                         <td>{{usuario.first_name}}</td>
                     </tr>
                     <tr>
-                        <td>NOMBRE USUARIO:</td>
+                        <td>USUARIO:</td>
                         <td>{{usuario.username}}</td>
                     </tr>
                     <tr>
@@ -47,16 +47,26 @@
                 </table>
             </div>
         </div>
-        <div id="usuarios" style="display: none;">
-            <table v-for="usuario in listaUsuarios" :key="usuario.id">
-                <tr>
+        <div id="usuarios" style="display: none;" class="listaUsu">
+                <table>
+                <thead>
+                    <th>ID</th><th>NOMBRE</th><th>EMAIL</th><th>USUARIO</th><th>ROL</th><th>MODIFICAR</th><th>ELIMINAR</th>
+                </thead>
+                <tr v-for="usuario in listaUsuarios | paginate" :key="usuario.id">
                     <td>{{usuario.id}}</td>
                     <td>{{usuario.first_name}} {{usuario.last_name}}</td>
                     <td>{{usuario.email}}</td>
-                    <td><button><i class="fa fa-pencil"></i>Modificar</button></td>
-                    <td><button><i class="fa fa-times"></i>Eliminar</button></td>
+                    <td>{{usuario.username}}</td>
+                    <td>{{usuario.rol}}</td>
+                    <td><button id="modificar"><i class="fa fa-pencil"></i>Modificar</button></td>
+                    <td><button id="eliminar"><i class="fa fa-times"></i>Eliminar</button></td>
                 </tr>
             </table>
+            <ul>
+                <li v-for="pageNumber in totalPages" v-if="Math.abs(pageNumber - currentPage) < 3 || pageNumber == totalPages - 1 || pageNumber == 0">
+                    <a href="#" @click="setPage(pageNumber)"  :class="{current: currentPage === pageNumber, last: (pageNumber == totalPages - 1 && Math.abs(pageNumber - currentPage) > 3), first:(pageNumber == 0 && Math.abs(pageNumber - currentPage) > 3)}">{{ pageNumber+1 }}</a>
+                </li>
+            </ul>
         </div>
         <div id="auditoria" style="display: none;">
             ESTE ES EL PANEL DE AUDITORIA
@@ -71,27 +81,44 @@
 import { mapState, mapActions } from 'vuex'
 
 export default {
-
+    data:{
+        searchKey: '',
+        currentPage: 0,
+        itemsPerPage: 1,
+        resultCount: 0
+    },
     computed:{
-        ...mapState(['usuario', 'listaUsuarios'])
+        ...mapState(['usuario', 'listaUsuarios']),
+        totalPages: function() {
+            return Math.ceil(this.resultCount / this.itemsPerPage)
+        }
     },
     methods:{
         showDivInfo(){
             document.getElementById('verinformacion').style.display='';
             document.getElementById('usuarios').style.display='none';
-            document.getElementById('citas').style.display='none';
-            document.getElementById('modificar').style.display='none';
         },
         showDivUsuarios(){
             document.getElementById('verinformacion').style.display='None';
             document.getElementById('usuarios').style.display='';
-            document.getElementById('citas').style.display='none';
-            document.getElementById('modificar').style.display='none';
         },
         ...mapActions(['getListaUsuarios']),
+        setPage: function(pageNumber) {
+            this.currentPage = pageNumber
+        },
     },
     mounted(){
         this.getListaUsuarios()
+    },
+    filters: {
+    paginate: function(list) {
+            this.resultCount = list.length
+            if (this.currentPage >= this.totalPages) {
+                this.currentPage = this.totalPages - 1
+            }
+            var index = this.currentPage * this.itemsPerPage
+            return list.slice(index, index + this.itemsPerPage)
+        },
     }
 }
 </script>
@@ -162,7 +189,7 @@ ul li:hover a{
     max-height: 40em;
     width: 30%;
     right: 45%;
-    top: 10%;
+    top: 5%;
     background-color: darkcyan;
     border-radius: 10%;
 }
@@ -180,9 +207,53 @@ ul li:hover a{
 .info .detalle table{
     width: 100%;
     font-size: 22px;
-    margin-top: 5%;
+    margin-top: 2%;
     color:beige;
-    margin-bottom: 2em;
+    margin-bottom: 1em;
+    line-height: 30%;
 }
-
+.listaUsu table{
+    width: 80%;
+    background-color: white;
+    text-align: left;
+    color: black;
+    top: 20%;
+    left:11px;
+    border-collapse: collapse;
+    position: fixed;
+}
+.listaUsu th,td{
+    padding: 20px;
+}
+.listaUsu thead{
+    background-color: #063146;
+    color: white;
+    border-bottom: solid 5px black;
+}
+.listaUsu tr:nth-child(even){
+    background-color: #ddd;
+}
+.listaUsu tr:hover{
+    background-color: #063146;
+    color: white;
+}
+.listaUsu button{
+    width: 100%;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    font-family: 'Karla', sans-serif;
+    font-size: 15px;
+}
+.listaUsu button i{
+    margin-right: 16px;
+}
+#modificar{
+    background-color: rgb(20, 94, 20);
+    color: white;
+}
+#eliminar{
+    background-color: rgb(202, 59, 59);
+    color: white;
+}
 </style>
