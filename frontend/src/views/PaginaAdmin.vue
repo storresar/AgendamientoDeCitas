@@ -52,7 +52,9 @@
                 <thead>
                     <th>ID</th><th>NOMBRE</th><th>EMAIL</th><th>USUARIO</th><th>ROL</th><th>MODIFICAR</th><th>ELIMINAR</th>
                 </thead>
-                <tr v-for="usuario in listaUsuarios | paginate" :key="usuario.id">
+                <tr v-for="(usuario, index) in listaUsuarios"
+                v-if="index >= nActual*nPaginacion && index < (nActual*nPaginacion)+nPaginacion"
+                :key="usuario.id">
                     <td>{{usuario.id}}</td>
                     <td>{{usuario.first_name}} {{usuario.last_name}}</td>
                     <td>{{usuario.email}}</td>
@@ -63,9 +65,8 @@
                 </tr>
             </table>
             <ul>
-                <li v-for="pageNumber in totalPages" v-if="Math.abs(pageNumber - currentPage) < 3 || pageNumber == totalPages - 1 || pageNumber == 0">
-                    <a href="#" @click="setPage(pageNumber)"  :class="{current: currentPage === pageNumber, last: (pageNumber == totalPages - 1 && Math.abs(pageNumber - currentPage) > 3), first:(pageNumber == 0 && Math.abs(pageNumber - currentPage) > 3)}">{{ pageNumber+1 }}</a>
-                </li>
+                <a @click="restarPaginacion()">Anterior</a>
+                <a @click="sumarPainacion()">Siguiente</a>
             </ul>
         </div>
         <div id="auditoria" style="display: none;">
@@ -81,17 +82,14 @@
 import { mapState, mapActions } from 'vuex'
 
 export default {
-    data:{
-        searchKey: '',
-        currentPage: 0,
-        itemsPerPage: 1,
-        resultCount: 0
+    data(){
+        return{
+            nPaginacion : 3,
+            nActual: 0,
+        }
     },
     computed:{
         ...mapState(['usuario', 'listaUsuarios']),
-        totalPages: function() {
-            return Math.ceil(this.resultCount / this.itemsPerPage)
-        }
     },
     methods:{
         showDivInfo(){
@@ -103,23 +101,20 @@ export default {
             document.getElementById('usuarios').style.display='';
         },
         ...mapActions(['getListaUsuarios']),
-        setPage: function(pageNumber) {
-            this.currentPage = pageNumber
+        restarPaginacion(){
+            if(this.nActual > 0){
+                this.nActual--;
+            }
         },
+        sumarPainacion(){
+            if((this.nActual*this.nPaginacion)+this.nPaginacion < this.listaUsuarios.length){
+                this.nActual++;
+            }
+        }
     },
     mounted(){
         this.getListaUsuarios()
     },
-    filters: {
-    paginate: function(list) {
-            this.resultCount = list.length
-            if (this.currentPage >= this.totalPages) {
-                this.currentPage = this.totalPages - 1
-            }
-            var index = this.currentPage * this.itemsPerPage
-            return list.slice(index, index + this.itemsPerPage)
-        },
-    }
 }
 </script>
 
