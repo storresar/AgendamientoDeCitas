@@ -164,7 +164,7 @@ h1 {
   text-align: center;
   font-weight: bold;
   color: #555;
-  text-shadow: 1px 1px 0 #fff;
+  text-shadow: 1px 1px 0 #fff;  
 }
 
 /** form field **/
