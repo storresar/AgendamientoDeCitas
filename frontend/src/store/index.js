@@ -63,23 +63,39 @@ export default new Vuex.Store({
       }
     },
     async eliminarUsuario(context, nombreUsuario){
+      console.log(context.state.token.access)
       const req = await fetch(`http://127.0.0.1:8000/api/usuarios/${nombreUsuario}`, {
         method : 'DELETE',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${context.state.token.access}`
         },
-        body: JSON.stringify({
-          username: datos.usuario,
-          password: datos.contraseña
-        })
       })
       if (req.status === 200){
-        const token = await req.json()
-        context.commit('storeToken', token)
-        await context.dispatch('getUsuario', datos)
+        await context.dispatch('getListaUsuarios')
+        return 'Se ha eliminado el usuario correctamente'
       }
       if (req.status === 401){
         throw 'Error de Autenticación'
+      }
+    },
+    async modificarUsuario(context, usuarioNuevo){
+      console.log(usuarioNuevo)
+      console.log(JSON.stringify(usuarioNuevo))
+      const req = await fetch(`http://127.0.0.1:8000/api/usuarios/${usuarioNuevo.username}/`,{
+        method : 'PUT',
+        headers : {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(usuarioNuevo)
+      })
+      console.log(req)
+      if (req.status === 200){
+        await context.dispatch('getListaUsuarios')
+        return 'Se ha modificado el usuario correctamente'
+      }
+      if (req.status === 401){
+        throw 'Error de Ejecución'
       }
     },
   },

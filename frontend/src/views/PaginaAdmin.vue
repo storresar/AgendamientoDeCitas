@@ -24,7 +24,7 @@
             </ul>
         </div>
         <div id="verinformacion" class="info">
-            <H1>INFORMACION</H1>
+            <H1>INFORMACIÓN</H1>
             <img src="https://www.softzone.es/app/uploads/2018/04/guest.png" alt="">
             <div class="detalle">
                 <table>
@@ -48,9 +48,11 @@
             </div>
         </div>
         <div id="usuarios" style="display: none;" class="listaUsu">
+                <h1>LISTA DE USUARIOS EN EL SISTEMA</h1>
+                <button id="agregar" @click="showModal">AGREGAR USUARIO</button>
                 <table>
                 <thead>
-                    <th>ID</th><th>NOMBRE</th><th>EMAIL</th><th>USUARIO</th><th>ROL</th><th>MODIFICAR</th><th>ELIMINAR</th>
+                    <th>ID</th><th>NOMBRE</th><th>EMAIL</th><th>USUARIO</th><th>FECHA NACIMIENTO</th><th>ROL</th><th>MODIFICAR</th><th>ELIMINAR</th>
                 </thead>
                 <tr v-for="(usuario, index) in listaUsuarios"
                 v-if="index >= nActual*nPaginacion && index < (nActual*nPaginacion)+nPaginacion"
@@ -59,15 +61,53 @@
                     <td>{{usuario.first_name}} {{usuario.last_name}}</td>
                     <td>{{usuario.email}}</td>
                     <td>{{usuario.username}}</td>
+                    <td>{{usuario.fecha_nacimiento}}</td>
                     <td>{{usuario.rol}}</td>
-                    <td><button id="modificar"><i class="fa fa-pencil"></i>Modificar</button></td>
-                    <td><button id="eliminar"><i class="fa fa-times"></i>Eliminar</button></td>
+                    <td><button id="modificar" @click="modificar(usuario)"><i class="fa fa-pencil"></i>Modificar</button></td>
+                    <td><button id="eliminar" @click="eliminar(usuario.username)"><i class="fa fa-times"></i>Eliminar</button></td>
                 </tr>
             </table>
-            <ul>
-                <a @click="restarPaginacion()">Anterior</a>
-                <a @click="sumarPainacion()">Siguiente</a>
-            </ul>
+            <div id="paginacion">
+                <ul>
+                    <button @click="restarPaginacion()" id="anterior">Anterior</button>
+                    <button @click="sumarPainacion()" id="siguiente">Siguiente</button>
+                </ul>
+            </div>
+            <ModalRegistro v-show="mostrarModal" @close="closeModal"> </ModalRegistro>
+            <ModalModificar v-show="mostrarModalModificar" @close="closeModalModificar">
+                <template v-slot:body>
+                    <label>Nombre:</label>
+                    <br>
+                    <input type="text" name="nombre" id="nombreM" v-model="usuarioModificar.first_name" autocomplete="off">
+                    <br>
+                    <label>Apellido:</label>
+                    <br>
+                    <input type="text" name="apellido" id="apellidoM" v-model="usuarioModificar.last_name" autocomplete="off">
+                    <br>
+                    <label>Fecha Nacimiento:</label>
+                    <br>
+                    <input type="date" name="fecha" id="fechaM" v-model="usuarioModificar.fecha_nacimiento" >
+                    <br>
+                    <label for="">Usuario:</label>
+                    <br>
+                    <input type="text" name="usuario" id="usuarioM" v-model="usuarioModificar.username" autocomplete="off">
+                    <br>
+                    <label for="">Contraseña</label>
+                    <br>
+                    <input type="text" name="" id="">
+                    <br>
+                    <label for="">Tipo Usuario</label>
+                    <br>
+                        <select name="" id="" v-model="usuarioModificar.rol">
+                            <option value="">ADMINISTRADOR</option>
+                            <option value="">PACIENTE</option>
+                            <option value="">FUNCIONARIO</option>
+                        </select>
+                </template>
+                <template v-slot:footer>
+                    <button id="modificar" @click="botonModificar(usuarioModificar)">MODIFICAR USUARIO</button>
+                </template>
+            </ModalModificar>
         </div>
         <div id="auditoria" style="display: none;">
             ESTE ES EL PANEL DE AUDITORIA
@@ -80,13 +120,22 @@
 <script>
 
 import { mapState, mapActions } from 'vuex'
+import ModalRegistro from '../components/ModalRegistro.vue'
+import ModalModificar from '../components/ModalModificar.vue'
 
 export default {
     data(){
         return{
-            nPaginacion : 3,
+            nPaginacion : 5 ,
             nActual: 0,
+            mostrarModal: false,
+            mostrarModalModificar: false,
+            usuarioModificar: ''
         }
+    },
+    components:{
+        ModalRegistro,
+        ModalModificar
     },
     computed:{
         ...mapState(['usuario', 'listaUsuarios']),
@@ -100,7 +149,7 @@ export default {
             document.getElementById('verinformacion').style.display='None';
             document.getElementById('usuarios').style.display='';
         },
-        ...mapActions(['getListaUsuarios']),
+        ...mapActions(['getListaUsuarios','eliminarUsuario','modificarUsuario']),
         restarPaginacion(){
             if(this.nActual > 0){
                 this.nActual--;
@@ -110,6 +159,35 @@ export default {
             if((this.nActual*this.nPaginacion)+this.nPaginacion < this.listaUsuarios.length){
                 this.nActual++;
             }
+        },
+        eliminar(usuario){
+            this.eliminarUsuario(usuario)
+            .then(msg => this.$alert(msg,'Usuario elminado correctamente','success'))
+            .catch(msg => this.$alert(msg,'Ha ocurrido un error','warning'))
+        },
+        showModal() {
+        this.mostrarModal = true;
+        },
+        closeModal() {
+        this.mostrarModal = false;
+        },
+        showModalModificar() {
+        this.mostrarModalModificar = true;
+        },
+        closeModalModificar() {
+        this.mostrarModalModificar = false;
+        },
+        modificar(usuario){
+            this.showModalModificar()
+            this.usuarioModificar = usuario
+            console.log(usuarioModificar)
+        },
+        botonModificar(usuarioNuevo){
+            this.usuarioModificar = usuarioNuevo
+            this.modificarUsuario(this.usuarioModificar)
+            .then(msg => this.$alert(msg,'Usuario modificado correctamente','success'))
+            .catch(msg => this.$alert(msg,'Ha ocurrido un error','warning'))
+            this.mostrarModalModificar = false;
         }
     },
     mounted(){
@@ -128,6 +206,7 @@ export default {
 .sidebar{
     position: fixed;
     right: 0;
+    top: 0;
     width: 250px;
     height: 100%;
     background-color:#042331;
@@ -207,6 +286,26 @@ ul li:hover a{
     margin-bottom: 1em;
     line-height: 30%;
 }
+.listaUsu h1{
+    text-align: left;
+    padding-left: 30px;
+}
+.listaUsu #agregar{
+    background-color: rgb(20, 149, 158);
+    color: white;
+    border: none;
+    padding: 20px;
+    border-radius: 6px;
+    font-family: 'Karla', sans-serif;
+    font-size: 15px;
+    width: 300px;
+    position: relative;
+    left: 17em;
+    top: -3em;
+}
+.listaUsu #agregar:hover{
+    background-color: rgb(38, 193, 204);
+}
 .listaUsu table{
     width: 80%;
     background-color: white;
@@ -218,7 +317,7 @@ ul li:hover a{
     position: fixed;
 }
 .listaUsu th,td{
-    padding: 20px;
+    padding: 15px;
 }
 .listaUsu thead{
     background-color: #063146;
@@ -247,8 +346,40 @@ ul li:hover a{
     background-color: rgb(20, 94, 20);
     color: white;
 }
+#modificar:hover{
+    background-color: rgb(23, 158, 23);
+}
 #eliminar{
     background-color: rgb(202, 59, 59);
+    color: white;
+}
+#eliminar:hover{
+    background-color: rgb(207, 6, 6);
+}
+#paginacion button {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    font-family: 'Karla', sans-serif;
+    font-size: 15px;
+    width: 100px;
+}
+
+#paginacion #anterior{
+    position: fixed;
+    top: 90%;
+    left: 30%;
+}
+
+#paginacion #siguiente{
+    position: fixed;
+    top: 90%;
+    left: 40%;
+}
+#paginacion button:hover{
+    background-color: gray;
     color: white;
 }
 </style>

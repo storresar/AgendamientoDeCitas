@@ -2,7 +2,7 @@
   <div class="home">
     <nav class="menu-main">
 		<router-link to="/registro"> Registrarse</router-link>
-		<router-link to="/login">Pagina Login</router-link>
+		<router-link to="/login">Iniciar Sesión</router-link>
 	</nav>
 	<nav class="menu-main">
 		<a href="#">PERSONA <br> Afiliación y Servicio</a>

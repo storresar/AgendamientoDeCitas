@@ -10,7 +10,6 @@ body{
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        background-image: linear-gradient(to right, #455e81 , #1b304b);
         font-family: 'Karla', sans-serif;
         
     }
