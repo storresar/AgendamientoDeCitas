@@ -17,33 +17,44 @@
 
         <section class="modal-body">
             <slot name="body">
-                <label>Nombre:</label>
-                <br>
-                <input type="text" v-model="nombre" id="nombre"  autocomplete="off" required>
-                <br>
-                <label>Apellido:</label>
-                <br>
-                <input type="text" v-model="apellido" id="apellido"  autocomplete="off" required>
-                <br>
-                <label>Fecha Nacimiento:</label>
-                <br>
-                <input type="date" v-model="fecha" id="fecha" r>
-                <br>
                 <label for="">Usuario:</label>
-                <br>
-                <input type="text" v-model="usuario" id="usuario"  autocomplete="off">
-                <br>
+                <input type="text" v-model.trim="$v.usuario.$model" id="usuario"  autocomplete="off">
+                <label for="">Correo:</label>
+                <input type="text" v-model.trim="$v.correo.$model" id="usuario"  autocomplete="off">
+                <label>Nombre:</label>
+                <input type="text" v-model.trim="$v.nombre.$model" id="nombre"  autocomplete="off">
+                <label>Apellido:</label>
+                <input type="text" v-model.trim="$v.apellido.$model" id="apellido"  autocomplete="off">
+                <label>Fecha Nacimiento:</label>
+                <input type="date" v-model.trim="$v.fecha.$model" id="fecha">
                 <label for="">Contraseña</label>
-                <br>
-                <input type="text" v-model="clave" id="">
-                <br>
+                <input type="text" v-model.trim="$v.clave.$model" id="">
+                <label for="">Contraseña</label>
+                <input type="text" v-model.trim="$v.confirma.$model" id="">
                 <label for="">Tipo Usuario</label>
-                <br>
-                <select v-model="tipo_usuario" id="">
-                    <option value="1">ADMINISTRADOR</option>
-                    <option value="2">PACIENTE</option>
-                    <option value="3">FUNCIONARIO</option>
+                <select v-model="tipo_usuario">
+                    <option value="1">PACIENTE</option>
+                    <option value="2">FUNCIONARIO</option>
+                    <option value="3">ADMINISTRADOR</option>
                 </select>
+                <div v-if="tipo_usuario == 1" class="if-paciente">
+                    <label for="">RH</label>
+                    <input type="text" v-model="model" id="">
+                    <label for="">Sexo</label>
+                    <select v-model="sexo">
+                        <option value="M">Masculino</option>
+                        <option value="F">Femenino</option>
+                    </select>
+                    <label for="">Tipo de identificacion</label>
+                    <select v-model="tId">
+                        <option value="1">Cedula</option>
+                        <option value="2">Tarjeta de Identidad</option>
+                        <option value="3">Pasaporte</option>
+                    </select>
+                    <label for="">Identificacion</label>
+                    <input type="text" v-model="$v.confirma.$model" id="">
+                    
+                </div>
             </slot>
         </section>
 
@@ -56,6 +67,10 @@
 </template>
 
 <script>
+
+import { mapActions } from 'vuex'
+import { required, maxLength,minLength, email, sameAs } from 'vuelidate/lib/validators'
+
 export default {
     name: 'Modal',
     data(){
@@ -64,16 +79,53 @@ export default {
             apellido: '',
             fecha: '',
             usuario: '',
+            correo: '',
             clave: '',
-            tipo_usuario: '',
+            confirma: '',
+            tipo_usuario: 2,
+            rh: '',
+            sexo: 'M',
+            tId: 1,
         }
     },
+    validations: {
+        nombre: {
+            required,
+            minLength: minLength(2)
+        },
+        apellido: {
+            required,
+            minLength: minLength(2)
+        },
+        fecha: {
+            required,
+        },
+        usuario: {
+            required,
+            minLength: minLength(8)
+        },
+        clave: {
+            required,
+            minLength: minLength(8)
+        },
+        confirma: {
+            sameAsClave: sameAs('clave')
+        },
+        correo: {
+            required,
+            email
+        },
+    },
     methods: {
+        ...mapActions(['crearUsuario']),
+        submitFormulario(){
+
+        },
         close() {
             this.$emit('close');
         },
         agregarUsuario(){
-
+            
         }
     },
 };
@@ -125,6 +177,8 @@ export default {
     position: relative;
     padding: 30px 10px;
     text-align: left;
+    display: grid;
+    grid-template-columns: 1;
 }
 .modal-body input{
     padding: 10px;
@@ -172,5 +226,9 @@ export default {
 .modal-fade-enter-active,
 .modal-fade-leave-active {
     transition: opacity .3s ease;
+}
+.if-paciente{
+    display: grid;
+    grid-template-columns: 1;
 }
 </style>

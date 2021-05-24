@@ -41,9 +41,8 @@ router.beforeEach((to, from, next) => {
     next('/')
   } else if (estaloggeado && !requiereAutorizacion){
     next('/admin')
-  } else {
-    next()
   }
+  next()
 })
 
 export default router

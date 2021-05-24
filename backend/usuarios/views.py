@@ -3,11 +3,13 @@ from rest_framework import viewsets
 from .serializers import usuario_serializer, usuario_login_serializer
 from .models import usuario
 from .permissions import IsUserOrAdmin
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
-from rest_framework.decorators import action, api_view
+from rest_framework.decorators import action, api_view, permission_classes
 from django.core.mail import send_mail
+from django.conf import settings
+import requests
 
 class usuario_viewset(viewsets.ModelViewSet):
 
@@ -80,4 +82,19 @@ def mandar_correo(request):
     if (send_mail(subject='Desbloqueo',message=mensaje,from_email=None,recipient_list=[usu.email]) > 0):
         return Response('Correo enviado', status=200)
 
-    
+@api_view(['POST'])
+@permission_classes((AllowAny,))
+def verificar_captcha(request):
+    recaptcha_response = request.data['g-recaptcha-response']
+    data = {
+        'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
+        'response': recaptcha_response
+    }
+    r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
+    result = r.json()
+    if result['success']:
+        return Response(True, status=r.status_code)
+    else:
+        request.recaptcha_is_valid = False
+        return Response(False, status=r.status_code)
+

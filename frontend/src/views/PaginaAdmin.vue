@@ -173,21 +173,21 @@ export default {
             .catch(msg => this.$alert(msg,'Ha ocurrido un error','warning'))
         },
         showModal() {
-        this.mostrarModal = true;
+            this.mostrarModal = true;
         },
         closeModal() {
-        this.mostrarModal = false;
+            this.mostrarModal = false;
         },
         showModalModificar() {
-        this.mostrarModalModificar = true;
+            this.mostrarModalModificar = true;
         },
         closeModalModificar() {
-        this.mostrarModalModificar = false;
+            this.mostrarModalModificar = false;
         },
         modificar(usuario){
             this.showModalModificar()
             this.usuarioModificar = usuario
-            console.log(usuarioModificar)
+            console.log(this.usuarioModificar)
         },
         botonModificar(usuarioNuevo){
             this.usuarioModificar = usuarioNuevo

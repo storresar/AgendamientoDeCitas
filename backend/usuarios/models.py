@@ -19,6 +19,9 @@ class usuario(AbstractUser):
     @property
     def edad(self):
         return int((datetime.date.today - self.fecha_nacimiento).days / 365.25)
+
+    def __str__(self):
+        return self.user
         
     
 class tipo_identificacion(models.Model):

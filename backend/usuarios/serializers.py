@@ -46,4 +46,3 @@ class usuario_login_serializer(serializers.Serializer):
     def create(self, data):
         token = get_token_for_user(user=self.context['user'])
         return self.context['user'], token
-

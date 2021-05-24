@@ -144,6 +144,10 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'sophyhospital2021@gmail.com'
 EMAIL_HOST_PASSWORD = '6VQQazScEUraTdq'
 
+#Google re captcha
+
+GOOGLE_RECAPTCHA_SECRET_KEY = '6LdY2egaAAAAAP5lcBD-IwFiLWB_7eN2FFwyKttA'
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
