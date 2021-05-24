@@ -4,7 +4,7 @@
         <h4>Ingresar</h4>
         <input class="control" type="text" placeholder="Ingrese su usuario" v-model="nombre" autocomplete="off">
         <input class="control" type="password"  placeholder="Ingrese su contraseña" v-model="clave" autocomplete="off" id="clave">
-        <input type="checkbox" id="cbox2" value="checkbox" v-model="check">Mostrar Contraseña</input>
+        <input type="checkbox" id="cbox2" value="checkbox" v-model="check">Mostrar Contraseña
         <button class="boton" @click="mandarDatos()">Ingresar</button>
         <p>¿No tienes cuenta? <a href="#">Registrate aquí</a></p>
     </section>
@@ -21,10 +21,12 @@ export default {
         }
     },
     methods:{
-        ...mapActions(['aunteticar']),
+        ...mapActions(['autenticar']),
         mandarDatos(){
-            const datos = {usuario:this.nombre, contraseña:this.clave}
-            this.aunteticar(datos).catch(msg => this.$alert(msg,'Error','warning'))
+            const datos = {username:this.nombre, password:this.clave}
+            this.autenticar(datos)
+            .then(this.$router.push('/admin'))
+            .catch(msg => this.$alert(msg,'Error','warning'))
         },
     },
     watch:{

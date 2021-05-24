@@ -19,7 +19,7 @@
                     <a onclick="showDivModificar()"><i class="fa fa-area-chart"></i>REPORTES Y GRÁFICAS</a>
                 </li>
                 <li>
-                    <a onclick="alert('AQUI HAY UN MENSAJE')"><i class="fa fa-sign-out"></i>CERRAR SESIÓN</a>
+                    <a @click="cerrarSesion()"><i class="fa fa-sign-out"></i>CERRAR SESIÓN</a>
                 </li>
             </ul>
         </div>
@@ -82,15 +82,15 @@
                     <br>
                     <label>Apellido:</label>
                     <br>
-                    <input type="text" name="apellido" id="apellidoM" v-model="usuarioModificar.last_name" autocomplete="off">
+                    <input type="text" name="apellido" id="apellidoM" v-model="usuarioModificar.last_name" autocomplete="off" >
                     <br>
                     <label>Fecha Nacimiento:</label>
                     <br>
-                    <input type="date" name="fecha" id="fechaM" v-model="usuarioModificar.fecha_nacimiento" >
+                    <input type="date" name="fecha" id="fechaM" v-model="usuarioModificar.fecha_nacimiento">
                     <br>
                     <label for="">Usuario:</label>
                     <br>
-                    <input type="text" name="usuario" id="usuarioM" v-model="usuarioModificar.username" autocomplete="off">
+                    <input type="text" name="usuario" id="usuarioM" v-model="usuarioModificar.username" autocomplete="off" readonly="true">
                     <br>
                     <label for="">Contraseña</label>
                     <br>
@@ -137,10 +137,17 @@ export default {
         ModalRegistro,
         ModalModificar
     },
+    validations:{
+
+    },
     computed:{
         ...mapState(['usuario', 'listaUsuarios']),
     },
     methods:{
+        cerrarSesion(){
+            window.localStorage.clear()
+            this.$router.push({name:'Home'})
+        },
         showDivInfo(){
             document.getElementById('verinformacion').style.display='';
             document.getElementById('usuarios').style.display='none';
