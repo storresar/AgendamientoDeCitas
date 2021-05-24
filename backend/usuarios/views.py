@@ -42,7 +42,7 @@ class usuario_viewset(viewsets.ModelViewSet):
             user, token = serializer.save()
             if user.activo:
                 usuario = usuario_serializer(user).data
-                if usuario['ultima_activacion'] < 7:
+                if usuario['ultima_activacion'] < 6:
                     data = {
                         'usuario': usuario,
                         'token': token
