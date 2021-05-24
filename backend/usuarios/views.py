@@ -56,7 +56,7 @@ class usuario_viewset(viewsets.ModelViewSet):
             else:
                 return Response(data='Usuario no activo', status=401)
         
-    @action(methods=['post'])
+    @action(detail=False, methods=['post'])
     def reactivar_usuario(self, request, pk=None):
         queryset = usuario.objects.filter(username=pk)
         user = get_object_or_404(queryset)
