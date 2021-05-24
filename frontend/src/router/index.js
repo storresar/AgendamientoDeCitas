@@ -4,6 +4,8 @@ import Home from '../views/Home.vue'
 
 Vue.use(VueRouter)
 
+const paginasPublicas = ['/','/login','/registro']
+
 const routes = [
   {
     path: '/',
@@ -30,6 +32,17 @@ const routes = [
 
 const router = new VueRouter({
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  const requiereAutorizacion = !paginasPublicas.includes(to.path)
+  const estaloggeado = window.localStorage.getItem('token')
+  if (requiereAutorizacion && !estaloggeado){
+    next('/')
+  } else if (estaloggeado && !requiereAutorizacion){
+    next('/admin')
+  }
+  next()
 })
 
 export default router

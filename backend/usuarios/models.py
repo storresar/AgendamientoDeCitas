@@ -10,14 +10,25 @@ class tipo_usuario(models.Model):
         return self.nombre_rol
 
 class usuario(AbstractUser):
-    rol = models.ForeignKey(tipo_usuario, on_delete=models.CASCADE,null=True)
+    email = models.EmailField(unique=True)
+    rol = models.ForeignKey(tipo_usuario, on_delete=models.CASCADE, null=True)
     fecha_nacimiento = models.DateField(null=True)
-    
-    def getEdad(self):
-        return int((datetime.now().date() - self.fechaNacimiento).days / 365.25)
+    ultima_activacion = models.DateField(default=datetime.date.today)
+    activo = models.BooleanField(default=True)
+
+    @property
+    def edad(self):
+        return int((datetime.date.today - self.fecha_nacimiento).days / 365.25)
+
+    def __str__(self):
+        return self.user
+        
     
 class tipo_identificacion(models.Model):
     nom_tipo_identificacion = models.TextField(max_length=25)
+
+    def __str__(self):
+        return self.nom_tipo_identificacion
 
 class paciente(models.Model):
     RH = models.TextField(max_length=3)

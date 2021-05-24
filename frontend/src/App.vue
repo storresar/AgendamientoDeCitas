@@ -4,13 +4,28 @@
   </div>
 </template>
 
+<script>
+import { mapActions } from 'vuex'
+export default {
+  methods:{
+    ...mapActions(['validarToken', 'getUsuario', 'getListaUsuarios'])
+  },
+  created(){
+    if (window.localStorage.getItem('token')){
+      this.validarToken(window.localStorage.getItem('token'))
+      .then(this.getUsuario(window.localStorage.getItem('usuario')))
+      .catch(msg => this.$alert(msg,'Error','warning'))
+    }
+  }
+}
+</script>
+
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Karla:ital,wght@1,300&display=swap');
 body{
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        background-image: linear-gradient(to right, #455e81 , #1b304b);
         font-family: 'Karla', sans-serif;
         
     }
