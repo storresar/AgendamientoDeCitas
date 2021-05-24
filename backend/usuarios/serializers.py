@@ -9,9 +9,10 @@ from .utilities import get_token_for_user
 
 class usuario_serializer(serializers.ModelSerializer):
     ultima_activacion = serializers.SerializerMethodField()
+
     class Meta:
         model = usuario
-        fields = ('id','username','password','first_name', 'last_name', 'email','fecha_nacimiento','rol','ultima_activacion')
+        fields = ('id','username','password','first_name', 'last_name', 'email','fecha_nacimiento','rol','ultima_activacion', 'activo')
 
     def create(self, validated_data):
         mensaje = 'Felicidades! Usted se ha registrado exitosamente en Sophy hostpital.\n'

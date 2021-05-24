@@ -24,6 +24,9 @@ class usuario(AbstractUser):
 class tipo_identificacion(models.Model):
     nom_tipo_identificacion = models.TextField(max_length=25)
 
+    def __str__(self):
+        return self.nom_tipo_identificacion
+
 class paciente(models.Model):
     RH = models.TextField(max_length=3)
     sexo = models.CharField(max_length=1)

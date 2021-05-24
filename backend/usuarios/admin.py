@@ -1,5 +1,5 @@
 from django.contrib import admin
-from usuarios.models import usuario,tipo_usuario,paciente, tipo_identificacion
+from .models import usuario,tipo_usuario,paciente, tipo_identificacion
 
 # Register your models here.
 

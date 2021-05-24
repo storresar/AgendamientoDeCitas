@@ -3,6 +3,7 @@ from rest_framework import viewsets
 from .serializers import usuario_serializer, usuario_login_serializer
 from .models import usuario
 from .permissions import IsUserOrAdmin
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.decorators import action, api_view
