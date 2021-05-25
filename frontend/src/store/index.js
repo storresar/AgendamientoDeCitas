@@ -99,7 +99,8 @@ export default new Vuex.Store({
         throw 'Error de Autenticación'
       }
     },
-    async modificarUsuario(context, usuarioNuevo){
+    async modificarUsuario(context, datos){
+      const usuario = datos.usuario
       const req = await fetch(`http://127.0.0.1:8000/api/usuarios/${usuarioNuevo.username}/`,{
         method : 'PUT',
         headers : {
@@ -108,8 +109,14 @@ export default new Vuex.Store({
         },
         body: JSON.stringify(usuarioNuevo)
       })
+      
       if (req.status === 200){
+        const usuario_r = await req.json()
         await context.dispatch('getListaUsuarios')
+        if(usuarioNuevo.rol === 1){
+          datos.paciente.usuario_p = usuario_r.id
+          await context.dispatch('modificarPaciente', usuario_r)
+        }
         return 'Se ha modificado el usuario correctamente'
       }
       if (req.status === 401){
@@ -152,6 +159,16 @@ export default new Vuex.Store({
         body: JSON.stringify(paciente)
       })
       console.log(req)
+    },
+    async modificarPaciente(context, pacienteNuevo){
+      const req = await fetch(`http://127.0.0.1:8000/api/usuarios/${pacienteNuevo.usuario_p}/`,{
+        method : 'PUT',
+        headers : {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${window.localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(pacienteNuevo)
+      })
     }
   }
 })

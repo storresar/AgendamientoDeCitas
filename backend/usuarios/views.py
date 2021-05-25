@@ -102,3 +102,10 @@ class paciente_view(viewsets.ModelViewSet):
 
     queryset = paciente.objects.all()
     serializer_class = pacienteSerializer
+
+
+    def retrieve(self, request, pk=None):
+        queryset = paciente.objects.filter(usuario_p=pk)
+        user = get_object_or_404(queryset)
+        serializer = pacienteSerializer(user)
+        return Response(serializer.data)

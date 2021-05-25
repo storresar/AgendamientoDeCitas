@@ -78,31 +78,60 @@
                 <template v-slot:body>
                     <label>Nombre:</label>
                     <br>
-                    <input type="text" name="nombre" id="nombreM" v-model="usuarioModificar.first_name" autocomplete="off">
+                    <input type="text" v-model.trim="$v.nombre.$model" id="nombre"  autocomplete="off">
+                    <div class="error" v-if="!$v.nombre.required">Este campo es requerido</div>
                     <br>
                     <label>Apellido:</label>
                     <br>
-                    <input type="text" name="apellido" id="apellidoM" v-model="usuarioModificar.last_name" autocomplete="off" >
+                    <input type="text" v-model.trim="$v.apellido.$model" id="apellido"  autocomplete="off">
+                    <div class="error" v-if="!$v.apellido.required">Este campo es requerido</div>
                     <br>
                     <label>Fecha Nacimiento:</label>
                     <br>
-                    <input type="date" name="fecha" id="fechaM" v-model="usuarioModificar.fecha_nacimiento">
+                    <input type="date" v-model.trim="$v.fecha.$model" id="fecha">
+                    <div class="error" v-if="!$v.fecha.required">Este campo es obligatorio</div>
                     <br>
                     <label for="">Usuario:</label>
                     <br>
-                    <input type="text" name="usuario" id="usuarioM" v-model="usuarioModificar.username" autocomplete="off" readonly="true">
+                    <input type="text" v-model.trim="$v.username.$model" id="usuario"  autocomplete="off">
+                    <div class="error" v-if="!$v.username.required">Este campo requiere minimo 8 caracteres</div>
                     <br>
                     <label for="">Contraseña</label>
                     <br>
-                    <input type="text" name="" id="">
+                    <input type="password" v-model.trim="$v.clave.$model" id="">
+                    <div class="error" v-if="!$v.clave.minLength">Este campo requiere minimo 8 caracteres</div>
+                    <br>
+                    <label for="">Confima la contraseña</label>
+                    <input type="password" v-model.trim="$v.confirma.$model" id="">
+                    <div class="error" v-if="!$v.confirma.required">Este campo es obligatorio</div>
+                    <div class="error" v-if="!$v.confirma.sameAsClave">Las claves no coinciden</div>
                     <br>
                     <label for="">Tipo Usuario</label>
                     <br>
-                        <select name="" id="" v-model="usuarioModificar.rol">
-                            <option value="">ADMINISTRADOR</option>
-                            <option value="">PACIENTE</option>
-                            <option value="">FUNCIONARIO</option>
+                        <select v-model="tipo_usuario">
+                            <option value="1">PACIENTE</option>
+                            <option value="2">FUNCIONARIO</option>
+                            <option value="3">ADMINISTRADOR</option>
                         </select>
+                    <div v-if="tipo_usuario == 1" class="if-paciente">
+                    <label for="">RH</label>
+                    <input type="text" v-model.trim="$v.rh.$model" id="">
+                    <div class="error" v-if="!$v.rh.required">Este campo es obligatorio</div>
+                    <label for="">Sexo</label>
+                    <select v-model="sexo">
+                        <option value="M">Masculino</option>
+                        <option value="F">Femenino</option>
+                    </select>
+                    <label for="">Tipo de identificacion</label>
+                    <select v-model="tId">
+                        <option value="1">Cedula</option>
+                        <option value="2">Tarjeta de Identidad</option>
+                        <option value="3">Pasaporte</option>
+                    </select>
+                    <label for="">Identificacion</label>
+                    <input type="text" v-model.trim="$v.id.$model" id="">
+                    <div class="error" v-if="!$v.id.required">Este campo es obligatorio</div>
+                </div>
                 </template>
                 <template v-slot:footer>
                     <button id="modificar" @click="botonModificar(usuarioModificar)">MODIFICAR USUARIO</button>
@@ -122,23 +151,89 @@
 import { mapState, mapActions } from 'vuex'
 import ModalRegistro from '../components/ModalRegistro.vue'
 import ModalModificar from '../components/ModalModificar.vue'
-
+import { required,minLength, sameAs } from 'vuelidate/lib/validators'
 export default {
     data(){
         return{
-            nPaginacion : 5 ,
+            nPaginacion : 4 ,
             nActual: 0,
             mostrarModal: false,
             mostrarModalModificar: false,
-            usuarioModificar: ''
+            usuarioModificar: '',
+            nombre: '',
+            apellido: '',
+            fecha: '',
+            tipo_usuario: '',
+            username: '',
+            clave:'',
+            confirma:'',
+            rh: 'o+',
+            sexo: 'M',
+            tId: 1,
+            id: '3178847957',
+            correo: ''
         }
     },
     components:{
         ModalRegistro,
         ModalModificar
     },
-    validations:{
-
+    validations(){
+        if(this.tipo_usuario === '1'){
+            return{
+                nombre: {
+                    required
+                },
+                apellido: {
+                    required
+                },
+                fecha:{
+                    required
+                },
+                username:{
+                    required
+                },
+                clave:{
+                    required,
+                    minLength: minLength(8)
+                },
+                confirma: {
+                    required,
+                    sameAsClave: sameAs('clave')
+                },
+                rh: {
+                    required,
+                },
+                id: {
+                    required,
+                },
+            }
+        }else{
+            return{
+                nombre: {
+                    required
+                },
+                apellido: {
+                    required
+                },
+                fecha:{
+                    required
+                },
+                username:{
+                    required
+                },
+                clave:{
+                    required,
+                    minLength: minLength(8)
+                },
+                confirma: {
+                    required,
+                    sameAsClave: sameAs('clave')
+                },
+                rh:{},
+                id:{},
+            }
+        }
     },
     computed:{
         ...mapState(['usuario', 'listaUsuarios']),
@@ -185,17 +280,53 @@ export default {
             this.mostrarModalModificar = false;
         },
         modificar(usuario){
+            console.log(usuario)
+            this.nombre = usuario.first_name
+            this.apellido = usuario.last_name
+            this.fecha = usuario.fecha_nacimiento
+            this.username = usuario.username
+            this.correo = usuario.email
+            if(usuario.rol === 1){
+                this.tipo_usuario = '1'
+            }else if(usuario.rol === 2) {
+                this.tipo_usuario = '2'
+            }else{
+                this.tipo_usuario = '3'
+            }
             this.showModalModificar()
             this.usuarioModificar = usuario
-            console.log(this.usuarioModificar)
         },
         botonModificar(usuarioNuevo){
-            this.usuarioModificar = usuarioNuevo
-            this.modificarUsuario(this.usuarioModificar)
-            .then(msg => this.$alert(msg,'Usuario modificado correctamente','success'))
-            .catch(msg => this.$alert(msg,'Ha ocurrido un error','warning'))
-            this.mostrarModalModificar = false;
-        }
+            this.$v.$touch()
+            if (this.$v.$invalid){
+                this.$alert('Llene los datos adecuadamente','Error en el formulario','warning')
+            } else{
+                const usuario = {
+                'username':this.usuario,
+                'password': this.clave,
+                'first_name': this.nombre,
+                'last_name': this.apellido,
+                'email': this.correo,
+                'fecha_nacimiento': this.fecha,
+                'rol': parseInt(this.tipo_usuario),
+                }
+                var paciente = {}
+                if (usuario.rol === 1){
+                    paciente = {
+                        'usuario_p' : null,
+                        'RH': this.rh,
+                        'sexo': this.sexo,
+                        'numero_identificacion': this.id,
+                        'tipo_identificacion': parseInt(this.tId)
+                    }
+                }
+                this.usuarioModificar = usuarioNuevo
+                this.modificarUsuario({'usuario': usuario, 'paciente': paciente})
+                .then(msg => this.$alert(msg,'Usuario modificado correctamente','success'))
+                .catch(msg => this.$alert(msg,'Ha ocurrido un error','warning'))
+                this.mostrarModalModificar = false;
+            }
+        },
     },
     mounted(){
         this.getListaUsuarios()

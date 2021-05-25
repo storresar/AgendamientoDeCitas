@@ -204,7 +204,7 @@ export default {
                 this.crearUsuario({'usuario': usuario, 'paciente': paciente})
                 .then(() => this.$alert('Usuario creado exitosamente','Exito','success'))
                 .catch((err) => this.$alert(err,'Ha ocurrido un error','error'))
-
+                this.close()
             }
         },
         close() {
