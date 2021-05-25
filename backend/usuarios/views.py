@@ -1,7 +1,7 @@
 from .utilities import get_token_for_user
 from rest_framework import viewsets
-from .serializers import usuario_serializer, usuario_login_serializer
-from .models import usuario
+from .serializers import usuario_serializer, usuario_login_serializer, pacienteSerializer
+from .models import usuario,paciente
 from .permissions import IsUserOrAdmin
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from django.shortcuts import get_object_or_404
@@ -98,3 +98,7 @@ def verificar_captcha(request):
         request.recaptcha_is_valid = False
         return Response(False, status=r.status_code)
 
+class paciente_view(viewsets.ModelViewSet):
+
+    queryset = paciente.objects.all()
+    serializer_class = pacienteSerializer

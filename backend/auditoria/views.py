@@ -1,11 +1,11 @@
 from rest_framework import viewsets
-from .serializers import log_history_serializer
-from django.contrib.admin.models import LogEntry
+from .models import auditoria
+from .serializers import auditoria_serializer
 
-# ADDITION = 1
-# CHANGE = 2
-# DELETION = 3
 
-class log_viewset(viewsets.ModelViewSet):
-    queryset = LogEntry.objects.all()
-    serializer_class = log_history_serializer
+class AuditoriaViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    A simple ViewSet for viewing accounts.
+    """
+    queryset = auditoria.objects.all()
+    serializer_class = auditoria_serializer

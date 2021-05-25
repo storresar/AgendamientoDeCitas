@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'simple_history',
     #Modelos-propios
     'usuarios',
+    'auditoria',
 ]
 
 REST_FRAMEWORK = {
