@@ -14,7 +14,7 @@ export default {
     if (window.localStorage.getItem('token')){
       this.validarToken(window.localStorage.getItem('token'))
       .then(this.getUsuario(window.localStorage.getItem('usuario')))
-      .catch(msg => this.$alert(msg,'Error','warning'))
+      .catch(() => window.localStorage.clear())
     }
   }
 }

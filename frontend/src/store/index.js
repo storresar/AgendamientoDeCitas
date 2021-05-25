@@ -37,7 +37,7 @@ export default new Vuex.Store({
         const datosUsuario = await req.json()
         context.commit('setUsuario', datosUsuario)
         if (datosUsuario.rol === 3){
-          router.push({name: 'Admin'})
+          return 'Admin';
         }
       }
     },

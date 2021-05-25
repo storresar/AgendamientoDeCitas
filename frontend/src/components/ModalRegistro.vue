@@ -28,9 +28,9 @@
                 <label>Fecha Nacimiento:</label>
                 <input type="date" v-model.trim="$v.fecha.$model" id="fecha">
                 <label for="">Contraseña</label>
-                <input type="text" v-model.trim="$v.clave.$model" id="">
-                <label for="">Contraseña</label>
-                <input type="text" v-model.trim="$v.confirma.$model" id="">
+                <input type="password" v-model.trim="$v.clave.$model" id="">
+                <label for="">Confima la contraseña</label>
+                <input type="password" v-model.trim="$v.confirma.$model" id="">
                 <label for="">Tipo Usuario</label>
                 <select v-model="tipo_usuario">
                     <option value="1">PACIENTE</option>
@@ -69,7 +69,7 @@
 <script>
 
 import { mapActions } from 'vuex'
-import { required, maxLength,minLength, email, sameAs } from 'vuelidate/lib/validators'
+import { required,minLength, email, sameAs } from 'vuelidate/lib/validators'
 
 export default {
     name: 'Modal',
@@ -125,7 +125,7 @@ export default {
             this.$emit('close');
         },
         agregarUsuario(){
-            
+            console.log()
         }
     },
 };
