@@ -367,6 +367,9 @@ export default {
                 this.mostrarModalModificar = false;
             }
         },
+        isPaciente(){
+            if (this.)
+        },
     },
     mounted(){
         this.getListaUsuarios()
