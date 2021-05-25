@@ -15,8 +15,7 @@ export default new Vuex.Store({
       window.localStorage.setItem('usuario', data.username)
     },
     deleteToken(){
-      window.localStorage.setItem('usuario', data.username)
-      window.localStorage.removeItem('token')
+      window.localStorage.clear()
     },
     setUsuario(state, usuario){
       state.usuario = usuario
@@ -118,33 +117,32 @@ export default new Vuex.Store({
       }
     },
     async crearUsuario(context, datos){
-      usuario = datos.usuario
+      const usuario = datos.usuario
       const req = await fetch('http://127.0.0.1:8000/api/usuarios/', {
         method : 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${window.localStorage.getItem('token')}`
         },
-        body: JSON.stringify(datos)
+        body: JSON.stringify(usuario)
       })
-      if (req.status === 200){
-        const usuario = await req.json()
-        context.commit('agregarUsuario', usuario)
-        if (usuario.usuario_p === 1){
-          try{
-            datos.paciente.paciente_p = usuario.id
-             await context.dispatch('crearPaciente', datos.paciente)
-          } catch {
-            throw 'Error en la creacion del Paciente'
-          }
+      if (req.status === 201){
+        const usuario_r = await req.json()
+        context.commit('agregarUsuario', usuario_r)
+        console.log(usuario_r)
+        if (usuario_r.rol === 1){
+          datos.paciente.usuario_p = usuario_r.id
+          await context.dispatch('crearPaciente', datos.paciente)
+          
         }
         return 'Se ha creado el usuario correctamente'
       }
-      if (req.status !== 401){
+      if (req.status === 401){
         throw 'Error de Ejecución'
       }
     },
     async crearPaciente(context, paciente){
+      console.log(paciente)
       const req = await fetch('http://127.0.0.1:8000/api/pacientes/', {
         method : 'POST',
         headers: {
@@ -153,6 +151,7 @@ export default new Vuex.Store({
         },
         body: JSON.stringify(paciente)
       })
+      console.log(req)
     }
   }
 })

@@ -84,18 +84,18 @@ export default {
     name: 'Modal',
     data(){
         return{
-            nombre: '',
-            apellido: '',
+            nombre: 'Pipe',
+            apellido: 'Pelaez',
             fecha: '',
-            usuario: '',
-            correo: '',
-            clave: '',
-            confirma: '',
+            usuario: 'ppelaez123',
+            correo: 'ppelaez@gmail.com',
+            clave: '123456789',
+            confirma: '123456789',
             tipo_usuario: 2,
-            rh: '',
-            sexo: '',
+            rh: 'o+',
+            sexo: 'M',
             tId: 1,
-            id: '',
+            id: '3178847957',
         }
     },
     validations() {
@@ -177,32 +177,33 @@ export default {
         ...mapActions(['crearUsuario']),
         submitFormulario(){
             this.$v.$touch()
-            console.log(this.$v)
             if (this.$v.$invalid){
                 this.$alert('Llene los datos adecuadamente','Error en el formulario','warning')
             } else {
                 // Peticion create
-                usuario = {'username':this.usuario,
+                const usuario = {
+                'username':this.usuario,
                 'password': this.clave,
                 'first_name': this.nombre,
                 'last_name': this.apellido,
-                'email': this.email,
+                'email': this.correo,
                 'fecha_nacimiento': this.fecha,
-                'rol': parseInt(this.rol)
+                'rol': parseInt(this.tipo_usuario),
+                "activo": true
                 }
-                paciente = {}
+                var paciente = {}
                 if (usuario.rol === 1){
                     paciente = {
-                        'paciente_p' : null,
+                        'usuario_p' : null,
                         'RH': this.rh,
                         'sexo': this.sexo,
-                        'numero_identificacion': this.numero_identificacion,
-                        'tipo_identificacion': parseInt(this.tipo_identificacion)
+                        'numero_identificacion': this.id,
+                        'tipo_identificacion': parseInt(this.tId)
                     }
                 }
                 this.crearUsuario({'usuario': usuario, 'paciente': paciente})
-
-
+                .then(() => this.$alert('Usuario creado exitosamente','Exito','success'))
+                .catch((err) => this.$alert(err,'Ha ocurrido un error','error'))
 
             }
         },
