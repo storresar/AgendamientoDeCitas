@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 import datetime
 from simple_history.models import HistoricalRecords
+
 # Create your models here.
 
 class tipo_usuario(models.Model):
