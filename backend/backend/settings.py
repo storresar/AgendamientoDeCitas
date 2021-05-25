@@ -42,8 +42,10 @@ INSTALLED_APPS = [
     #Librerias
     'rest_framework',
     'corsheaders',
+    'simple_history',
     #Modelos-propios
     'usuarios',
+    'auditoria',
 ]
 
 REST_FRAMEWORK = {
@@ -66,6 +68,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
 ]
 
 ROOT_URLCONF = 'backend.urls'

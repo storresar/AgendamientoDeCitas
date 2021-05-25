@@ -1,7 +1,7 @@
 from .utilities import get_token_for_user
 from rest_framework import viewsets
-from .serializers import usuario_serializer, usuario_login_serializer
-from .models import usuario
+from .serializers import usuario_serializer, usuario_login_serializer, pacienteSerializer
+from .models import usuario,paciente
 from .permissions import IsUserOrAdmin
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from django.shortcuts import get_object_or_404
@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action, api_view, permission_classes
 from django.core.mail import send_mail
 from django.conf import settings
+from auditoria.models import auditoria
 import requests
 
 class usuario_viewset(viewsets.ModelViewSet):
@@ -24,6 +25,13 @@ class usuario_viewset(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def update(self, request, pk=None):
+        nueva_auditora = auditoria(
+         tipo=request.method,
+         usuario_realiza= request.user,
+         usuario_cambio=pk,
+         ip=request.META.get('REMOTE_ADDR')
+         )
+        nueva_auditora.save()
         queryset = usuario.objects.filter(username=pk)
         user = get_object_or_404(queryset)
         serializer = usuario_serializer(user, data=request.data)
@@ -33,10 +41,27 @@ class usuario_viewset(viewsets.ModelViewSet):
         return Response(serializer.errors)
 
     def destroy(self, request, pk=None):
+        nueva_auditora = auditoria(
+         tipo=request.method,
+         usuario_realiza= request.user,
+         usuario_cambio=pk,
+         ip=request.META.get('REMOTE_ADDR')
+         )
+        nueva_auditora.save()
         queryset = usuario.objects.filter(username=pk)
         user = get_object_or_404(queryset)
         user.delete()
         return self.list(request)
+
+    def create(self, request):
+        nueva_auditora = auditoria(
+         tipo=request.method,
+         usuario_realiza= request.user,
+         usuario_cambio=request.data['username'],
+         ip=request.META.get('REMOTE_ADDR')
+         )
+        nueva_auditora.save()
+        return super().create(request)
 
     @action(detail=False, methods=['post'])
     def login(self, request):
@@ -98,3 +123,14 @@ def verificar_captcha(request):
         request.recaptcha_is_valid = False
         return Response(False, status=r.status_code)
 
+class paciente_view(viewsets.ModelViewSet):
+
+    queryset = paciente.objects.all()
+    serializer_class = pacienteSerializer
+
+
+    def retrieve(self, request, pk=None):
+        queryset = paciente.objects.filter(usuario_p=pk)
+        user = get_object_or_404(queryset)
+        serializer = pacienteSerializer(user)
+        return Response(serializer.data)

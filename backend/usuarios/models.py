@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 import datetime
+from simple_history.models import HistoricalRecords
+
 # Create your models here.
 
 class tipo_usuario(models.Model):
@@ -15,13 +17,14 @@ class usuario(AbstractUser):
     fecha_nacimiento = models.DateField(null=True)
     ultima_activacion = models.DateField(default=datetime.date.today)
     activo = models.BooleanField(default=True)
+    history = HistoricalRecords()
 
     @property
     def edad(self):
         return int((datetime.date.today - self.fecha_nacimiento).days / 365.25)
 
     def __str__(self):
-        return self.user
+        return self.username
         
     
 class tipo_identificacion(models.Model):

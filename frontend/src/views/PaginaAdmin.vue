@@ -13,7 +13,7 @@
                     <a onclick="showDivModificar()"><i class="fa fa-calendar"></i>GESTIÓN DE CITAS</a>
                 </li>
                 <li>
-                    <a onclick="showDivCitas()"><i class="fa fa-address-book"></i>AUDITORIA</a>
+                    <a @click="showDivAuditoria()"><i class="fa fa-address-book"></i>AUDITORIA</a>
                 </li>
                 <li>
                     <a onclick="showDivModificar()"><i class="fa fa-area-chart"></i>REPORTES Y GRÁFICAS</a>
@@ -73,44 +73,94 @@
                     <button @click="sumarPainacion()" id="siguiente">Siguiente</button>
                 </ul>
             </div>
+        </div>
             <ModalRegistro v-show="mostrarModal" @close="closeModal"> </ModalRegistro>
             <ModalModificar v-show="mostrarModalModificar" @close="closeModalModificar">
                 <template v-slot:body>
                     <label>Nombre:</label>
                     <br>
-                    <input type="text" name="nombre" id="nombreM" v-model="usuarioModificar.first_name" autocomplete="off">
+                    <input type="text" v-model.trim="$v.nombre.$model" id="nombre"  autocomplete="off">
+                    <div class="error" v-if="!$v.nombre.required">Este campo es requerido</div>
                     <br>
                     <label>Apellido:</label>
                     <br>
-                    <input type="text" name="apellido" id="apellidoM" v-model="usuarioModificar.last_name" autocomplete="off" >
+                    <input type="text" v-model.trim="$v.apellido.$model" id="apellido"  autocomplete="off">
+                    <div class="error" v-if="!$v.apellido.required">Este campo es requerido</div>
                     <br>
                     <label>Fecha Nacimiento:</label>
                     <br>
-                    <input type="date" name="fecha" id="fechaM" v-model="usuarioModificar.fecha_nacimiento">
+                    <input type="date" v-model.trim="$v.fecha.$model" id="fecha">
+                    <div class="error" v-if="!$v.fecha.required">Este campo es obligatorio</div>
                     <br>
                     <label for="">Usuario:</label>
                     <br>
-                    <input type="text" name="usuario" id="usuarioM" v-model="usuarioModificar.username" autocomplete="off" readonly="true">
+                    <input type="text" v-model.trim="$v.username.$model" id="usuario"  autocomplete="off">
+                    <div class="error" v-if="!$v.username.required">Este campo requiere minimo 8 caracteres</div>
                     <br>
                     <label for="">Contraseña</label>
                     <br>
-                    <input type="text" name="" id="">
+                    <input type="password" v-model.trim="$v.clave.$model" id="">
+                    <div class="error" v-if="!$v.clave.minLength">Este campo requiere minimo 8 caracteres</div>
+                    <br>
+                    <label for="">Confima la contraseña</label>
+                    <input type="password" v-model.trim="$v.confirma.$model" id="">
+                    <div class="error" v-if="!$v.confirma.required">Este campo es obligatorio</div>
+                    <div class="error" v-if="!$v.confirma.sameAsClave">Las claves no coinciden</div>
                     <br>
                     <label for="">Tipo Usuario</label>
                     <br>
-                        <select name="" id="" v-model="usuarioModificar.rol">
-                            <option value="">ADMINISTRADOR</option>
-                            <option value="">PACIENTE</option>
-                            <option value="">FUNCIONARIO</option>
+                        <select v-model="tipo_usuario" @change="isPaciente">
+                            <option value="1">PACIENTE</option>
+                            <option value="2">FUNCIONARIO</option>
+                            <option value="3">ADMINISTRADOR</option>
                         </select>
+                    <div v-if="tipo_usuario == 1" class="if-paciente">
+                    <label for="">RH</label>
+                    <input type="text" v-model.trim="$v.rh.$model" id="">
+                    <div class="error" v-if="!$v.rh.required">Este campo es obligatorio</div>
+                    <label for="">Sexo</label>
+                    <select v-model="sexo">
+                        <option value="M">Masculino</option>
+                        <option value="F">Femenino</option>
+                    </select>
+                    <label for="">Tipo de identificacion</label>
+                    <select v-model="tId">
+                        <option value="1">Cedula</option>
+                        <option value="2">Tarjeta de Identidad</option>
+                        <option value="3">Pasaporte</option>
+                    </select>
+                    <label for="">Identificacion</label>
+                    <input type="text" v-model.trim="$v.id.$model" id="">
+                    <div class="error" v-if="!$v.id.required">Este campo es obligatorio</div>
+                </div>
                 </template>
                 <template v-slot:footer>
                     <button id="modificar" @click="botonModificar(usuarioModificar)">MODIFICAR USUARIO</button>
                 </template>
             </ModalModificar>
-        </div>
-        <div id="auditoria" style="display: none;">
-            ESTE ES EL PANEL DE AUDITORIA
+        <div id="auditoria" style="display: none;" class="audi">
+                    <h1>AUDITORIA DE LA APLICACIÓN</h1>
+                    <table>
+                    <thead>
+                        <th>ID</th><th>FECHA</th><th>TIPO</th><th>USUARIO AFECTADO</th><th>USUARIO</th><th>IP</th>
+                    </thead>
+                    <tr v-for="(auditoria, index) in listaAuditoria"
+                v-if="index >= nActualAuditoria*nPaginacionAuditoria && index < (nActualAuditoria*nPaginacionAuditoria)+nPaginacionAuditoria"
+                :key="auditoria.id">
+                        <td>{{auditoria.id}}</td>
+                        <td>{{auditoria.fecha}}</td>
+                        <td>{{auditoria.tipo}}</td>
+                        <td>{{auditoria.usuario_cambio}}</td>
+                        <td>{{auditoria.usuario_realiza}}</td>
+                        <td>{{auditoria.ip}}</td>
+                    </tr>
+                    </table>
+                     <div id="paginacion">
+                <ul>
+                    <button @click="restarPaginacionAuditoria()" id="anterior">Anterior</button>
+                    <button @click="sumarPaginacionAuditoria()" id="siguiente">Siguiente</button>
+                </ul>
+            </div>
         </div>
     </div>
 </template>
@@ -122,26 +172,94 @@
 import { mapState, mapActions } from 'vuex'
 import ModalRegistro from '../components/ModalRegistro.vue'
 import ModalModificar from '../components/ModalModificar.vue'
-
+import { required,minLength, sameAs } from 'vuelidate/lib/validators'
 export default {
     data(){
         return{
-            nPaginacion : 5 ,
+            nPaginacion : 4 ,
             nActual: 0,
+            nPaginacionAuditoria : 8 ,
+            nActualAuditoria: 0,
             mostrarModal: false,
             mostrarModalModificar: false,
-            usuarioModificar: ''
+            usuarioModificar: '',
+            nombre: '',
+            apellido: '',
+            fecha: '',
+            tipo_usuario: '',
+            username: '',
+            clave:'',
+            confirma:'',
+            rh: '',
+            sexo: '',
+            tId: 1,
+            id: '',
+            correo: ''
         }
     },
     components:{
         ModalRegistro,
         ModalModificar
     },
-    validations:{
-
+    validations(){
+        if(this.tipo_usuario === '1'){
+            return{
+                nombre: {
+                    required
+                },
+                apellido: {
+                    required
+                },
+                fecha:{
+                    required
+                },
+                username:{
+                    required
+                },
+                clave:{
+                    required,
+                    minLength: minLength(8)
+                },
+                confirma: {
+                    required,
+                    sameAsClave: sameAs('clave')
+                },
+                rh: {
+                    required,
+                },
+                id: {
+                    required,
+                },
+            }
+        }else{
+            return{
+                nombre: {
+                    required
+                },
+                apellido: {
+                    required
+                },
+                fecha:{
+                    required
+                },
+                username:{
+                    required
+                },
+                clave:{
+                    required,
+                    minLength: minLength(8)
+                },
+                confirma: {
+                    required,
+                    sameAsClave: sameAs('clave')
+                },
+                rh:{},
+                id:{},
+            }
+        }
     },
     computed:{
-        ...mapState(['usuario', 'listaUsuarios']),
+        ...mapState(['usuario', 'listaUsuarios','listaAuditoria']),
     },
     methods:{
         cerrarSesion(){
@@ -150,13 +268,20 @@ export default {
         },
         showDivInfo(){
             document.getElementById('verinformacion').style.display='';
-            document.getElementById('usuarios').style.display='none';
+            document.getElementById('usuarios').style.display='None';
+            document.getElementById('auditoria').style.display='None';
         },
         showDivUsuarios(){
-            document.getElementById('verinformacion').style.display='None';
+            document.getElementById('verinformacion').style.display='none';
             document.getElementById('usuarios').style.display='';
+            document.getElementById('auditoria').style.display='none';
         },
-        ...mapActions(['getListaUsuarios','eliminarUsuario','modificarUsuario']),
+        showDivAuditoria(){
+            document.getElementById('verinformacion').style.display='None';
+            document.getElementById('usuarios').style.display='None';
+            document.getElementById('auditoria').style.display='';
+        },
+        ...mapActions(['getListaUsuarios','eliminarUsuario','modificarUsuario','getAuditoria']),
         restarPaginacion(){
             if(this.nActual > 0){
                 this.nActual--;
@@ -165,6 +290,16 @@ export default {
         sumarPainacion(){
             if((this.nActual*this.nPaginacion)+this.nPaginacion < this.listaUsuarios.length){
                 this.nActual++;
+            }
+        },
+        restarPaginacionAuditoria(){
+            if(this.nActualAuditoria > 0){
+                this.nActualAuditoria--;
+            }
+        },
+        sumarPaginacionAuditoria(){
+            if((this.nActualAuditoria*this.nPaginacionAuditoria)+this.nPaginacionAuditoria < this.listaAuditoria.length){
+                this.nActualAuditoria++;
             }
         },
         eliminar(usuario){
@@ -185,20 +320,57 @@ export default {
             this.mostrarModalModificar = false;
         },
         modificar(usuario){
+            this.nombre = usuario.first_name
+            this.apellido = usuario.last_name
+            this.fecha = usuario.fecha_nacimiento
+            this.username = usuario.username
+            this.correo = usuario.email
+            if(usuario.rol === 1){
+                this.tipo_usuario = '1'
+            }else if(usuario.rol === 2) {
+                this.tipo_usuario = '2'
+            }else{
+                this.tipo_usuario = '3'
+            }
             this.showModalModificar()
             this.usuarioModificar = usuario
-            console.log(this.usuarioModificar)
         },
         botonModificar(usuarioNuevo){
-            this.usuarioModificar = usuarioNuevo
-            this.modificarUsuario(this.usuarioModificar)
-            .then(msg => this.$alert(msg,'Usuario modificado correctamente','success'))
-            .catch(msg => this.$alert(msg,'Ha ocurrido un error','warning'))
-            this.mostrarModalModificar = false;
-        }
+            this.$v.$touch()
+            if (this.$v.$invalid){
+                this.$alert('Llene los datos adecuadamente','Error en el formulario','warning')
+            } else{
+                const usuario = {
+                'username':this.usuario,
+                'password': this.clave,
+                'first_name': this.nombre,
+                'last_name': this.apellido,
+                'email': this.correo,
+                'fecha_nacimiento': this.fecha,
+                'rol': parseInt(this.tipo_usuario),
+                }
+                var paciente = {}
+                if (usuario.rol === 1){
+                    paciente = {
+                        'usuario_p' : null,
+                        'RH': this.rh,
+                        'sexo': this.sexo,
+                        'numero_identificacion': this.id,
+                        'tipo_identificacion': parseInt(this.tId)
+                    }
+                }
+                this.usuarioModificar = usuarioNuevo
+                
+                this.modificarUsuario({'usuario': usuario, 'paciente': paciente})
+                .then(msg => this.$alert(msg,'Usuario modificado correctamente','success'))
+                .catch(msg => this.$alert(msg,'Ha ocurrido un error','warning'))
+                this.mostrarModalModificar = false;
+            }
+        },
     },
     mounted(){
         this.getListaUsuarios()
+        this.getAuditoria()
     },
 }
 </script>
@@ -387,6 +559,37 @@ ul li:hover a{
 }
 #paginacion button:hover{
     background-color: gray;
+    color: white;
+}
+.audi h1{
+    text-align: left;
+    padding-left: 30px;
+}
+
+.audi table{
+    width: 80%;
+    background-color: white;
+    text-align: left;
+    color: black;
+    top: 20%;
+    left:11px;
+    border-collapse: collapse;
+    position: fixed;
+}
+
+.audi th,td{
+    padding: 15px;
+}
+.audi thead{
+    background-color: #063146;
+    color: white;
+    border-bottom: solid 5px black;
+}
+.audi tr:nth-child(even){
+    background-color: #ddd;
+}
+.audi tr:hover{
+    background-color: #063146;
     color: white;
 }
 </style>
