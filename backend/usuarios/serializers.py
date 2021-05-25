@@ -29,6 +29,7 @@ class usuario_serializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Correo invalido')
         return nuevo
 
+        
     def get_ultima_activacion(self, instance):
         return int((date.today() - instance.ultima_activacion).days)
     

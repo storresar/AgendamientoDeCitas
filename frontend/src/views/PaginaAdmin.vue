@@ -108,7 +108,7 @@
                     <br>
                     <label for="">Tipo Usuario</label>
                     <br>
-                        <select v-model="tipo_usuario">
+                        <select v-model="tipo_usuario" @change="isPaciente">
                             <option value="1">PACIENTE</option>
                             <option value="2">FUNCIONARIO</option>
                             <option value="3">ADMINISTRADOR</option>
@@ -167,10 +167,10 @@ export default {
             username: '',
             clave:'',
             confirma:'',
-            rh: 'o+',
-            sexo: 'M',
+            rh: '',
+            sexo: '',
             tId: 1,
-            id: '3178847957',
+            id: '',
             correo: ''
         }
     },
@@ -280,7 +280,6 @@ export default {
             this.mostrarModalModificar = false;
         },
         modificar(usuario){
-            console.log(usuario)
             this.nombre = usuario.first_name
             this.apellido = usuario.last_name
             this.fecha = usuario.fecha_nacimiento
@@ -321,6 +320,7 @@ export default {
                     }
                 }
                 this.usuarioModificar = usuarioNuevo
+                
                 this.modificarUsuario({'usuario': usuario, 'paciente': paciente})
                 .then(msg => this.$alert(msg,'Usuario modificado correctamente','success'))
                 .catch(msg => this.$alert(msg,'Ha ocurrido un error','warning'))

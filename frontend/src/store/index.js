@@ -7,6 +7,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     usuario: '',
+    paciente: '',
     listaUsuarios: [],
   },
   mutations: {
@@ -26,12 +27,14 @@ export default new Vuex.Store({
     },
     agregarUsuario(state, usuario){
       state.listaUsuarios.push(usuario)
+    },
+    setPaciente(state, paciente){
+      state.paciente = paciente
     }
   },
   actions: {
     async getUsuario(context, datos){
       const req = await fetch(`http://127.0.0.1:8000/api/usuarios/${datos}`)
-      console.log(req)
       if (req.status === 200){
         const datosUsuario = await req.json()
         context.commit('setUsuario', datosUsuario)
@@ -44,8 +47,16 @@ export default new Vuex.Store({
       const req = await fetch('http://127.0.0.1:8000/api/usuarios/')
       console.log(req)
       if (req.status === 200){
-        const datosUsuario = await req.json()
-        context.commit('setListaUsuarios', datosUsuario)
+        const datos = await req.json()
+        context.commit('setListaUsuarios', datos)
+      }
+    },
+    async getPaciente(context, idUsuario){
+      const req = await fetch(`http://127.0.0.1:8000/api/usuarios/${idUsuario}`)
+      console.log(req, 'puede ser pa')
+      if (req.status === 200){
+        const datosPaciente = await req.json()
+        context.commit('setPaciente', datosPaciente)
       }
     },
     async autenticar(context, datos){
