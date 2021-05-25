@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import usuario
+from .models import usuario,paciente
 from django.contrib.auth.hashers import make_password
 from django.core.mail import send_mail
 from datetime import date
@@ -12,7 +12,7 @@ class usuario_serializer(serializers.ModelSerializer):
 
     class Meta:
         model = usuario
-        fields = ('id','username','password','first_name', 'last_name', 'email','fecha_nacimiento','rol','ultima_activacion', 'activo', 'history')
+        fields = ('id','username','password','first_name', 'last_name', 'email','fecha_nacimiento','rol','ultima_activacion', 'activo')
 
     def create(self, validated_data):
         mensaje = 'Felicidades! Usted se ha registrado exitosamente en Sophy hostpital.\n'
@@ -46,3 +46,10 @@ class usuario_login_serializer(serializers.Serializer):
     def create(self, data):
         token = get_token_for_user(user=self.context['user'])
         return self.context['user'], token
+
+
+class pacienteSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = paciente
+        fields = '__all__'
