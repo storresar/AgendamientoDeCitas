@@ -12,7 +12,7 @@ class usuario_serializer(serializers.ModelSerializer):
 
     class Meta:
         model = usuario
-        fields = ('id','username','password','first_name', 'last_name', 'email','fecha_nacimiento','rol','ultima_activacion', 'activo', 'history')
+        fields = ('id','username','password','first_name', 'last_name', 'email','fecha_nacimiento','rol','ultima_activacion', 'activo')
 
     def create(self, validated_data):
         mensaje = 'Felicidades! Usted se ha registrado exitosamente en Sophy hostpital.\n'

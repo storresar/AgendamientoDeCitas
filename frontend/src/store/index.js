@@ -118,6 +118,7 @@ export default new Vuex.Store({
       }
     },
     async crearUsuario(context, datos){
+      usuario = datos.usuario
       const req = await fetch('http://127.0.0.1:8000/api/usuarios/', {
         method : 'POST',
         headers: {
@@ -129,11 +130,29 @@ export default new Vuex.Store({
       if (req.status === 200){
         const usuario = await req.json()
         context.commit('agregarUsuario', usuario)
+        if (usuario.usuario_p === 1){
+          try{
+            datos.paciente.paciente_p = usuario.id
+             await context.dispatch('crearPaciente', datos.paciente)
+          } catch {
+            throw 'Error en la creacion del Paciente'
+          }
+        }
         return 'Se ha creado el usuario correctamente'
       }
       if (req.status !== 401){
         throw 'Error de Ejecución'
       }
     },
+    async crearPaciente(context, paciente){
+      const req = await fetch('http://127.0.0.1:8000/api/pacientes/', {
+        method : 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${window.localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(paciente)
+      })
+    }
   }
 })
