@@ -13,7 +13,7 @@
                     <a onclick="showDivModificar()"><i class="fa fa-calendar"></i>GESTIÓN DE CITAS</a>
                 </li>
                 <li>
-                    <a onclick="showDivCitas()"><i class="fa fa-address-book"></i>AUDITORIA</a>
+                    <a @click="showDivAuditoria()"><i class="fa fa-address-book"></i>AUDITORIA</a>
                 </li>
                 <li>
                     <a onclick="showDivModificar()"><i class="fa fa-area-chart"></i>REPORTES Y GRÁFICAS</a>
@@ -73,6 +73,7 @@
                     <button @click="sumarPainacion()" id="siguiente">Siguiente</button>
                 </ul>
             </div>
+        </div>
             <ModalRegistro v-show="mostrarModal" @close="closeModal"> </ModalRegistro>
             <ModalModificar v-show="mostrarModalModificar" @close="closeModalModificar">
                 <template v-slot:body>
@@ -137,9 +138,29 @@
                     <button id="modificar" @click="botonModificar(usuarioModificar)">MODIFICAR USUARIO</button>
                 </template>
             </ModalModificar>
-        </div>
-        <div id="auditoria" style="display: none;">
-            ESTE ES EL PANEL DE AUDITORIA
+        <div id="auditoria" style="display: none;" class="audi">
+                    <h1>AUDITORIA DE LA APLICACIÓN</h1>
+                    <table>
+                    <thead>
+                        <th>ID</th><th>FECHA</th><th>TIPO</th><th>USUARIO AFECTADO</th><th>USUARIO</th><th>IP</th>
+                    </thead>
+                    <tr v-for="(auditoria, index) in listaAuditoria"
+                v-if="index >= nActualAuditoria*nPaginacionAuditoria && index < (nActualAuditoria*nPaginacionAuditoria)+nPaginacionAuditoria"
+                :key="auditoria.id">
+                        <td>{{auditoria.id}}</td>
+                        <td>{{auditoria.fecha}}</td>
+                        <td>{{auditoria.tipo}}</td>
+                        <td>{{auditoria.usuario_cambio}}</td>
+                        <td>{{auditoria.usuario_realiza}}</td>
+                        <td>{{auditoria.ip}}</td>
+                    </tr>
+                    </table>
+                     <div id="paginacion">
+                <ul>
+                    <button @click="restarPaginacionAuditoria()" id="anterior">Anterior</button>
+                    <button @click="sumarPaginacionAuditoria()" id="siguiente">Siguiente</button>
+                </ul>
+            </div>
         </div>
     </div>
 </template>
@@ -157,6 +178,8 @@ export default {
         return{
             nPaginacion : 4 ,
             nActual: 0,
+            nPaginacionAuditoria : 8 ,
+            nActualAuditoria: 0,
             mostrarModal: false,
             mostrarModalModificar: false,
             usuarioModificar: '',
@@ -167,10 +190,10 @@ export default {
             username: '',
             clave:'',
             confirma:'',
-            rh: 'o+',
-            sexo: 'M',
+            rh: '',
+            sexo: '',
             tId: 1,
-            id: '3178847957',
+            id: '',
             correo: ''
         }
     },
@@ -236,7 +259,7 @@ export default {
         }
     },
     computed:{
-        ...mapState(['usuario', 'listaUsuarios']),
+        ...mapState(['usuario', 'listaUsuarios','listaAuditoria']),
     },
     methods:{
         cerrarSesion(){
@@ -245,13 +268,20 @@ export default {
         },
         showDivInfo(){
             document.getElementById('verinformacion').style.display='';
-            document.getElementById('usuarios').style.display='none';
+            document.getElementById('usuarios').style.display='None';
+            document.getElementById('auditoria').style.display='None';
         },
         showDivUsuarios(){
-            document.getElementById('verinformacion').style.display='None';
+            document.getElementById('verinformacion').style.display='none';
             document.getElementById('usuarios').style.display='';
+            document.getElementById('auditoria').style.display='none';
         },
-        ...mapActions(['getListaUsuarios','eliminarUsuario','modificarUsuario']),
+        showDivAuditoria(){
+            document.getElementById('verinformacion').style.display='None';
+            document.getElementById('usuarios').style.display='None';
+            document.getElementById('auditoria').style.display='';
+        },
+        ...mapActions(['getListaUsuarios','eliminarUsuario','modificarUsuario','getAuditoria']),
         restarPaginacion(){
             if(this.nActual > 0){
                 this.nActual--;
@@ -260,6 +290,16 @@ export default {
         sumarPainacion(){
             if((this.nActual*this.nPaginacion)+this.nPaginacion < this.listaUsuarios.length){
                 this.nActual++;
+            }
+        },
+        restarPaginacionAuditoria(){
+            if(this.nActualAuditoria > 0){
+                this.nActualAuditoria--;
+            }
+        },
+        sumarPaginacionAuditoria(){
+            if((this.nActualAuditoria*this.nPaginacionAuditoria)+this.nPaginacionAuditoria < this.listaAuditoria.length){
+                this.nActualAuditoria++;
             }
         },
         eliminar(usuario){
@@ -330,6 +370,7 @@ export default {
     },
     mounted(){
         this.getListaUsuarios()
+        this.getAuditoria()
     },
 }
 </script>
@@ -518,6 +559,37 @@ ul li:hover a{
 }
 #paginacion button:hover{
     background-color: gray;
+    color: white;
+}
+.audi h1{
+    text-align: left;
+    padding-left: 30px;
+}
+
+.audi table{
+    width: 80%;
+    background-color: white;
+    text-align: left;
+    color: black;
+    top: 20%;
+    left:11px;
+    border-collapse: collapse;
+    position: fixed;
+}
+
+.audi th,td{
+    padding: 15px;
+}
+.audi thead{
+    background-color: #063146;
+    color: white;
+    border-bottom: solid 5px black;
+}
+.audi tr:nth-child(even){
+    background-color: #ddd;
+}
+.audi tr:hover{
+    background-color: #063146;
     color: white;
 }
 </style>

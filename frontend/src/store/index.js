@@ -8,6 +8,7 @@ export default new Vuex.Store({
   state: {
     usuario: '',
     listaUsuarios: [],
+    listaAuditoria: [],
   },
   mutations: {
     storeToken(state, data){
@@ -26,7 +27,10 @@ export default new Vuex.Store({
     },
     agregarUsuario(state, usuario){
       state.listaUsuarios.push(usuario)
-    }
+    },
+    setAuditoria(state,lista){
+      state.listaAuditoria = lista
+    },
   },
   actions: {
     async getUsuario(context, datos){
@@ -42,10 +46,22 @@ export default new Vuex.Store({
     },
     async getListaUsuarios(context){
       const req = await fetch('http://127.0.0.1:8000/api/usuarios/')
+      if (req.status === 200){
+        const datos = await req.json()
+        context.commit('setListaUsuarios', datos)
+      }
+    },
+    async getAuditoria(context){
+      const req = await fetch('http://127.0.0.1:8000/api/auditoria/',{
+      method : 'GET',
+      headers: {
+        'Authorization': `Bearer ${window.localStorage.getItem('token')}`
+      }
+    })
       console.log(req)
       if (req.status === 200){
-        const datosUsuario = await req.json()
-        context.commit('setListaUsuarios', datosUsuario)
+        const datosAuditoria = await req.json()
+        context.commit('setAuditoria', datosAuditoria)
       }
     },
     async autenticar(context, datos){
@@ -93,6 +109,7 @@ export default new Vuex.Store({
       })
       if (req.status === 200){
         await context.dispatch('getListaUsuarios')
+        await context.dispatch('getAuditoria')
         return 'Se ha eliminado el usuario correctamente'
       }
       if (req.status === 401){
