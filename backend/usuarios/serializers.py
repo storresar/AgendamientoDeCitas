@@ -49,7 +49,7 @@ class usuario_login_serializer(serializers.Serializer):
         return self.context['user'], token
 
 
-class pacienteSerializer(serializers.ModelSerializer):
+class paciente_serializer(serializers.ModelSerializer):
     
     class Meta:
         model = paciente

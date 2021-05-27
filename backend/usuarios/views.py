@@ -1,6 +1,6 @@
 from .utilities import get_token_for_user
 from rest_framework import viewsets
-from .serializers import usuario_serializer, usuario_login_serializer, pacienteSerializer
+from .serializers import usuario_serializer, usuario_login_serializer, paciente_serializer
 from .models import usuario,paciente
 from .permissions import IsUserOrAdmin
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
@@ -120,17 +120,35 @@ def verificar_captcha(request):
     if result['success']:
         return Response(True, status=r.status_code)
     else:
-        request.recaptcha_is_valid = False
         return Response(False, status=r.status_code)
 
 class paciente_view(viewsets.ModelViewSet):
 
     queryset = paciente.objects.all()
-    serializer_class = pacienteSerializer
+    serializer_class = paciente_serializer
 
 
     def retrieve(self, request, pk=None):
         queryset = paciente.objects.filter(usuario_p=pk)
         user = get_object_or_404(queryset)
-        serializer = pacienteSerializer(user)
+        serializer = paciente_serializer(user)
         return Response(serializer.data)
+
+    def update(self, request, pk=None):
+
+        queryset = paciente.objects.filter(usuario_p=pk)
+        user = get_object_or_404(queryset)
+        serializer = paciente_serializer(user, data=request.data)
+        if serializer.is_valid(raise_exception=False):
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+
+    def destroy(self, request, pk=None):
+        queryset = paciente.objects.filter(usuario_p=pk)
+        user = get_object_or_404(queryset)
+        serializer = paciente_serializer(user, data=request.data)
+        if serializer.is_valid(raise_exception=False):
+            serializer.delete()
+            return Response('Eliminado')
+        return Response(serializer.errors)
