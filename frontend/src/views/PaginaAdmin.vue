@@ -10,13 +10,13 @@
                     <a @click="showDivUsuarios()"><i class="fa fa-users"></i>GESTIÓN DE USUARIOS</a>
                 </li>
                 <li>
-                    <a onclick="showDivModificar()"><i class="fa fa-calendar"></i>GESTIÓN DE CITAS</a>
+                    <a onclick=""><i class="fa fa-calendar"></i>GESTIÓN DE CITAS</a>
                 </li>
                 <li>
                     <a @click="showDivAuditoria()"><i class="fa fa-address-book"></i>AUDITORIA</a>
                 </li>
                 <li>
-                    <a onclick="showDivModificar()"><i class="fa fa-area-chart"></i>REPORTES Y GRÁFICAS</a>
+                    <a onclick=""><i class="fa fa-area-chart"></i>REPORTES Y GRÁFICAS</a>
                 </li>
                 <li>
                     <a @click="cerrarSesion()"><i class="fa fa-sign-out"></i>CERRAR SESIÓN</a>
@@ -24,7 +24,7 @@
             </ul>
         </div>
         <div id="verinformacion" class="info">
-            <H1>INFORMACIÓN</H1>
+            <h1>INFORMACIÓN</h1>
             <img src="https://www.softzone.es/app/uploads/2018/04/guest.png" alt="">
             <div class="detalle">
                 <table>
@@ -49,22 +49,22 @@
         </div>
         <div id="usuarios" style="display: none;" class="listaUsu">
                 <h1>LISTA DE USUARIOS EN EL SISTEMA</h1>
-                <button id="agregar" @click="showModal">AGREGAR USUARIO</button>
+                <button id="agregar" @click="mostrarModal = true">AGREGAR USUARIO</button>
                 <table>
                 <thead>
                     <th>ID</th><th>NOMBRE</th><th>EMAIL</th><th>USUARIO</th><th>FECHA NACIMIENTO</th><th>ROL</th><th>MODIFICAR</th><th>ELIMINAR</th>
                 </thead>
-                <tr v-for="(usuario, index) in listaUsuarios"
+                <tr v-for="(usuarioL, index) in listaUsuarios"
                 v-if="index >= nActual*nPaginacion && index < (nActual*nPaginacion)+nPaginacion"
-                :key="usuario.id">
-                    <td>{{usuario.id}}</td>
-                    <td>{{usuario.first_name}} {{usuario.last_name}}</td>
-                    <td>{{usuario.email}}</td>
-                    <td>{{usuario.username}}</td>
-                    <td>{{usuario.fecha_nacimiento}}</td>
-                    <td>{{usuario.rol}}</td>
-                    <td><button id="modificar" @click="modificar(usuario)"><i class="fa fa-pencil"></i>Modificar</button></td>
-                    <td><button id="eliminar" @click="eliminar(usuario.username)"><i class="fa fa-times"></i>Eliminar</button></td>
+                :key="usuarioL.id">
+                    <td>{{usuarioL.id}}</td>
+                    <td>{{usuarioL.first_name}} {{usuario.last_name}}</td>
+                    <td>{{usuarioL.email}}</td>
+                    <td>{{usuarioL.username}}</td>
+                    <td>{{usuarioL.fecha_nacimiento}}</td>
+                    <td>{{usuarioL.rol}}</td>
+                    <td><button id="modificar" @click="modificar(usuarioL)"><i class="fa fa-pencil"></i>Modificar</button></td>
+                    <td><button id="eliminar" @click="eliminar(usuarioL.username)"><i class="fa fa-times"></i>Eliminar</button></td>
                 </tr>
             </table>
             <div id="paginacion">
@@ -74,70 +74,12 @@
                 </ul>
             </div>
         </div>
-            <ModalRegistro v-show="mostrarModal" @close="closeModal"> </ModalRegistro>
-            <ModalModificar v-show="mostrarModalModificar" @close="closeModalModificar">
-                <template v-slot:body>
-                    <label>Nombre:</label>
-                    <br>
-                    <input type="text" v-model.trim="$v.nombre.$model" id="nombre"  autocomplete="off">
-                    <div class="error" v-if="!$v.nombre.required">Este campo es requerido</div>
-                    <br>
-                    <label>Apellido:</label>
-                    <br>
-                    <input type="text" v-model.trim="$v.apellido.$model" id="apellido"  autocomplete="off">
-                    <div class="error" v-if="!$v.apellido.required">Este campo es requerido</div>
-                    <br>
-                    <label>Fecha Nacimiento:</label>
-                    <br>
-                    <input type="date" v-model.trim="$v.fecha.$model" id="fecha">
-                    <div class="error" v-if="!$v.fecha.required">Este campo es obligatorio</div>
-                    <br>
-                    <label for="">Usuario:</label>
-                    <br>
-                    <input type="text" v-model.trim="$v.username.$model" id="usuario"  autocomplete="off">
-                    <div class="error" v-if="!$v.username.required">Este campo requiere minimo 8 caracteres</div>
-                    <br>
-                    <label for="">Contraseña</label>
-                    <br>
-                    <input type="password" v-model.trim="$v.clave.$model" id="">
-                    <div class="error" v-if="!$v.clave.minLength">Este campo requiere minimo 8 caracteres</div>
-                    <br>
-                    <label for="">Confima la contraseña</label>
-                    <input type="password" v-model.trim="$v.confirma.$model" id="">
-                    <div class="error" v-if="!$v.confirma.required">Este campo es obligatorio</div>
-                    <div class="error" v-if="!$v.confirma.sameAsClave">Las claves no coinciden</div>
-                    <br>
-                    <label for="">Tipo Usuario</label>
-                    <br>
-                        <select v-model="tipo_usuario" @change="isPaciente">
-                            <option value="1">PACIENTE</option>
-                            <option value="2">FUNCIONARIO</option>
-                            <option value="3">ADMINISTRADOR</option>
-                        </select>
-                    <div v-if="tipo_usuario == 1" class="if-paciente">
-                    <label for="">RH</label>
-                    <input type="text" v-model.trim="$v.rh.$model" id="">
-                    <div class="error" v-if="!$v.rh.required">Este campo es obligatorio</div>
-                    <label for="">Sexo</label>
-                    <select v-model="sexo">
-                        <option value="M">Masculino</option>
-                        <option value="F">Femenino</option>
-                    </select>
-                    <label for="">Tipo de identificacion</label>
-                    <select v-model="tId">
-                        <option value="1">Cedula</option>
-                        <option value="2">Tarjeta de Identidad</option>
-                        <option value="3">Pasaporte</option>
-                    </select>
-                    <label for="">Identificacion</label>
-                    <input type="text" v-model.trim="$v.id.$model" id="">
-                    <div class="error" v-if="!$v.id.required">Este campo es obligatorio</div>
-                </div>
-                </template>
-                <template v-slot:footer>
-                    <button id="modificar" @click="botonModificar(usuarioModificar)">MODIFICAR USUARIO</button>
-                </template>
-            </ModalModificar>
+        <ModalRegistro v-show="mostrarModal" @close="mostrarModal = false"/>
+        <ModalModificar
+        v-if="mostrarModalModificar"
+        @close="mostrarModalModificar = false"
+        :usuario="usuarioModificar"
+        :paciente="pacienteModificar"/>
         <div id="auditoria" style="display: none;" class="audi">
                     <h1>AUDITORIA DE LA APLICACIÓN</h1>
                     <table>
@@ -145,8 +87,8 @@
                         <th>ID</th><th>FECHA</th><th>TIPO</th><th>USUARIO AFECTADO</th><th>USUARIO</th><th>IP</th>
                     </thead>
                     <tr v-for="(auditoria, index) in listaAuditoria"
-                v-if="index >= nActualAuditoria*nPaginacionAuditoria && index < (nActualAuditoria*nPaginacionAuditoria)+nPaginacionAuditoria"
-                :key="auditoria.id">
+                    v-if="index >= nActualAuditoria*nPaginacionAuditoria && index < (nActualAuditoria*nPaginacionAuditoria)+nPaginacionAuditoria"
+                    :key="auditoria.id">
                         <td>{{auditoria.id}}</td>
                         <td>{{auditoria.fecha}}</td>
                         <td>{{auditoria.tipo}}</td>
@@ -172,7 +114,6 @@
 import { mapState, mapActions } from 'vuex'
 import ModalRegistro from '../components/ModalRegistro.vue'
 import ModalModificar from '../components/ModalModificar.vue'
-import { required,minLength, sameAs } from 'vuelidate/lib/validators'
 export default {
     data(){
         return{
@@ -182,86 +123,20 @@ export default {
             nActualAuditoria: 0,
             mostrarModal: false,
             mostrarModalModificar: false,
-            usuarioModificar: '',
-            nombre: '',
-            apellido: '',
-            fecha: '',
-            tipo_usuario: '',
-            username: '',
-            clave:'',
-            confirma:'',
-            rh: '',
-            sexo: '',
-            tId: 1,
-            id: '',
-            correo: ''
+            usuarioModificar : '',
+            pacienteModificar : '',
         }
     },
     components:{
         ModalRegistro,
         ModalModificar
     },
-    validations(){
-        if(this.tipo_usuario === '1'){
-            return{
-                nombre: {
-                    required
-                },
-                apellido: {
-                    required
-                },
-                fecha:{
-                    required
-                },
-                username:{
-                    required
-                },
-                clave:{
-                    required,
-                    minLength: minLength(8)
-                },
-                confirma: {
-                    required,
-                    sameAsClave: sameAs('clave')
-                },
-                rh: {
-                    required,
-                },
-                id: {
-                    required,
-                },
-            }
-        }else{
-            return{
-                nombre: {
-                    required
-                },
-                apellido: {
-                    required
-                },
-                fecha:{
-                    required
-                },
-                username:{
-                    required
-                },
-                clave:{
-                    required,
-                    minLength: minLength(8)
-                },
-                confirma: {
-                    required,
-                    sameAsClave: sameAs('clave')
-                },
-                rh:{},
-                id:{},
-            }
-        }
-    },
+
     computed:{
-        ...mapState(['usuario', 'listaUsuarios','listaAuditoria']),
+        ...mapState(['usuario', 'listaUsuarios','listaAuditoria', 'paciente']),
     },
     methods:{
+        ...mapActions(['getPaciente','getListaUsuarios','eliminarUsuario','modificarUsuario','getAuditoria']),
         cerrarSesion(){
             window.localStorage.clear()
             this.$router.push({name:'Home'})
@@ -281,7 +156,6 @@ export default {
             document.getElementById('usuarios').style.display='None';
             document.getElementById('auditoria').style.display='';
         },
-        ...mapActions(['getListaUsuarios','eliminarUsuario','modificarUsuario','getAuditoria']),
         restarPaginacion(){
             if(this.nActual > 0){
                 this.nActual--;
@@ -305,68 +179,33 @@ export default {
         eliminar(usuario){
             this.eliminarUsuario(usuario)
             .then(msg => this.$alert(msg,'Usuario elminado correctamente','success'))
-            .catch(msg => this.$alert(msg,'Ha ocurrido un error','warning'))
-        },
-        showModal() {
-            this.mostrarModal = true;
-        },
-        closeModal() {
-            this.mostrarModal = false;
-        },
-        showModalModificar() {
-            this.mostrarModalModificar = true;
-        },
-        closeModalModificar() {
-            this.mostrarModalModificar = false;
+            .catch(msg => this.$alert(msg,'Ha ocurrido un error','error'))
         },
         modificar(usuario){
-            this.nombre = usuario.first_name
-            this.apellido = usuario.last_name
-            this.fecha = usuario.fecha_nacimiento
-            this.username = usuario.username
-            this.correo = usuario.email
-            if(usuario.rol === 1){
-                this.tipo_usuario = '1'
-            }else if(usuario.rol === 2) {
-                this.tipo_usuario = '2'
-            }else{
-                this.tipo_usuario = '3'
-            }
-            this.showModalModificar()
             this.usuarioModificar = usuario
-        },
-        botonModificar(usuarioNuevo){
-            this.$v.$touch()
-            if (this.$v.$invalid){
-                this.$alert('Llene los datos adecuadamente','Error en el formulario','warning')
-            } else{
-                const usuario = {
-                'username':this.usuario,
-                'password': this.clave,
-                'first_name': this.nombre,
-                'last_name': this.apellido,
-                'email': this.correo,
-                'fecha_nacimiento': this.fecha,
-                'rol': parseInt(this.tipo_usuario),
+            console.log(this.usuarioModificar)
+            if (this.usuarioModificar.rol === 1) {
+                this.getPaciente(this.usuarioModificar.id)
+                .then(() => {
+                    this.pacienteModificar = this.paciente
+                    this.mostrarModalModificar = true
+                })
+                .catch(msg => {
+                    this.$alert(msg,'Ha ocurrido un error','error')
+                    this.mostrarModalModificar = false
+                })
+            } else {
+                this.pacienteModificar = {
+                    RH : '',
+                    sexo: 'M',
+                    numero_identificacion : '',
+                    tipo_identificacion: '',
+                    usuario_p: this.usuarioModificar.id,
                 }
-                var paciente = {}
-                if (usuario.rol === 1){
-                    paciente = {
-                        'usuario_p' : null,
-                        'RH': this.rh,
-                        'sexo': this.sexo,
-                        'numero_identificacion': this.id,
-                        'tipo_identificacion': parseInt(this.tId)
-                    }
-                }
-                this.usuarioModificar = usuarioNuevo
-                
-                this.modificarUsuario({'usuario': usuario, 'paciente': paciente})
-                .then(msg => this.$alert(msg,'Usuario modificado correctamente','success'))
-                .catch(msg => this.$alert(msg,'Ha ocurrido un error','warning'))
-                this.mostrarModalModificar = false;
+                this.mostrarModalModificar = true
             }
         },
+        
     },
     mounted(){
         this.getListaUsuarios()

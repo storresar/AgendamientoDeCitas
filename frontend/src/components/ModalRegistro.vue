@@ -3,32 +3,27 @@
     <div class="modal-backdrop">
         <div class="modal">
         <header class="modal-header">
-            <slot name="header">
-            AGREGAR USUARIO
-            </slot>
+            <strong>AGREGAR USUARIO</strong>
             <button
             type="button"
             class="btn-close"
             @click="close"
-            >
-            x
-            </button>
+            >X</button>
         </header>
-
         <section class="modal-body">
             <slot name="body">
                 <label for="">Usuario:</label>
-                <input type="text" v-model.trim="$v.usuario.$model" id="usuario"  autocomplete="off">
-                <div class="error" v-if="!$v.usuario.minLength">Este campo requiere minimo 8 caracteres</div>
+                <input type="text" v-model.trim="$v.nombreUsuario.$model" id="usuario"  autocomplete="off">
+                <div class="error" v-if="!$v.nombreUsuario.minLength">Este campo requiere minimo 8 caracteres</div>
                 <label for="">Correo:</label>
                 <input type="text" v-model.trim="$v.correo.$model" id="usuario"  autocomplete="off">
                 <div class="error" v-if="!$v.correo.email">Este correo es invalido</div>
                 <label>Nombre:</label>
                 <input type="text" v-model.trim="$v.nombre.$model" id="nombre"  autocomplete="off">
-                <div class="error" v-if="!$v.nombre.minLength">Este campo requiere minimo 8 caracteres</div>
+                <div class="error" v-if="!$v.nombre.minLength">Este campo requiere minimo 3 caracteres</div>
                 <label>Apellido:</label>
                 <input type="text" v-model.trim="$v.apellido.$model" id="apellido"  autocomplete="off">
-                <div class="error" v-if="!$v.apellido.minLength">Este campo requiere minimo 8 caracteres</div>
+                <div class="error" v-if="!$v.apellido.minLength">Este campo requiere minimo 3 caracteres</div>
                 <label>Fecha Nacimiento:</label>
                 <input type="date" v-model.trim="$v.fecha.$model" id="fecha">
                 <div class="error" v-if="!$v.fecha.required">Este campo es obligatorio</div>
@@ -84,94 +79,60 @@ export default {
     name: 'Modal',
     data(){
         return{
-            nombre: 'Pipe',
-            apellido: 'Pelaez',
+            nombre: '',
+            apellido: '',
             fecha: '',
-            usuario: 'ppelaez123',
-            correo: 'ppelaez@gmail.com',
-            clave: '123456789',
-            confirma: '123456789',
-            tipo_usuario: 2,
-            rh: 'o+',
+            nombreUsuario: '',
+            correo: '',
+            clave: '',
+            confirma: '',
+            tipo_usuario: '1',
+            rh: '',
             sexo: 'M',
             tId: 1,
-            id: '3178847957',
+            id: '',
         }
     },
-    validations() {
-        console.log(this.tipo_usuario)
-        if (this.tipo_usuario === '1'){
-            console.log('Paciente')
-            return{
-                nombre: {
-                    required,
-                    minLength: minLength(2)
-                },
-                apellido: {
-                    required,
-                    minLength: minLength(2)
-                },
-                fecha: {
-                    required,
-                },
-                usuario: {
-                    required,
-                    minLength: minLength(8)
-                },
-                clave: {
-                    required,
-                    minLength: minLength(8)
-                },
-                confirma: {
-                    required,
-                    sameAsClave: sameAs('clave')
-                },
-                correo: {
-                    required,
-                    email
-                },
-                rh: {
-                    required,
-                },
-                id: {
-                    required,
-                },
+    validations(){
+        const validaciones = {
+            nombre: {
+                required,
+                minLength: minLength(3)
+            },
+            apellido: {
+                required,
+                minLength: minLength(3),
+            },
+            fecha:{
+                required
+            },
+            nombreUsuario:{
+                required,
+                minLength: minLength(8),
+            },
+            correo: {
+                email
+            },
+            clave:{
+                required,
+                minLength: minLength(8)
+            },
+            confirma: {
+                required,
+                sameAsClave: sameAs('clave')
+            },
+            rh:{},
+            id:{},
+        }
+        if(this.tipo_usuario === '1'){
+            validaciones.rh = {
+                required,
+            }
+            validaciones.id = {
+                required,
             }
         }
-        else{
-            return{
-                nombre: {
-                    required,
-                    minLength: minLength(2)
-                },
-                apellido: {
-                    required,
-                    minLength: minLength(2)
-                },
-                fecha: {
-                    required,
-                },
-                usuario: {
-                    required,
-                    minLength: minLength(8)
-                },
-                clave: {
-                    required,
-                    minLength: minLength(8)
-                },
-                confirma: {
-                    required,
-                    sameAsClave: sameAs('clave')
-                },
-                correo: {
-                    required,
-                    email
-                },
-                rh:{},
-                id:{},
-            }
-        }
-        
+        return validaciones      
     },
     methods: {
         ...mapActions(['crearUsuario']),
@@ -182,7 +143,7 @@ export default {
             } else {
                 // Peticion create
                 const usuario = {
-                'username':this.usuario,
+                'username':this.nombreUsuario,
                 'password': this.clave,
                 'first_name': this.nombre,
                 'last_name': this.apellido,

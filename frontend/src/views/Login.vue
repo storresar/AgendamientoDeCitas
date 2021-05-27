@@ -9,7 +9,9 @@
         <VueRecaptcha class="captcha"
         sitekey="6LdY2egaAAAAAInX0sJZ8urUHpBWb9isu9arAqP_"
         :loadRecaptchaScript="true"
-        @verify="onVerify">
+        @verify="onVerify"
+        @expired="verificado=false"
+        theme="Dark">
         </VueRecaptcha>
         <button class="boton" @click="mandarDatos()">Ingresar</button>
 

@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import router from '../router/index.js';
 
 Vue.use(Vuex)
 
@@ -24,12 +23,12 @@ export default new Vuex.Store({
     },
     setListaUsuarios(state, usuarios){
       state.listaUsuarios = usuarios.filter((usuario) => usuario.id != state.usuario.id)
-      console.log(state.listaUsuarios)
     },
     agregarUsuario(state, usuario){
       state.listaUsuarios.push(usuario)
     },
     setPaciente(state, paciente){
+      console.log(paciente)
       state.paciente = paciente
     },
     setAuditoria(state,lista){
@@ -61,19 +60,24 @@ export default new Vuex.Store({
           'Authorization': `Bearer ${window.localStorage.getItem('token')}`
         }
       })
-      console.log(req)
       if (req.status === 200){
         const datos = await req.json()
         context.commit('setAuditoria', datos)
       }
     },
     async getPaciente(context, idUsuario){
-      const req = await fetch(`http://127.0.0.1:8000/api/usuarios/${idUsuario}`)
-      console.log(req, 'puede ser pa')
+      console.log(idUsuario)
+      const req = await fetch(`http://127.0.0.1:8000/api/pacientes/${idUsuario}`,{
+        method : 'GET',
+        headers: {
+          'Authorization': `Bearer ${window.localStorage.getItem('token')}`
+        }
+      })
       if (req.status === 200){
         const datosPaciente = await req.json()
         context.commit('setPaciente', datosPaciente)
-        
+      } else{
+        throw 'Error al cargar el paciente'
       }
     },
     async autenticar(context, datos){
@@ -88,7 +92,6 @@ export default new Vuex.Store({
         const data = await req.json()
         context.commit('storeToken', {token:data.token, username:data.usuario.username})
         context.commit('setUsuario', data.usuario)
-        router.push({name:'Admin'})
       }
       if (req.status === 401){
         throw 'Error de Autenticación'
@@ -129,22 +132,25 @@ export default new Vuex.Store({
       }
     },
     async modificarUsuario(context, datos){
-      const usuario = datos.usuario
-      const req = await fetch(`http://127.0.0.1:8000/api/usuarios/${usuarioNuevo.username}/`,{
+      const usuarioM = datos.usuario
+      const pacienteM = datos.paciente
+      const req = await fetch(`http://127.0.0.1:8000/api/usuarios/${usuarioM.username}/`,{
         method : 'PUT',
         headers : {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${window.localStorage.getItem('token')}`
         },
-        body: JSON.stringify(usuarioNuevo)
+        body: JSON.stringify(usuarioM)
       })
       
       if (req.status === 200){
-        const usuario_r = await req.json()
         await context.dispatch('getListaUsuarios')
-        if(usuarioNuevo.rol === 1){
-          datos.paciente.usuario_p = usuario_r.id
-          await context.dispatch('modificarPaciente', usuario_r)
+        if(usuarioM.rol === 1){
+          if(pacienteM.id){
+            await context.dispatch('modificarPaciente', pacienteM)
+          } else {
+            await context.dispatch('crearPaciente', pacienteM)
+          }
         }
         return 'Se ha modificado el usuario correctamente'
       }
@@ -178,7 +184,6 @@ export default new Vuex.Store({
       }
     },
     async crearPaciente(context, paciente){
-      console.log(paciente)
       const req = await fetch('http://127.0.0.1:8000/api/pacientes/', {
         method : 'POST',
         headers: {
@@ -187,17 +192,17 @@ export default new Vuex.Store({
         },
         body: JSON.stringify(paciente)
       })
-      console.log(req)
     },
-    async modificarPaciente(context, pacienteNuevo){
-      const req = await fetch(`http://127.0.0.1:8000/api/usuarios/${pacienteNuevo.usuario_p}/`,{
+    async modificarPaciente(context, datos){
+      const req = await fetch(`http://127.0.0.1:8000/api/pacientes/${datos.usuario_p}/`,{
         method : 'PUT',
         headers : {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${window.localStorage.getItem('token')}`
         },
-        body: JSON.stringify(pacienteNuevo)
+        body: JSON.stringify(datos)
       })
+      console.log(req)
     }
   }
 })
