@@ -13,54 +13,71 @@
 
         <section class="modal-body">
             <label for="">Usuario:</label>
-            <input type="text" v-model.trim="$v.nombreUsuario.$model" id="usuario"  autocomplete="off">
-            <div class="error" v-if="!$v.nombreUsuario.required">Este campo requiere minimo 8 caracteres</div>
-            <label for="">Correo:</label>
-            <input type="text" v-model.trim="$v.correo.$model" id="usuario"  autocomplete="off">
-            <div class="error" v-if="!$v.correo.email">Este correo es invalido</div>
-            <label>Nombre:</label>
-            <input type="text" v-model.trim="$v.nombre.$model" id="nombre"  autocomplete="off">
-            <div class="error" v-if="!$v.nombre.required">Este campo es requerido</div>
-            <label>Apellido:</label>
-            <input type="text" v-model.trim="$v.apellido.$model" id="apellido"  autocomplete="off">
-            <div class="error" v-if="!$v.apellido.required">Este campo es requerido</div>
-            <label>Fecha Nacimiento:</label>
-            <input type="date" v-model.trim="$v.fecha.$model" id="fecha">
-            <div class="error" v-if="!$v.fecha.required">Este campo es obligatorio</div>
-            <label for="">Contraseña</label>
-            <input type="password" v-model.trim="$v.clave.$model" id="">
-            <div class="error" v-if="!$v.clave.minLength">Este campo requiere minimo 8 caracteres</div>
-            <label for="">Confima la contraseña</label>
-            <input type="password" v-model.trim="$v.confirma.$model" id="">
-            <div class="error" v-if="!$v.confirma.required">Este campo es obligatorio</div>
-            <div class="error" v-if="!$v.confirma.sameAsClave">Las claves no coinciden</div>
-            <label for="">Estado Usuario</label>
-            <input type="checkbox" name="" id="" v-model="estado">
-            <label for="">Tipo Usuario</label>
-            <select v-model="tipo_usuario" @change="changePaciente()">
-                <option value="1">PACIENTE</option>
-                <option value="2">FUNCIONARIO</option>
-                <option value="3">ADMINISTRADOR</option>
-            </select>
-            <div v-if="tipo_usuario == 1" class="if-paciente">
-                <label for="">RH</label>
-                <input type="text" v-model.trim="$v.rh.$model" id="">
-                <div class="error" v-if="!$v.rh.required">Este campo es obligatorio</div>
-                <label for="">Sexo</label>
-                <select v-model="sexo">
-                    <option value="M">Masculino</option>
-                    <option value="F">Femenino</option>
+                <input type="text" v-model.trim="$v.nombreUsuario.$model" id="usuario"  autocomplete="off" readonly>
+                <div class="error" v-if="!$v.nombreUsuario.minLength">Este campo requiere minimo 8 caracteres</div>
+                <div class="error" v-if="!$v.nombreUsuario.contieneMayuscula">Tiene que escribir todo en minuscula</div>
+                <label for="">Correo:</label>
+                <input type="text" v-model.trim="$v.correo.$model" id="usuario"  autocomplete="off" readonly>
+                <div class="error" v-if="!$v.correo.email">Este correo es invalido</div>
+                <label>Nombre:</label>
+                <input type="text" v-model.trim="$v.nombre.$model" id="nombre"  autocomplete="off">
+                <div class="error" v-if="!$v.nombre.minLength">Este campo requiere minimo 3 caracteres</div>
+                <div class="error" v-if="!$v.nombre.noNumeros">No se admiten numeros</div>
+                <div class="error" v-if="!$v.nombre.noCaracteresEspeciales">No se admiten caracteres especiales</div>
+                <label>Apellido:</label>
+                <input type="text" v-model.trim="$v.apellido.$model" id="apellido"  autocomplete="off">
+                <div class="error" v-if="!$v.apellido.minLength">Este campo requiere minimo 8 caracteres</div>
+                <div class="error" v-if="!$v.apellido.noNumeros">No se admiten numeros</div>
+                <div class="error" v-if="!$v.apellido.noCaracteresEspeciales">No se admiten caracteres especiales</div>
+                <label>Fecha Nacimiento:</label>
+                <input type="date" v-model.trim="$v.fecha.$model" id="fecha" min="1905-01-01">
+                <div class="error" v-if="!$v.fecha.required">Este campo es obligatorio</div>
+                <div class="error" v-if="!$v.fecha.validacionFecha">Esta fecha no es valida</div>
+                <label for="">Contraseña</label>
+                <input type="password" v-model.trim="$v.clave.$model" id="">
+                <div class="error" v-if="!$v.clave.minLength">Este campo requiere minimo 8 caracteres</div>
+                <div class="error" v-if="!$v.clave.esFuerte">La contraseña debe contener una mayuscula, una minuscula y un numero</div>
+                <label for="">Confima la contraseña</label>
+                <input type="password" v-model.trim="$v.confirma.$model" id="">
+                <div class="error" v-if="!$v.confirma.required">Este campo es obligatorio</div>
+                <div class="error" v-if="!$v.confirma.sameAsClave">Las claves no coinciden</div>
+                <label for="">Tipo Usuario</label>
+                <select v-model="tipo_usuario">
+                    <option value="1">PACIENTE</option>
+                    <option value="2">FUNCIONARIO</option>
+                    <option value="3">ADMINISTRADOR</option>
                 </select>
-                <label for="">Tipo de identificacion</label>
-                <select v-model="tId">
-                    <option value="1">Cedula</option>
-                    <option value="2">Tarjeta de Identidad</option>
-                    <option value="3">Pasaporte</option>
-                </select>
-                <label for="">Identificacion</label>
-                <input type="text" v-model.trim="$v.id.$model" id="">
-                <div class="error" v-if="!$v.id.required">Este campo es obligatorio</div>
-            </div>
+                <div v-if="tipo_usuario == 1" class="if-paciente">
+                    <label for="">RH</label>
+                    <select v-model="rh">
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                    </select>
+                    <div class="error" v-if="!$v.rh.required">Este campo es obligatorio</div>
+                    <label for="">Sexo</label>
+                    <select v-model="sexo">
+                        <option value="M">Masculino</option>
+                        <option value="F">Femenino</option>
+                    </select>
+                    <label for="">Tipo de identificacion</label>
+                    <select v-model="tId">
+                        <option value="1">Cedula</option>
+                        <option value="2">Tarjeta de Identidad</option>
+                        <option value="3">Pasaporte</option>
+                    </select>
+                    <label for="">Identificacion</label>
+                    <input type="text" v-model.trim="$v.id.$model" id="">
+                    <div class="error" v-if="!$v.id.minLength">No es una tarjeta valida</div>
+                    <div class="error" v-if="!$v.id.maxLength">No es una tarjeta valida</div>
+                    <div class="error" v-if="!$v.id.contieneMayuscula">No puede ingresar letras</div>
+                    <div class="error" v-if="!$v.id.contieneMinuscula">No puede ingresar letras</div>
+                </div>
         </section>
 
         <footer class="modal-footer">
@@ -73,8 +90,10 @@
 </template>
 
 <script>
-import { required,minLength, sameAs, email } from 'vuelidate/lib/validators'
+import { required,minLength, email, sameAs, maxLength } from 'vuelidate/lib/validators'
 import { mapActions } from 'vuex'
+import { esFuerte,noCaracteresEspeciales,noNumeros,contieneMayuscula,validacionFecha,contieneMinuscula } from '../validators/validator'
+
  
 export default {
     name: 'Modal',
@@ -145,25 +164,32 @@ export default {
         const validaciones = {
             nombre: {
                 required,
-                minLength: minLength(3)
+                minLength: minLength(3),
+                noCaracteresEspeciales,
+                noNumeros,
             },
             apellido: {
                 required,
                 minLength: minLength(3),
+                noCaracteresEspeciales,
+                noNumeros,
             },
             fecha:{
-                required
+                required,
+                validacionFecha,
             },
             nombreUsuario:{
                 required,
                 minLength: minLength(8),
+                contieneMayuscula,
             },
             correo: {
                 email
             },
             clave:{
                 required,
-                minLength: minLength(8)
+                minLength: minLength(8),
+                esFuerte,
             },
             confirma: {
                 required,
@@ -178,6 +204,11 @@ export default {
             }
             validaciones.id = {
                 required,
+                minLength: minLength(8),
+                maxLength: maxLength(10),
+                noCaracteresEspeciales,
+                contieneMayuscula,
+                contieneMinuscula,
             }
         }
         return validaciones  
