@@ -41,7 +41,7 @@ export default {
             const datos = {username:this.nombre, password:this.clave}
             if (this.verificado){
                 this.autenticar(datos)
-                .then(this.$router.push('/admin'))
+                .then(() => this.$router.push('/admin')) 
                 .catch(msg => this.$alert(msg,'Error','warning'))
             } else{
                 this.reloadCaptcha()

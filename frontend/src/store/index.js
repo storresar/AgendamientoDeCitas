@@ -86,7 +86,7 @@ export default new Vuex.Store({
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(datos)
+        body: JSON.stringify(datos),
       })
       if (req.status === 201){
         const data = await req.json()
@@ -110,8 +110,6 @@ export default new Vuex.Store({
       if (req.status !== 200){
         context.commit('deleteToken')
         throw  'Session caducada'
-      } else {
-        await context.dispatch('getUsuario', window.localStorage.getItem('username'))
       }
     },
     async eliminarUsuario(context, nombreUsuario){

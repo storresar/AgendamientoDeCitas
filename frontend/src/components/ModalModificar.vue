@@ -113,7 +113,6 @@ export default {
             sexo: this.paciente.sexo,
             tId: this.paciente.tipo_identificacion,
             id: this.paciente.numero_identificacion,
-            isPaciente: false,
         }
     },
     methods: {
@@ -125,12 +124,6 @@ export default {
             this.$v.$touch()
             if (this.$v.$invalid){
                 this.$alert('Llene los datos adecuadamente','Error en el formulario','warning')
-            }
-        },
-        changePaciente(){
-            this.isPaciente = false
-            if (this.tipo_usuario === '1') {
-                this.isPaciente = true
             }
         },
         submitFormulario(){
@@ -156,6 +149,7 @@ export default {
                 this.modificarUsuario({'usuario': this.usuario, 'paciente': this.paciente})
                 .then(() => this.$alert('Usuario modificado exitosamente','Exito','success'))
                 .catch((err) => this.$alert(err,'Ha ocurrido un error','error'))
+
                 this.close()
             }
         },

@@ -54,9 +54,7 @@
                 <thead>
                     <th>ID</th><th>NOMBRE</th><th>EMAIL</th><th>USUARIO</th><th>FECHA NACIMIENTO</th><th>ROL</th><th>MODIFICAR</th><th>ELIMINAR</th>
                 </thead>
-                <tr v-for="(usuarioL, index) in listaUsuarios"
-                v-if="index >= nActual*nPaginacion && index < (nActual*nPaginacion)+nPaginacion"
-                :key="usuarioL.id">
+                <tr v-for="usuarioL in paginated" :key="usuarioL.id">
                     <td>{{usuarioL.id}}</td>
                     <td>{{usuarioL.first_name}} {{usuario.last_name}}</td>
                     <td>{{usuarioL.email}}</td>
@@ -86,9 +84,7 @@
                     <thead>
                         <th>ID</th><th>FECHA</th><th>TIPO</th><th>USUARIO AFECTADO</th><th>USUARIO</th><th>IP</th>
                     </thead>
-                    <tr v-for="(auditoria, index) in listaAuditoria"
-                    v-if="index >= nActualAuditoria*nPaginacionAuditoria && index < (nActualAuditoria*nPaginacionAuditoria)+nPaginacionAuditoria"
-                    :key="auditoria.id">
+                    <tr v-for="auditoria in paginatedA" :key="auditoria.id">
                         <td>{{auditoria.id}}</td>
                         <td>{{auditoria.fecha}}</td>
                         <td>{{auditoria.tipo}}</td>
@@ -134,6 +130,24 @@ export default {
 
     computed:{
         ...mapState(['usuario', 'listaUsuarios','listaAuditoria', 'paciente']),
+        indexStart() {
+            return this.nActual * this.nPaginacion
+        },
+        indexEnd() {
+            return this.indexStart + this.nPaginacion
+        },
+        paginated() {
+            return this.listaUsuarios.slice(this.indexStart, this.indexEnd)
+        },
+        indexAStart() {
+            return this.nActualAuditoria * this.nPaginacionAuditoria
+        },
+        indexAEnd() {
+            return this.indexAStart + this.nPaginacionAuditoria
+        },
+        paginatedA() {
+            return this.listaAuditoria.slice(this.indexAStart, this.indexAEnd)
+        }
     },
     methods:{
         ...mapActions(['getPaciente','getListaUsuarios','eliminarUsuario','modificarUsuario','getAuditoria']),
