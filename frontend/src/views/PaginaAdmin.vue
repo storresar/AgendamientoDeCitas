@@ -16,7 +16,7 @@
                     <a @click="showDivAuditoria()"><i class="fa fa-address-book"></i>AUDITORIA</a>
                 </li>
                 <li>
-                    <a onclick=""><i class="fa fa-area-chart"></i>REPORTES Y GRÁFICAS</a>
+                    <a @click="showDivGraficas()"><i class="fa fa-area-chart"></i>GRÁFICAS</a>
                 </li>
                 <li>
                     <a @click="cerrarSesion()"><i class="fa fa-sign-out"></i>CERRAR SESIÓN</a>
@@ -46,6 +46,11 @@
                     </tr>
                 </table>
             </div>
+        </div>
+        
+        <div id="graficas" style="display: none;" class="">
+             <h1>GRÁFICAS</h1>
+             <Graficas/>
         </div>
         <div id="usuarios" style="display: none;" class="listaUsu">
                 <h1>LISTA DE USUARIOS EN EL SISTEMA</h1>
@@ -100,6 +105,8 @@
                 </ul>
             </div>
         </div>
+        
+        
     </div>
 </template>
 
@@ -110,9 +117,15 @@
 import { mapState, mapActions } from 'vuex'
 import ModalRegistro from '../components/ModalRegistro.vue'
 import ModalModificar from '../components/ModalModificar.vue'
+import Graficas from '../components/Graficas.vue'
 export default {
     data(){
         return{
+            chartData: {
+        Books: 24,
+        Magazine: 30,
+        Newspapers: 10
+      },
             nPaginacion : 4 ,
             nActual: 0,
             nPaginacionAuditoria : 8 ,
@@ -125,7 +138,8 @@ export default {
     },
     components:{
         ModalRegistro,
-        ModalModificar
+        ModalModificar,
+        Graficas
     },
 
     computed:{
@@ -159,16 +173,25 @@ export default {
             document.getElementById('verinformacion').style.display='';
             document.getElementById('usuarios').style.display='None';
             document.getElementById('auditoria').style.display='None';
+            document.getElementById('graficas').style.display='None';
         },
         showDivUsuarios(){
             document.getElementById('verinformacion').style.display='none';
             document.getElementById('usuarios').style.display='';
             document.getElementById('auditoria').style.display='none';
+            document.getElementById('graficas').style.display='None';
         },
         showDivAuditoria(){
             document.getElementById('verinformacion').style.display='None';
             document.getElementById('usuarios').style.display='None';
             document.getElementById('auditoria').style.display='';
+            document.getElementById('graficas').style.display='None';
+        },
+        showDivGraficas(){
+            document.getElementById('verinformacion').style.display='None';
+            document.getElementById('usuarios').style.display='None';
+            document.getElementById('auditoria').style.display='None';
+            document.getElementById('graficas').style.display='';
         },
         restarPaginacion(){
             if(this.nActual > 0){
