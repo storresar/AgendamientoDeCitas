@@ -1,3 +1,4 @@
+from django.db.models import query
 from .utilities import get_token_for_user
 from rest_framework import viewsets
 from .serializers import usuario_serializer, usuario_login_serializer, paciente_serializer
@@ -26,7 +27,7 @@ class usuario_viewset(viewsets.ModelViewSet):
 
     def update(self, request, pk=None):
         nueva_auditora = auditoria(
-         tipo=request.method,
+         tipo='Actualización usuario',
          usuario_realiza= request.user,
          usuario_cambio=pk,
          ip=request.META.get('REMOTE_ADDR')
@@ -42,7 +43,7 @@ class usuario_viewset(viewsets.ModelViewSet):
 
     def destroy(self, request, pk=None):
         nueva_auditora = auditoria(
-         tipo=request.method,
+         tipo='Eliminación usuario',
          usuario_realiza= request.user,
          usuario_cambio=pk,
          ip=request.META.get('REMOTE_ADDR')
@@ -55,7 +56,7 @@ class usuario_viewset(viewsets.ModelViewSet):
 
     def create(self, request):
         nueva_auditora = auditoria(
-         tipo=request.method,
+         tipo='Creación usuario',
          usuario_realiza= request.user,
          usuario_cambio=request.data['username'],
          ip=request.META.get('REMOTE_ADDR')
@@ -97,7 +98,6 @@ class usuario_viewset(viewsets.ModelViewSet):
 
 @api_view(['POST'])
 def mandar_correo(request):
-    print(request.data)
     usuario_bloqueado = usuario.objects.filter(email=request.data['email'])
     usu = get_object_or_404(usuario_bloqueado)
     nuevo_token = get_token_for_user(usu)
@@ -129,12 +129,37 @@ class paciente_view(viewsets.ModelViewSet):
 
 
     def retrieve(self, request, pk=None):
+
         queryset = paciente.objects.filter(usuario_p=pk)
         user = get_object_or_404(queryset)
         serializer = paciente_serializer(user)
         return Response(serializer.data)
 
+    def create(self, request, *args, **kwargs):
+
+        user = usuario.objects.get(id=request.data.usuario_p)
+
+        nueva_auditora = auditoria(
+         tipo='Creación paciente',
+         usuario_realiza= request.user,
+         usuario_cambio= user.username,
+         ip=request.META.get('REMOTE_ADDR')
+         )
+        nueva_auditora.save()
+        return super().create(request, *args, **kwargs)
+
     def update(self, request, pk=None):
+
+        user = usuario.objects.get(id=pk)
+        print('Siete')
+
+        nueva_auditora = auditoria(
+         tipo='Actualización Paciente',
+         usuario_realiza= request.user,
+         usuario_cambio= user.username,
+         ip=request.META.get('REMOTE_ADDR')
+         )
+        nueva_auditora.save()
 
         queryset = paciente.objects.filter(usuario_p=pk)
         user = get_object_or_404(queryset)
@@ -145,6 +170,16 @@ class paciente_view(viewsets.ModelViewSet):
         return Response(serializer.errors)
 
     def destroy(self, request, pk=None):
+
+        user = usuario.objects.get(id=pk)
+
+        nueva_auditora = auditoria(
+         tipo='Eliminación Paciente',
+         usuario_realiza= request.user,
+         usuario_cambio= user.username,
+         ip=request.META.get('REMOTE_ADDR')
+         )
+        nueva_auditora.save()
         queryset = paciente.objects.filter(usuario_p=pk)
         user = get_object_or_404(queryset)
         serializer = paciente_serializer(user, data=request.data)

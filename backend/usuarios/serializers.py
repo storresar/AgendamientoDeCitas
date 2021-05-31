@@ -29,6 +29,17 @@ class usuario_serializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Correo invalido')
         return nuevo
 
+    def update(self, instance, validated_data):
+        instance.username = validated_data.get('username')
+        instance.password = make_password(validated_data.get('password'))
+        instance.first_name = validated_data.get('first_name')
+        instance.last_name = validated_data.get('last_name')
+        instance.email = validated_data.get('email')
+        instance.fecha_nacimiento = validated_data.get('fecha_nacimiento')
+        instance.activo = validated_data.get('activo')
+        instance.rol = validated_data.get('rol')
+        instance.save()
+        return instance
         
     def get_ultima_activacion(self, instance):
         return int((date.today() - instance.ultima_activacion).days)
