@@ -8,7 +8,28 @@ export default {
     data(){
         return{
             cActivos: 0,
-            cInactivos: 0
+            cInactivos: 0,
+            options: {
+                scales: {
+                    yAxes: [{
+                    stacked: true,
+                    ticks: {
+                        beginAtZero: true,
+                        min: 0,
+                    },
+                    }],
+                    xAxes: [{
+                    stacked: true,
+                    ticks: {
+                        beginAtZero: true,
+                        categoryPercentage: 0.5,
+                        barPercentage: 1,
+                    },
+                    }],
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+            },
         }
     },
     computed: {
@@ -41,7 +62,7 @@ export default {
                 }
                 ]
             },
-            { responsive: true, maintainAspectRatio: false }
+            this.options
             );
     }
     };
