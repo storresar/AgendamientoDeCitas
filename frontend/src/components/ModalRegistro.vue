@@ -34,7 +34,7 @@
                 <div class="error" v-if="!$v.fecha.required">Este campo es obligatorio</div>
                 <div class="error" v-if="!$v.fecha.validacionFecha">Esta fecha no es valida</div>
                 <label for="">Contraseña</label>
-                <input type="password" v-model.trim="$v.clave.$model" id="">
+                <input type="password" v-model.trim="$v.clave.$model" id="" maxlength="8" minlength="5">
                 <div class="error" v-if="!$v.clave.minLength">Este campo requiere minimo 8 caracteres</div>
                 <div class="error" v-if="!$v.clave.esFuerte">La contraseña debe contener una mayuscula, una minuscula y un numero</div>
                 <label for="">Confima la contraseña</label>
@@ -133,6 +133,7 @@ export default {
                 required,
                 minLength: minLength(8),
                 contieneMayuscula,
+                noCaracteresEspeciales
             },
             correo: {
                 email

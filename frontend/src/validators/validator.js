@@ -34,10 +34,10 @@ function esFuerte(clave){
                         }
                         if(mayuscula == true && minuscula == true && caracter_raro == true && numero == true)
                         {
-                            return false;
+                            return true;
                         }
                     }
-                    return true
+                    return false
 }
 
 function validacionFecha(fecha){

@@ -20,7 +20,7 @@
         </div>
         <div class="grafica-fila1 hijo">
             <div class="carta-info">
-                <CantidadTipoUsuarios/>
+                <CantidadUsuariosPorTiempo/>
             </div>
             <div class="carta-info">
                 <CantidadTipoUsuarios/>
@@ -28,10 +28,10 @@
         </div>
         <div class="grafica-fila2 hijo">
             <div class="carta-info">
-                <CantidadTipoUsuarios/>
+                <MujeresVsHombres/>
             </div>
             <div class="carta-info">
-                <CantidadTipoUsuarios/>
+                <ActivosVsInactivos/>
             </div>
             <div class="carta-info">
                 <CantidadTipoUsuarios/>
@@ -43,11 +43,15 @@
 <script>
 
 import { mapState } from 'vuex'
+import ActivosVsInactivosVue from './Graficas/ActivosVsInactivos.vue'
 
 export default {
     name:'GraficasPadre',
     components: {
         CantidadTipoUsuarios : () => import('./Graficas/CantidadTipoUsuarios.vue'),
+        CantidadUsuariosPorTiempo : () => import('./Graficas/CantidadUsuariosPorTiempo.vue'),
+        MujeresVsHombres : () => import('./Graficas/MujeresVsHombres.vue'),
+        ActivosVsInactivos : () => import('./Graficas/ActivosVsInactivos.vue')
     },
     data(){
         return{
@@ -98,12 +102,12 @@ export default {
 .grafica-fila1{
     display: grid;
     grid-gap: 2em; 
-    grid-template-columns: 60% 38%;
+    grid-template-columns: 59% 38%;
 }
 .grafica-fila2{
     display: grid;
     grid-gap: 2em; 
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 31.2% 31.2% 31.2%;
 }
 .info-general{
     display: grid;

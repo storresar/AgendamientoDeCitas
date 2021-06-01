@@ -136,8 +136,8 @@ class paciente_view(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def create(self, request, *args, **kwargs):
-
-        user = usuario.objects.get(id=request.data.usuario_p)
+        print(request.data.get('usuario_p'))
+        user = usuario.objects.get(id=request.data.get('usuario_p'))
 
         nueva_auditora = auditoria(
          tipo='Creación paciente',
