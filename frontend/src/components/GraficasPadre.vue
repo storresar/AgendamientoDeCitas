@@ -22,18 +22,18 @@
             <div class="carta-info">
                 <CantidadUsuariosPorTiempo/>
             </div>
-            <div class="carta-info">
+            <div class="carta-info grafica">
                 <CantidadTipoUsuarios/>
             </div>
         </div>
         <div class="grafica-fila2 hijo">
-            <div class="carta-info">
+            <div class="carta-info grafica">
                 <MujeresVsHombres/>
             </div>
-            <div class="carta-info">
+            <div class="carta-info grafica">
                 <ActivosVsInactivos/>
             </div>
-            <div class="carta-info">
+            <div class="carta-info grafica">
                 <RangoPorEdades/>
             </div>
         </div>
@@ -88,7 +88,7 @@ export default {
 .componente{
     font-family: "Open Sans", sans-serif; 
     display: grid;
-    grid-template-rows: 20vh 70vh 60vh;
+    grid-template-rows: 20vh 50vh 50vh;
     grid-template-columns: 100vw;
     grid-gap: 1em;
     background-color: black;
@@ -146,5 +146,10 @@ export default {
 .right{
     margin-left: auto;
     order: 2;
+}
+
+.grafica {
+    padding-top: 1em;
+    padding-bottom: 1em;
 }
 </style>
