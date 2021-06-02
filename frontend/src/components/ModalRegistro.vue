@@ -11,7 +11,6 @@
             >X</button>
         </header>
         <section class="modal-body">
-            <label for="">Usuario:</label>
                 <label for="">Usuario:</label>
                 <input type="text" v-model.trim="$v.nombreUsuario.$model" id="usuario"  autocomplete="off">
                 <div class="error" v-if="!$v.nombreUsuario.minLength">Este campo requiere minimo 8 caracteres</div>

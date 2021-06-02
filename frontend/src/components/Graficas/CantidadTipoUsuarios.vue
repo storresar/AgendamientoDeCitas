@@ -53,7 +53,7 @@ export default {
         labels: ["Administradores", "Pacientes", "Funcionarios"],
         datasets: [
           {
-            backgroundColor: [this.gradient, this.gradient2, "#00D8FF"],
+            backgroundColor: ["#7F38D0", "#fff", "#00D8FF"],
             data: [this.cAdmins, this.cPacientes, this.cFuncionarios],
           },
         ],

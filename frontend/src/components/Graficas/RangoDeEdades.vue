@@ -7,8 +7,10 @@ export default {
     extends: Bar,
     data(){
         return{
-            cActivos: 0,
-            cInactivos: 0
+            cNinos: 0,
+            cJovenes: 0,
+            cAdultos:0,
+            cAncianos:0
         }
     },
     computed: {
@@ -17,12 +19,29 @@ export default {
     methods:{
         calcularCantidades(){
             for (let i = 0; i < this.listaUsuarios.length; i++) {
-                if(this.listaUsuarios[i].activo == true){
-                    this.cActivos++
+                let edad = this.calcularEdad(this.listaUsuarios[i].fecha_nacimiento)
+                if(edad <= 12){
+                    this.cNinos++
+                }else if(edad <= 24){
+                    this.cJovenes++
+                }else if(edad <= 59){
+                    this.cAdultos++
                 }else{
-                    this.cInactivos++
+                    this.cAncianos++
                 }
             }
+        },
+        calcularEdad(fecha) {
+            var hoy = new Date();
+            var cumpleanos = new Date(fecha);
+            var edad = hoy.getFullYear() - cumpleanos.getFullYear();
+            var m = hoy.getMonth() - cumpleanos.getMonth();
+
+            if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
+                edad--;
+            }
+
+            return edad;
         }
     },
     mounted() {
@@ -30,14 +49,16 @@ export default {
         this.renderChart(
             {
                 labels: [
-                "Activos",
-                "Inactivos",
+                "Niños",
+                "Jovenes",
+                "Adultos",
+                "Ancianos"
                 ],
                 datasets: [
                 {
-                    label: "ACTIVOS VS INACTIVOS",
-                    backgroundColor: "#f87979",
-                    data: [this.cActivos,this.cInactivos]
+                    label: "POR EDADDES",
+                    backgroundColor: "#FFF",
+                    data: [this.cNinos,this.cJovenes,this.cAdultos,this.cAncianos]
                 }
                 ]
             },

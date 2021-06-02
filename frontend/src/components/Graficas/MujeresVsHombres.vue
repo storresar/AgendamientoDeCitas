@@ -8,7 +8,28 @@ export default {
     data(){
         return{
             cMujeres: 0,
-            cHombres: 0
+            cHombres: 0,
+            options: {
+                scales: {
+                    yAxes: [{
+                    stacked: true,
+                    ticks: {
+                        beginAtZero: true,
+                        min: 0,
+                    },
+                    }],
+                    xAxes: [{
+                    stacked: true,
+                    ticks: {
+                        beginAtZero: true,
+                        categoryPercentage: 0.5,
+                        barPercentage: 1,
+                    },
+                    }],
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+            },
         }
     },
     computed: {
@@ -40,12 +61,13 @@ export default {
                 datasets: [
                 {
                     label: "HOMBRES VS MUJERES",
-                    backgroundColor: "#f87979",
+                    backgroundColor: "#7F38D0",
+                    color: "white",
                     data: [this.cHombres,this.cMujeres]
                 }
                 ]
             },
-            { responsive: true, maintainAspectRatio: false }
+            this.options
             );
         })
     },

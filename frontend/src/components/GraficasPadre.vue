@@ -34,7 +34,7 @@
                 <ActivosVsInactivos/>
             </div>
             <div class="carta-info">
-                <CantidadTipoUsuarios/>
+                <RangoPorEdades/>
             </div>
         </div>
     </div>
@@ -51,7 +51,8 @@ export default {
         CantidadTipoUsuarios : () => import('./Graficas/CantidadTipoUsuarios.vue'),
         CantidadUsuariosPorTiempo : () => import('./Graficas/CantidadUsuariosPorTiempo.vue'),
         MujeresVsHombres : () => import('./Graficas/MujeresVsHombres.vue'),
-        ActivosVsInactivos : () => import('./Graficas/ActivosVsInactivos.vue')
+        ActivosVsInactivos : () => import('./Graficas/ActivosVsInactivos.vue'),
+        RangoPorEdades : () => import('./Graficas/RangoDeEdades.vue')
     },
     data(){
         return{
@@ -85,17 +86,18 @@ export default {
 
 <style scoped>
 .componente{
+    font-family: "Open Sans", sans-serif; 
     display: grid;
-    grid-template-rows: 20vh 80vh 60vh;
+    grid-template-rows: 20vh 70vh 60vh;
     grid-template-columns: 100vw;
     grid-gap: 1em;
-    background-color: #F0F2F4;
+    background-color: black;
     overflow: auto;
     margin-right: 250px;
-    
+    color: white;
 }
 .hijo{
-    background-color: #F0F2F4;
+    background-color: black;
     margin: 1em;
     margin-right: 290px;
 }
@@ -103,6 +105,7 @@ export default {
     display: grid;
     grid-gap: 2em; 
     grid-template-columns: 59% 38%;
+    height: 80%;
 }
 .grafica-fila2{
     display: grid;
@@ -115,23 +118,26 @@ export default {
     grid-gap: 1em;
 }
 .carta-info{
-    background-color: rgb(144, 185, 221);
+    background-color: #063146;
     text-align: left;
     border-radius: 1em;
 }   
 .carta-info p{
-
     margin: 0;
     margin-top: 1em;
     margin-left: 1em;
     padding: 0;
-    font-size: 1.2em;
+    font-size: 1em;
+    font-weight: initial;
+    color: #777b7e;
 }
 .carta-info .valor{
     padding-left: 0.5em;
     font-size: 3em;
 }
 .subtitulos{
+    color: #777b7e;
+    font-size: 0.9em;
     display: flex;
     margin-left: 1em;
     margin-right: 4em;

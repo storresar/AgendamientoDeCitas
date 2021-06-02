@@ -19,6 +19,12 @@
                     <a @click="showDivGraficas()"><i class="fa fa-area-chart"></i>GRÁFICAS</a>
                 </li>
                 <li>
+                    <a @click="showDivReportes()"><i class="fa fa-file-text-o"></i>REPORTES</a>
+                </li>
+                <li>
+                    <a><i class="fa fa-cog"></i>PARAMETRIZACIÓN</a>
+                </li>
+                <li>
                     <a @click="cerrarSesion()"><i class="fa fa-sign-out"></i>CERRAR SESIÓN</a>
                 </li>
             </ul>
@@ -60,11 +66,11 @@
                 </thead>
                 <tr v-for="usuarioL in paginated" :key="usuarioL.id">
                     <td>{{usuarioL.id}}</td>
-                    <td>{{usuarioL.first_name}} {{usuario.last_name}}</td>
+                    <td>{{usuarioL.first_name}} {{usuarioL.last_name}}</td>
                     <td>{{usuarioL.email}}</td>
                     <td>{{usuarioL.username}}</td>
                     <td>{{usuarioL.fecha_nacimiento}}</td>
-                    <td>{{usuarioL.rol}}</td>
+                    <td>{{mostrarRol(usuarioL.rol)}}</td>
                     <td><button id="modificar" @click="modificar(usuarioL)"><i class="fa fa-pencil"></i>Modificar</button></td>
                     <td><button id="eliminar" @click="eliminar(usuarioL.username)"><i class="fa fa-times"></i>Eliminar</button></td>
                 </tr>
@@ -97,14 +103,16 @@
                         <td>{{auditoria.ip}}</td>
                     </tr>
                     </table>
-                     <div id="paginacion">
+                    <div id="paginacion">
                 <ul>
                     <button @click="restarPaginacionAuditoria()" id="anterior">Anterior</button>
                     <button @click="sumarPaginacionAuditoria()" id="siguiente">Siguiente</button>
                 </ul>
             </div>
         </div>
-        
+        <div id="reportes" style="display: none;">
+            <Reportes/>
+        </div>
         
     </div>
 </template>
@@ -117,10 +125,11 @@ import { mapState, mapActions } from 'vuex'
 import ModalRegistro from '../components/ModalRegistro.vue'
 import ModalModificar from '../components/ModalModificar.vue'
 import GraficasPadre from '../components/GraficasPadre.vue'
+import Reportes from '../components/Reportes.vue'
 export default {
     data(){
         return{
-            nPaginacion : 4 ,
+            nPaginacion : 6 ,
             nActual: 0,
             nPaginacionAuditoria : 8 ,
             nActualAuditoria: 0,
@@ -135,6 +144,7 @@ export default {
         ModalRegistro,
         ModalModificar,
         GraficasPadre,
+        Reportes
     },
 
     computed:{
@@ -168,25 +178,36 @@ export default {
             document.getElementById('verinformacion').style.display='';
             document.getElementById('usuarios').style.display='None';
             document.getElementById('auditoria').style.display='None';
+            document.getElementById('reportes').style.display='None';
             this.mostrarGraficas = false
         },
         showDivUsuarios(){
             document.getElementById('verinformacion').style.display='none';
             document.getElementById('usuarios').style.display='';
             document.getElementById('auditoria').style.display='none';
+            document.getElementById('reportes').style.display='None';
             this.mostrarGraficas = false
         },
         showDivAuditoria(){
             document.getElementById('verinformacion').style.display='None';
             document.getElementById('usuarios').style.display='None';
             document.getElementById('auditoria').style.display='';
+            document.getElementById('reportes').style.display='None';
             this.mostrarGraficas = false
         },
         showDivGraficas(){
             document.getElementById('verinformacion').style.display='None';
             document.getElementById('usuarios').style.display='None';
             document.getElementById('auditoria').style.display='None';
+            document.getElementById('reportes').style.display='None';
             this.mostrarGraficas = true
+        },
+        showDivReportes(){
+            document.getElementById('verinformacion').style.display='None';
+            document.getElementById('usuarios').style.display='None';
+            document.getElementById('auditoria').style.display='None';
+            document.getElementById('reportes').style.display='';
+            this.mostrarGraficas = false
         },
         restarPaginacion(){
             if(this.nActual > 0){
@@ -237,7 +258,15 @@ export default {
                 this.mostrarModalModificar = true
             }
         },
-        
+        mostrarRol(rol){
+            if(rol == 1){
+                return "PACIENTE"
+            }else if(rol == 2){
+                return "FUNCIONARIO"
+            }else{
+                return "ADMIN"
+            }
+        }
     },
     mounted(){
         this.getListaUsuarios()
