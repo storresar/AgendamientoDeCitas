@@ -27,7 +27,7 @@
           <th>ROL</th>
           <th>ACTIVO</th>
         </thead>
-        <tr v-for="usuarioL in filtrarPorActivo" :key="usuarioL.id">
+        <tr v-for="usuarioL in paginated" :key="usuarioL.id">
           <td>{{ usuarioL.id }}</td>
           <td>{{ usuarioL.first_name }} {{ usuarioL.last_name }}</td>
           <td>{{ usuarioL.email }}</td>
@@ -147,6 +147,7 @@ export default {
     },
     generarPDF() {
       const usuarios = []
+      console.log(this.filtrarPorActivo)
       this.filtrarPorActivo.forEach(obj => {
         usuarios.push([
             obj.id,
@@ -165,9 +166,9 @@ export default {
       doc.setFontSize(16)
       doc.text(20,32, `Este reporte fue generado por el usuario ${this.usuario.username} el día ${time}`)
       doc.text(20,44, `Filtros aplicados para la busqueda: 
-      Busqueda por usuario:${this.buscar===''?' Ninguna':this.buscar}
-      Busqueda por estado: ${this.activo}
-      Busqueda por tipo de usuario: ${this.tipo_usuario}`)
+      Busqueda por usuario: ${this.buscar===''?'ninguna':this.buscar}
+      Busqueda por Estado: ${this.activo}
+      Busqueda por Rol: ${this.tipo_usuario}`)
       doc.autoTable({
         head: [['ID','Nombre', 'Email', 'Usuario', 'Fecha Nacimiento', 'Rol', 'Estado']],
         margin: {top:70},
