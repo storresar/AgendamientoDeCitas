@@ -16,11 +16,7 @@
       </select>
     </div>
 
-    <div id="reporte">
-      <h1 id="reporte-titulo" style="display:none; position:fixed; top:20px; left:2em;">REPORTE</h1>
-      <p id="reporte-info" style="clear: both; text-align:left; margin:1em; font-size:2em; display:none">
-        Este reporte fue generado por el usuario {{usuario.username}} el dia {{tiempoReal}}
-      </p>
+    <div>
       <table style="margin-top:1em">
         <thead>
           <th>ID</th>
@@ -40,15 +36,6 @@
           <td>{{ mostrarRol(usuarioL.rol) }}</td>
           <td>{{ usuarioL.activo }}</td>
         </tr>
-        <tr v-for="usuarioL in listaUsuarios" :key="usuarioL.email" style="display:none">
-          <td>{{ usuarioL.id }}</td>
-          <td>{{ usuarioL.first_name }} {{ usuarioL.last_name }}</td>
-          <td>{{ usuarioL.email }}</td>
-          <td>{{ usuarioL.username }}</td>
-          <td>{{ usuarioL.fecha_nacimiento }}</td>
-          <td>{{ mostrarRol(usuarioL.rol) }}</td>
-          <td>{{ usuarioL.activo }}</td>
-        </tr>
       </table>
     </div>
       
@@ -58,10 +45,14 @@
         <button @click="sumarPainacion()" id="siguiente">Siguiente</button>
       </ul>
     </div>
-    <button @click="generarPDF()">Generar PDF</button>
+    <button @click="generarPDF()">
+      <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+      Reporte PDF
+    </button>
     <JsonExcel :data="JSON.parse(JSON.stringify(this.filtrarPorActivo))">
       <button>
-          Reporte excel
+        <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+        Reporte excel
       </button>
     </JsonExcel>
   </div>
@@ -70,10 +61,8 @@
 <script>
 import { mapState } from "vuex";
 import JsonExcel from "vue-json-excel";
-import html2canvas from "html2canvas";
-import pdfMake from "pdfmake/build/pdfmake";
-import pdfFonts from "pdfmake/build/vfs_fonts";
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import jsPDF from 'jspdf'
+import 'jspdf-autotable'
 
 export default {
   data() {
@@ -97,10 +86,10 @@ export default {
       return this.indexStart + this.nPaginacion;
     },
     paginated() {
-      return this.listaUsuarios.slice(this.indexStart, this.indexEnd);
+      return this.filtrarPorActivo.slice(this.indexStart, this.indexEnd);
     },
     filtrarPorUsuario() {
-      var lista = this.paginated;
+      var lista = this.listaUsuarios;
       if (this.buscar == "") {
         return lista;
       } else {
@@ -157,51 +146,36 @@ export default {
       }
     },
     generarPDF() {
-      const reporte = document.querySelector('#reporte')
-      reporte.children[0].style.display = 'block'
-      reporte.children[1].style.display = 'block'
-      console.log(reporte.children[2])
-      for (let i = 1; i < this.nPaginacion+1; i++) {
-        reporte.children[2].children[i].style.display = 'none'
-        
-      }
-      for (let i = this.nPaginacion+1; i <= this.nPaginacion+ this.listaUsuarios.length; i++) {
-        reporte.children[2].children[i].style.display = ''
-        
-      }
-      console.log(reporte.children[2])
-      html2canvas(reporte).then((canvas) => {
-        var data = canvas.toDataURL()
-        var docDefinition = {
-          pageOrientation: "landscape",
-          content: [
-            {
-              image: data,
-              width: 950,
-            },
-          ],
-        };
-        pdfMake.createPdf(docDefinition).open();
-        reporte.children[0].style.display = 'none'
-        reporte.children[1].style.display = 'none'
-        for (let i = 1; i <= this.nPaginacion; i++) {
-          reporte.children[2].children[i].style.display = ''
-        
-        }
-        for (let i = this.nPaginacion+1; i <= this.nPaginacion+ this.listaUsuarios.length; i++) {
-          reporte.children[2].children[i].style.display = 'none'
-        
-        }
+      const usuarios = []
+      this.filtrarPorActivo.forEach(obj => {
+        usuarios.push([
+            obj.id,
+            `${obj.first_name} ${obj.last_name}`,
+            obj.email,
+            obj.username,
+            obj.fecha_nacimiento,
+            obj.rol===1?'Paciente':obj.rol===2?'Funcionario':'Admin',
+            obj.activo?'Activo':'Inactivo']
+          )
+      });
+      const doc = new jsPDF('landscape')
+      const time = new Date().toISOString().slice(0,10) + ' a las ' + new Date().toLocaleTimeString('en-US', {hour:'numeric', hour12:true, minute:'numeric'})
+      doc.setFontSize(26)
+      doc.text(20,20,'Reporte')
+      doc.setFontSize(16)
+      doc.text(20,32, `Este reporte fue generado por el usuario ${this.usuario.username} el día ${time}`)
+      doc.text(20,44, `Filtros aplicados para la busqueda: 
+      Busqueda por usuario:${this.buscar===''?' Ninguna':this.buscar}
+      Busqueda por estado: ${this.activo}
+      Busqueda por tipo de usuario: ${this.tipo_usuario}`)
+      doc.autoTable({
+        head: [['ID','Nombre', 'Email', 'Usuario', 'Fecha Nacimiento', 'Rol', 'Estado']],
+        margin: {top:70},
+        body: usuarios
       })
+      doc.output('dataurlnewwindow');
     },
   },
-  watch: {
-    pdfReporte (val){
-      if (val){
-        this.generarPDF()
-      }
-    }
-  }
 };
 </script>
 
