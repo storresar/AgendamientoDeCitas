@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     #Modelos-propios
     'usuarios',
     'auditoria',
+    'parametrizacion',
 ]
 
 REST_FRAMEWORK = {

@@ -148,7 +148,7 @@ export default {
     generarPDF() {
       const usuarios = []
       console.log(this.filtrarPorActivo)
-      this.filtrarPorActivo.forEach(obj => {
+      this.listaUsuarios.forEach(obj => {
         usuarios.push([
             obj.id,
             `${obj.first_name} ${obj.last_name}`,
@@ -174,7 +174,7 @@ export default {
         margin: {top:70},
         body: usuarios
       })
-      doc.output('dataurlnewwindow');
+      doc.save();
     },
   },
 };
