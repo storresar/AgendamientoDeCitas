@@ -1,6 +1,6 @@
 <template>
   <div class="reporte">
-    <h1>REPORTES</h1>
+    <h1 id = "titulo-reporte">REPORTE</h1>
     <div class="filtros">
       <input type="text" placeholder="Buscar Por Usuario" v-model="buscar" />
       <select v-model="tipo_usuario">
@@ -15,26 +15,43 @@
         <option value="todos">TODOS</option>
       </select>
     </div>
-    <table id="tabla-reportes">
-      <thead>
-        <th>ID</th>
-        <th>NOMBRE</th>
-        <th>EMAIL</th>
-        <th>USUARIO</th>
-        <th>FECHA NACIMIENTO</th>
-        <th>ROL</th>
-        <th>ACTIVO</th>
-      </thead>
-      <tr v-for="usuarioL in filtrarPorActivo" :key="usuarioL.id">
-        <td>{{ usuarioL.id }}</td>
-        <td>{{ usuarioL.first_name }} {{ usuarioL.last_name }}</td>
-        <td>{{ usuarioL.email }}</td>
-        <td>{{ usuarioL.username }}</td>
-        <td>{{ usuarioL.fecha_nacimiento }}</td>
-        <td>{{ mostrarRol(usuarioL.rol) }}</td>
-        <td>{{ usuarioL.activo }}</td>
-      </tr>
-    </table>
+
+    <div id="reporte">
+      <h1 id="reporte-titulo" style="display:none; position:fixed; top:20px; left:2em;">REPORTE</h1>
+      <p id="reporte-info" style="clear: both; text-align:left; margin:1em; font-size:2em; display:none">
+        Este reporte fue generado por el usuario {{usuario.username}} el dia {{tiempoReal}}
+      </p>
+      <table style="margin-top:1em">
+        <thead>
+          <th>ID</th>
+          <th>NOMBRE</th>
+          <th>EMAIL</th>
+          <th>USUARIO</th>
+          <th>FECHA NACIMIENTO</th>
+          <th>ROL</th>
+          <th>ACTIVO</th>
+        </thead>
+        <tr v-for="usuarioL in filtrarPorActivo" :key="usuarioL.id">
+          <td>{{ usuarioL.id }}</td>
+          <td>{{ usuarioL.first_name }} {{ usuarioL.last_name }}</td>
+          <td>{{ usuarioL.email }}</td>
+          <td>{{ usuarioL.username }}</td>
+          <td>{{ usuarioL.fecha_nacimiento }}</td>
+          <td>{{ mostrarRol(usuarioL.rol) }}</td>
+          <td>{{ usuarioL.activo }}</td>
+        </tr>
+        <tr v-for="usuarioL in listaUsuarios" :key="usuarioL.email" style="display:none">
+          <td>{{ usuarioL.id }}</td>
+          <td>{{ usuarioL.first_name }} {{ usuarioL.last_name }}</td>
+          <td>{{ usuarioL.email }}</td>
+          <td>{{ usuarioL.username }}</td>
+          <td>{{ usuarioL.fecha_nacimiento }}</td>
+          <td>{{ mostrarRol(usuarioL.rol) }}</td>
+          <td>{{ usuarioL.activo }}</td>
+        </tr>
+      </table>
+    </div>
+      
     <div id="paginacion">
       <ul>
         <button @click="restarPaginacion()" id="anterior">Anterior</button>
@@ -72,7 +89,7 @@ export default {
     JsonExcel,
   },
   computed: {
-    ...mapState(["listaUsuarios"]),
+    ...mapState(["listaUsuarios", 'usuario']),
     indexStart() {
       return this.nActual * this.nPaginacion;
     },
@@ -112,6 +129,9 @@ export default {
         }
       }
     },
+    tiempoReal(){
+      return new Date().toISOString().slice(0,10) + ' a las ' + new Date().toLocaleTimeString('en-US', {hour:'numeric', hour12:true, minute:'numeric'})
+    }
   },
   methods: {
     restarPaginacion() {
@@ -137,21 +157,51 @@ export default {
       }
     },
     generarPDF() {
-      html2canvas(document.getElementById("tabla-reportes")).then((canvas) => {
-        var data = canvas.toDataURL();
+      const reporte = document.querySelector('#reporte')
+      reporte.children[0].style.display = 'block'
+      reporte.children[1].style.display = 'block'
+      console.log(reporte.children[2])
+      for (let i = 1; i < this.nPaginacion+1; i++) {
+        reporte.children[2].children[i].style.display = 'none'
+        
+      }
+      for (let i = this.nPaginacion+1; i <= this.nPaginacion+ this.listaUsuarios.length; i++) {
+        reporte.children[2].children[i].style.display = ''
+        
+      }
+      console.log(reporte.children[2])
+      html2canvas(reporte).then((canvas) => {
+        var data = canvas.toDataURL()
         var docDefinition = {
           pageOrientation: "landscape",
           content: [
             {
               image: data,
-              width: 750,
+              width: 950,
             },
           ],
         };
         pdfMake.createPdf(docDefinition).open();
-      });
+        reporte.children[0].style.display = 'none'
+        reporte.children[1].style.display = 'none'
+        for (let i = 1; i <= this.nPaginacion; i++) {
+          reporte.children[2].children[i].style.display = ''
+        
+        }
+        for (let i = this.nPaginacion+1; i <= this.nPaginacion+ this.listaUsuarios.length; i++) {
+          reporte.children[2].children[i].style.display = 'none'
+        
+        }
+      })
     },
   },
+  watch: {
+    pdfReporte (val){
+      if (val){
+        this.generarPDF()
+      }
+    }
+  }
 };
 </script>
 
@@ -161,18 +211,20 @@ h1 {
   margin-left: 1em;
   font-size: 40px;
 }
+#reporte{
+  height: 80vh;
+}
 .reporte table {
   width: 80%;
   background-color: white;
   text-align: left;
   color: black;
-  top: 15%;
+  top: 17%;
   left: 11px;
   border-collapse: collapse;
   position: fixed;
 }
-.reporte th,
-td {
+.reporte th, td {
   padding: 15px;
 }
 .reporte thead {

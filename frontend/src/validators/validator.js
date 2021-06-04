@@ -11,7 +11,6 @@ function esFuerte(clave){
     var mayuscula = false
     var minuscula = false
     var numero = false
-    var caracter_raro = false
         if(clave.length >= 8){
             for(var i = 0;i<clave.length;i++)
                         {
@@ -27,12 +26,8 @@ function esFuerte(clave){
                             {
                                 numero = true;
                             }
-                            else
-                            {
-                                caracter_raro = true;
-                            }
                         }
-                        if(mayuscula == true && minuscula == true && caracter_raro == true && numero == true)
+                        if(mayuscula == true && minuscula == true && numero == true)
                         {
                             return true;
                         }

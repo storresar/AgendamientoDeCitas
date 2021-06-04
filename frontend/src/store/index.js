@@ -108,6 +108,7 @@ export default new Vuex.Store({
         })
       })
       if (req.status !== 200){
+        console.log('Session expired')
         context.commit('deleteToken')
         throw  'Session caducada'
       }
@@ -182,7 +183,7 @@ export default new Vuex.Store({
       }
     },
     async crearPaciente(context, paciente){
-      const req = await fetch('http://127.0.0.1:8000/api/pacientes/', {
+      await fetch('http://127.0.0.1:8000/api/pacientes/', {
         method : 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -200,7 +201,6 @@ export default new Vuex.Store({
         },
         body: JSON.stringify(datos)
       })
-      console.log(req)
     }
   }
 })
