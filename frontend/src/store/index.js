@@ -167,6 +167,7 @@ export default new Vuex.Store({
         },
         body: JSON.stringify(usuario)
       })
+
       if (req.status === 201){
         const usuario_r = await req.json()
         context.commit('agregarUsuario', usuario_r)
@@ -179,7 +180,9 @@ export default new Vuex.Store({
         return 'Se ha creado el usuario correctamente'
       }
       if (req.status === 401){
-        throw 'Error de Ejecución'
+
+        const res = await req.json()
+        throw res
       }
     },
     async crearPaciente(context, paciente){

@@ -5,4 +5,5 @@ class parametrizacion(models.Model):
     fecha_inicio = models.DateField()
     fecha_fin = models.DateField()
     valor = models.CharField(max_length = 30)
+    estado = models.BooleanField()
     

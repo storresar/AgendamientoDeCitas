@@ -5,6 +5,8 @@ from django.core.mail import send_mail
 from datetime import date
 from django.contrib.auth import get_user, password_validation, authenticate
 from .utilities import get_token_for_user
+from django.shortcuts import get_object_or_404
+from parametrizacion.models import parametrizacion
 
 
 class usuario_serializer(serializers.ModelSerializer):
@@ -15,9 +17,15 @@ class usuario_serializer(serializers.ModelSerializer):
         fields = ('id','username','password','first_name', 'last_name', 'email','fecha_nacimiento','rol','ultima_activacion', 'activo')
 
     def create(self, validated_data):
-        mensaje = 'Felicidades! Usted se ha registrado exitosamente en Sophy hostpital.\n'
-        mensaje += 'A continuacion mostaremos sus credenciales, por favor no las difunda con nadie mas.\n'
-        mensaje += 'Usuario:  ' + validated_data['username'] + '\n'
+        mensaje = parametrizacion.objects.filter(nombre='correo', estado=True)
+        try:
+            mensaje = get_object_or_404(mensaje)
+            mensaje = mensaje.valor
+        except:
+            mensaje = 'Felicidades! Usted se ha registrado exitosamente en Sophy hostpital.\n'
+            mensaje += 'A continuacion mostaremos sus credenciales, por favor no las difunda con nadie mas.'
+        
+        mensaje += '\nUsuario:  ' + validated_data['username'] + '\n'
         mensaje += 'Contraseña:  ' + validated_data['password'] + '\n'
 
         if send_mail(subject='Creacion de cuenta',message=mensaje,from_email=None,recipient_list=[validated_data['email']]) > 0:

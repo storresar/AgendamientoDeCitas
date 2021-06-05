@@ -1,4 +1,5 @@
 from django.db.models import query
+from rest_framework import response
 from .utilities import get_token_for_user
 from rest_framework import viewsets
 from .serializers import usuario_serializer, usuario_login_serializer, paciente_serializer
@@ -11,6 +12,7 @@ from rest_framework.decorators import action, api_view, permission_classes
 from django.core.mail import send_mail
 from django.conf import settings
 from auditoria.models import auditoria
+from parametrizacion.models import parametrizacion
 import requests
 
 class usuario_viewset(viewsets.ModelViewSet):
@@ -55,23 +57,46 @@ class usuario_viewset(viewsets.ModelViewSet):
         return self.list(request)
 
     def create(self, request):
-        nueva_auditora = auditoria(
-         tipo='Creación usuario',
-         usuario_realiza= request.user,
-         usuario_cambio=request.data['username'],
-         ip=request.META.get('REMOTE_ADDR')
-         )
-        nueva_auditora.save()
-        return super().create(request)
+        c_admins_permitidos = parametrizacion.objects.filter(nombre='admin', estado=True)
+        try:
+            c_admins_permitidos = get_object_or_404(c_admins_permitidos)
+            c_admins_permitidos = int(c_admins_permitidos.valor)
+        except:
+            c_admins_permitidos = 6
+        c_admins_actuales = usuario.objects.filter(rol=3).count()
+        if request.data['rol'] == 3:
+            c_admins_actuales += 1
+        print(c_admins_permitidos)
+        if c_admins_permitidos >= c_admins_actuales:
+
+            nueva_auditora = auditoria(
+            tipo='Creación usuario',
+            usuario_realiza= request.user,
+            usuario_cambio=request.data['username'],
+            ip=request.META.get('REMOTE_ADDR')
+            )
+            nueva_auditora.save()
+
+            return super().create(request)
+        else:
+            return Response('Limite superado para la creación de administradores', status=401)
 
     @action(detail=False, methods=['post'])
     def login(self, request):
+        c_dias_permitidos = parametrizacion.objects.filter(nombre='inactivar', estado=True)
+        try:
+            c_dias_permitidos = get_object_or_404(c_dias_permitidos)
+            c_dias_permitidos = int(c_dias_permitidos.valor)
+        except:
+            c_dias_permitidos = 30
+            
+        print(c_dias_permitidos)
         serializer = usuario_login_serializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             user, token = serializer.save()
             if user.activo:
                 usuario = usuario_serializer(user).data
-                if usuario['ultima_activacion'] < 30:
+                if usuario['ultima_activacion'] < c_dias_permitidos:
                     data = {
                         'usuario': usuario,
                         'token': token
