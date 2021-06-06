@@ -9,6 +9,7 @@ export default new Vuex.Store({
     paciente: '',
     listaUsuarios: [],
     listaAuditoria: [],
+    listaParametrizacion: []
   },
   mutations: {
     storeToken(state, data){
@@ -34,6 +35,10 @@ export default new Vuex.Store({
     setAuditoria(state,lista){
       state.listaAuditoria = lista
     },
+    setParametrizacion(state,lista){
+      console.log(lista)
+      state.listaParametrizacion = lista
+    }
   },
   actions: {
     async getUsuario(context, datos){
@@ -204,6 +209,74 @@ export default new Vuex.Store({
         },
         body: JSON.stringify(datos)
       })
+    },
+    async getParametrizacion(context){
+      const req = await fetch('http://127.0.0.1:8000/api/parametrizacion/',{
+        method : 'GET',
+        headers: {
+          'Authorization': `Bearer ${window.localStorage.getItem('token')}`
+        }
+      })
+      if (req.status === 200){
+        const datos = await req.json()
+        console.log(datos)
+        context.commit('setParametrizacion', datos)
+      }
+    },
+    async eliminarParametrizacion(context,id){
+      const req = await fetch(`http://127.0.0.1:8000/api/parametrizacion/${id}`, {
+        method : 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${window.localStorage.getItem('token')}`
+        },
+      })
+      console.log(req.status)
+      if (req.status === 204){
+        await context.dispatch('getParametrizacion')
+        return 'Se ha eliminado correctamente'
+      }
+      if (req.status === 401){
+        throw 'Error de Autenticación'
+      }
+    },
+    async modificarParametrizacion(context, datos){
+      console.log(datos)
+      const req = await fetch(`http://127.0.0.1:8000/api/parametrizacion/${datos.id}/`,{
+        method : 'PUT',
+        headers : {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${window.localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(datos)
+      })
+      if (req.status === 200){
+        await context.dispatch('getParametrizacion')
+        return 'Se ha modificado el usuario correctamente'
+      }
+      if (req.status === 401){
+        throw 'Error de Ejecución'
+      }
+    },
+    async crearParametrizacion(context,datos){
+      console.log(datos)
+      const req = await fetch('http://127.0.0.1:8000/api/parametrizacion/', {
+        method : 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${window.localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(datos)
+      })
+      if (req.status === 201){
+        await context.dispatch('getParametrizacion')
+        return 'Se ha creado el usuario correctamente'
+      }
+      if (req.status === 400){
+        const res = await req.json()
+        throw res
+      }
+
     }
   }
 })

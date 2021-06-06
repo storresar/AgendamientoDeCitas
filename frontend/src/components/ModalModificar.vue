@@ -12,7 +12,7 @@
         </header>
 
         <section class="modal-body">
-            <label for="">Usuario:</label>
+                <label>Usuario:</label>
                 <input type="text" v-model.trim="$v.nombreUsuario.$model" id="usuario"  autocomplete="off" readonly>
                 <div class="error" v-if="!$v.nombreUsuario.minLength">Este campo requiere minimo 8 caracteres</div>
                 <div class="error" v-if="!$v.nombreUsuario.contieneMayuscula">Tiene que escribir todo en minuscula</div>

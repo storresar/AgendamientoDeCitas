@@ -6,7 +6,8 @@ class parametrizacion_serializer(serializers.ModelSerializer):
     class Meta():
         model = parametrizacion
         fields = ('id','nombre', 'fecha_inicio', 'fecha_fin', 'valor', 'estado')
-    
+        read_only_fields = ('estado',)
+        
     def create(self, validated_data):
         nombre = validated_data['nombre']
         f_inicio = validated_data['fecha_inicio']
@@ -24,14 +25,14 @@ class parametrizacion_serializer(serializers.ModelSerializer):
         for i in mismos_parametros:
             print(f_inicio, i.fecha_fin)
             if f_inicio < i.fecha_fin:
-                entra = False
-            if f_fin > i.fecha_inicio:
+                print("1")
                 entra = False
 
         if f_inicio > f_fin:
+            print("3")
             entra = False
         
-        if entra:
+        if entra == True:
             print('Entro')
             obj = parametrizacion(nombre=nombre,
                 fecha_inicio=f_inicio,
@@ -41,7 +42,7 @@ class parametrizacion_serializer(serializers.ModelSerializer):
             obj.save()
             return obj
         else:
-            raise serializers.ValidationError('No se pueden ingresar el mismo parametro con una fecha existente')
+            raise serializers.ValidationError('No se pueden ingresar el mismo parametro con una fecha existente',code = 400)
 
 
 

@@ -22,7 +22,7 @@
                     <a @click="showDivReportes()"><i class="fa fa-file-text-o"></i>REPORTES</a>
                 </li>
                 <li>
-                    <a><i class="fa fa-cog"></i>PARAMETRIZACIÓN</a>
+                    <a @click="showDivPara()"><i class="fa fa-cog"></i>PARAMETRIZACIÓN</a>
                 </li>
                 <li>
                     <a @click="cerrarSesion()"><i class="fa fa-sign-out"></i>CERRAR SESIÓN</a>
@@ -113,6 +113,9 @@
         <div id="reportes" style="display: none;">
             <Reportes/>
         </div>
+        <div id="parametrizacion" style="display: none;">
+            <Parametrizacion/>
+        </div>
         
     </div>
 </template>
@@ -126,6 +129,7 @@ import ModalRegistro from '../components/ModalRegistro.vue'
 import ModalModificar from '../components/ModalModificar.vue'
 import GraficasPadre from '../components/GraficasPadre.vue'
 import Reportes from '../components/Reportes.vue'
+import Parametrizacion from '../components/Parametrizacion.vue'
 export default {
     data(){
         return{
@@ -144,7 +148,8 @@ export default {
         ModalRegistro,
         ModalModificar,
         GraficasPadre,
-        Reportes
+        Reportes,
+        Parametrizacion
     },
 
     computed:{
@@ -169,7 +174,7 @@ export default {
         }
     },
     methods:{
-        ...mapActions(['getPaciente','getListaUsuarios','eliminarUsuario','modificarUsuario','getAuditoria']),
+        ...mapActions(['getPaciente','getListaUsuarios','eliminarUsuario','modificarUsuario','getAuditoria','getParametrizacion']),
         cerrarSesion(){
             window.localStorage.clear()
             this.$router.push({name:'Home'})
@@ -186,6 +191,7 @@ export default {
             document.getElementById('usuarios').style.display='';
             document.getElementById('auditoria').style.display='none';
             document.getElementById('reportes').style.display='None';
+            document.getElementById('parametrizacion').style.display='None';
             this.mostrarGraficas = false
         },
         showDivAuditoria(){
@@ -193,6 +199,7 @@ export default {
             document.getElementById('usuarios').style.display='None';
             document.getElementById('auditoria').style.display='';
             document.getElementById('reportes').style.display='None';
+            document.getElementById('parametrizacion').style.display='None';
             this.mostrarGraficas = false
         },
         showDivGraficas(){
@@ -200,6 +207,7 @@ export default {
             document.getElementById('usuarios').style.display='None';
             document.getElementById('auditoria').style.display='None';
             document.getElementById('reportes').style.display='None';
+            document.getElementById('parametrizacion').style.display='None';
             this.mostrarGraficas = true
         },
         showDivReportes(){
@@ -207,6 +215,15 @@ export default {
             document.getElementById('usuarios').style.display='None';
             document.getElementById('auditoria').style.display='None';
             document.getElementById('reportes').style.display='';
+            document.getElementById('parametrizacion').style.display='None';
+            this.mostrarGraficas = false
+        },
+        showDivPara(){
+            document.getElementById('verinformacion').style.display='None';
+            document.getElementById('usuarios').style.display='None';
+            document.getElementById('auditoria').style.display='None';
+            document.getElementById('reportes').style.display='None';
+            document.getElementById('parametrizacion').style.display='';
             this.mostrarGraficas = false
         },
         restarPaginacion(){
@@ -271,6 +288,7 @@ export default {
     mounted(){
         this.getListaUsuarios()
         this.getAuditoria()
+        this.getParametrizacion()
     },
 }
 </script>

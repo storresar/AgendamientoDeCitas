@@ -109,7 +109,7 @@ export default {
     filtrarPorActivo() {
       var lista = this.filtrarPorTipo;
       if (this.activo == "todos") {
-        return lista.slice(this.indexStart, this.indexEnd);
+        return lista;
       } else {
         if (this.activo == "activo") {
           return lista.filter((objeto) => objeto.activo == true);
