@@ -1,9 +1,11 @@
 <template>
     <div class="parametrizacion">
         <h1>PARAMETRIZACIÓN DE LA APLICACION</h1>
-        <button id="agregar" @click="mostrarModal = true">AGREGAR</button>
+        <button id="agregar" @click="mostrarModal = true"><i class="fa fa-plus-circle"></i>AGREGAR</button>
         <table>
             <thead>
+            <th>MODIFICAR</th>
+            <th>ELIMINAR</th>
             <th>ID</th>
             <th>NOMBRE</th>
             <th>FECHA INICIO</th>
@@ -12,14 +14,19 @@
             <th>ESTADO</th>
         </thead>
         <tr v-for="para in paginated" :key="para.id">
+            <td><button id="modificar" @click="modificar(para)"><i class="fa fa-pencil"></i>Modificar</button></td>
+            <td><button id="eliminar" @click="eliminar(para)"><i class="fa fa-times"></i>Eliminar</button></td>
             <td>{{ para.id }}</td>
             <td>{{ para.nombre }}</td>
             <td>{{ para.fecha_inicio }}</td>
             <td>{{ para.fecha_fin }}</td>
             <td>{{ para.valor }}</td>
-            <td>{{ para.estado }}</td>
-            <td><button id="modificar" @click="modificar(para)"><i class="fa fa-pencil"></i>Modificar</button></td>
-            <td><button id="eliminar" @click="eliminar(para.id)"><i class="fa fa-times"></i>Eliminar</button></td>
+            <div v-if="para.estado == true">
+                <td><i class="fa fa-check-circle-o" aria-hidden="true" id="activo"></i> ACTIVO</td>
+            </div>
+            <div v-if="para.estado == false">
+                <td><i class="fa fa-times-circle-o" aria-hidden="true" id="inactivo"></i> INACTIVO</td>
+            </div>
         </tr>
         </table>
         <div id="paginacion">
@@ -83,5 +90,97 @@ export default {
 </script>
 
 <style scoped>
+    .parametrizacion table{
+    width: 80%;
+    background-color: rgb(85, 82, 82);
+    text-align: left;
+    color: white;
+    top: 20%;
+    left:11px;
+    border-collapse: collapse;
+    border: 1px solid black;
+    position: fixed;
+    }
+    .parametrizacion th,td{
+    padding: 15px;
+    }
+    .parametrizacion thead{
+    background-color: #000000;
+    color: white;
+    border-bottom: solid 5px black;
+    }
+    .parametrizacion button{
+    width: 100%;
+    border: none;
+    padding: 10px;
+    font-family: 'Karla', sans-serif;
+    font-size: 15px;
+    }
+    .parametrizacion button i{
+    margin-right: 16px;
+    }
+    #modificar{
+    background-color: rgb(123, 131, 9);
+    color: white;
+    }
+    #eliminar{
+    background-color: rgb(202, 59, 59);
+    color: white;
+    }
+    #eliminar:hover{
+    background-color: rgb(207, 6, 6);
+    }
+    #modificar:hover{
+    background-color: rgb(206, 219, 17);
+    }
+    #paginacion button {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    font-family: 'Karla', sans-serif;
+    font-size: 15px;
+    width: 100px;
+    }
 
+    #paginacion #anterior{
+        position: fixed;
+        top: 90%;
+        left: 30%;
+    }
+
+    #paginacion #siguiente{
+        position: fixed;
+        top: 90%;
+        left: 40%;
+    }
+    #paginacion button:hover{
+        background-color: gray;
+        color: white;
+        cursor: pointer;
+    }
+    #agregar{
+    background-color: rgb(0, 0, 0);
+    color: white;
+    border: none;
+    padding: 20px;
+    border-radius: 6px;
+    font-family: 'Karla', sans-serif;
+    font-size: 15px;
+    width: 300px;
+    position: fixed;
+    left: 2em;
+    top: 6em;
+    }
+    #agregar:hover{
+    background-color: rgb(109, 128, 129);
+    cursor: pointer;
+    }
+    #activo{
+        color: rgb(30, 212, 30);
+    }
+    #inactivo{
+        color: rgb(190, 34, 34);
+    }
 </style>

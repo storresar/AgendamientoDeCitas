@@ -221,8 +221,8 @@ export default new Vuex.Store({
         context.commit('setParametrizacion', datos)
       }
     },
-    async eliminarParametrizacion(context,id){
-      const req = await fetch(`http://127.0.0.1:8000/api/parametrizacion/${id}`, {
+    async eliminarParametrizacion(context,parametro){
+      const req = await fetch(`http://127.0.0.1:8000/api/parametrizacion/${parametro.id}`, {
         method : 'DELETE',
         headers: {
           'Content-Type': 'application/json',

@@ -31,7 +31,7 @@
         </section>
 
         <footer class="modal-footer">
-            <button id="agregar" @click="submitFormulario()">MODIFICAR USUARIO</button>
+            <button id="agregar" @click="submitFormulario()">MODIFICAR PARAMETRO</button>
         </footer>
 
         </div>
