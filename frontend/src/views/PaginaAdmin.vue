@@ -64,7 +64,7 @@
                 <thead>
                     <th>ID</th><th>NOMBRE</th><th>EMAIL</th><th>USUARIO</th><th>FECHA NACIMIENTO</th><th>ROL</th><th>MODIFICAR</th><th>ELIMINAR</th>
                 </thead>
-                <tr v-for="usuarioL in paginated" :key="usuarioL.id">
+                <tr v-for="usuarioL in paginated" :key="usuarioL.username">
                     <td>{{usuarioL.id}}</td>
                     <td>{{usuarioL.first_name}} {{usuarioL.last_name}}</td>
                     <td>{{usuarioL.email}}</td>
@@ -94,7 +94,7 @@
                     <thead>
                         <th>ID</th><th>FECHA</th><th>TIPO</th><th>USUARIO AFECTADO</th><th>USUARIO</th><th>IP</th>
                     </thead>
-                    <tr v-for="auditoria in paginatedA" :key="auditoria.id">
+                    <tr v-for="auditoria in paginatedA" :key="auditoria.fecha">
                         <td>{{auditoria.id}}</td>
                         <td>{{auditoria.fecha}}</td>
                         <td>{{auditoria.tipo}}</td>

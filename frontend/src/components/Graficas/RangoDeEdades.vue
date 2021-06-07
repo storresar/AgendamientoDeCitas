@@ -57,7 +57,7 @@ export default {
                 datasets: [
                 {
                     label: "POR EDADDES",
-                    backgroundColor: "#FFF",
+                    backgroundColor: ["#FFF","#7000DF", "#13C5E2", "#FE3F6F"],
                     data: [this.cNinos,this.cJovenes,this.cAdultos,this.cAncianos]
                 }
                 ]

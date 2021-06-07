@@ -57,7 +57,7 @@ export default {
                 datasets: [
                 {
                     label: "ACTIVOS VS INACTIVOS",
-                    backgroundColor: "#13DFD6",
+                    backgroundColor: ["#13DFD6","#7000DF"],
                     data: [this.cActivos,this.cInactivos]
                 }
                 ]

@@ -13,11 +13,11 @@
 
         <section class="modal-body">
                 <label>Usuario:</label>
-                <input type="text" v-model.trim="$v.nombreUsuario.$model" id="usuario"  autocomplete="off" readonly>
+                <input type="text" v-model.trim="$v.nombreUsuario.$model" autocomplete="off" readonly>
                 <div class="error" v-if="!$v.nombreUsuario.minLength">Este campo requiere minimo 8 caracteres</div>
                 <div class="error" v-if="!$v.nombreUsuario.contieneMayuscula">Tiene que escribir todo en minuscula</div>
                 <label for="">Correo:</label>
-                <input type="text" v-model.trim="$v.correo.$model" id="usuario"  autocomplete="off" readonly>
+                <input type="text" v-model.trim="$v.correo.$model" autocomplete="off" readonly>
                 <div class="error" v-if="!$v.correo.email">Este correo es invalido</div>
                 <label>Nombre:</label>
                 <input type="text" v-model.trim="$v.nombre.$model" id="nombre"  autocomplete="off">
@@ -119,12 +119,6 @@ export default {
         ...mapActions(['modificarUsuario']),
         close() {
             this.$emit('close');
-        },
-        botonModificar(usuarioNuevo){
-            this.$v.$touch()
-            if (this.$v.$invalid){
-                this.$alert('Llene los datos adecuadamente','Error en el formulario','warning')
-            }
         },
         submitFormulario(){
             this.$v.$touch()

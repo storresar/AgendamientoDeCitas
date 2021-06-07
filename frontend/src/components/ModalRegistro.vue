@@ -12,11 +12,11 @@
         </header>
         <section class="modal-body">
                 <label for="">Usuario:</label>
-                <input type="text" v-model.trim="$v.nombreUsuario.$model" id="usuario"  autocomplete="off">
+                <input type="text" v-model.trim="$v.nombreUsuario.$model" autocomplete="off">
                 <div class="error" v-if="!$v.nombreUsuario.minLength">Este campo requiere minimo 8 caracteres</div>
                 <div class="error" v-if="!$v.nombreUsuario.contieneMayuscula">Tiene que escribir todo en minuscula</div>
                 <label for="">Correo:</label>
-                <input type="text" v-model.trim="$v.correo.$model" id="usuario"  autocomplete="off">
+                <input type="text" v-model.trim="$v.correo.$model" autocomplete="off">
                 <div class="error" v-if="!$v.correo.email">Este correo es invalido</div>
                 <label>Nombre:</label>
                 <input type="text" v-model.trim="$v.nombre.$model" id="nombre"  autocomplete="off">

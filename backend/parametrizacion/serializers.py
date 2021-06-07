@@ -33,7 +33,7 @@ class parametrizacion_serializer(serializers.ModelSerializer):
             entra = False
         
         if entra == True:
-            print('Entro')
+            
             obj = parametrizacion(nombre=nombre,
                 fecha_inicio=f_inicio,
                 fecha_fin=f_fin,

@@ -36,6 +36,22 @@
           <td>{{ mostrarRol(usuarioL.rol) }}</td>
           <td>{{ usuarioL.activo }}</td>
         </tr>
+        <tfoot>
+          <tr>
+            <td class="excel">
+              <JsonExcel :data="JSON.parse(JSON.stringify(this.filtrarPorActivo))">
+                <button>
+                  <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+                </button>
+              </JsonExcel>
+            </td>
+            <td class="pdf">
+              <button @click="generarPDF()">
+                <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+              </button>
+            </td>
+          </tr>
+        </tfoot>
       </table>
     </div>
       
@@ -45,16 +61,7 @@
         <button @click="sumarPainacion()" id="siguiente">Siguiente</button>
       </ul>
     </div>
-    <button @click="generarPDF()">
-      <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-      Reporte PDF
-    </button>
-    <JsonExcel :data="JSON.parse(JSON.stringify(this.filtrarPorActivo))">
-      <button>
-        <i class="fa fa-file-excel-o" aria-hidden="true"></i>
-        Reporte excel
-      </button>
-    </JsonExcel>
+    
   </div>
 </template>
 
@@ -174,7 +181,8 @@ export default {
         margin: {top:70},
         body: usuarios
       })
-      doc.save();
+      const pdf = doc.output('blob')
+      window.open(URL.createObjectURL(pdf))
     },
   },
 };
@@ -211,6 +219,18 @@ h1 {
   background-color: #ddd;
 }
 .reporte tr:hover {
+  background-color: #063146;
+  color: white;
+}
+.reporte tfoot tr{
+  background-color: #063146;
+  color: white;
+}
+.reporte tfoot tr {
+  background-color: #063146;
+  color: white;
+}
+.reporte tfoot tr {
   background-color: #063146;
   color: white;
 }

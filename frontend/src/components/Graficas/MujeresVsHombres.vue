@@ -61,7 +61,7 @@ export default {
                 datasets: [
                 {
                     label: "HOMBRES VS MUJERES",
-                    backgroundColor: "#7F38D0",
+                    backgroundColor: ["#7F38D0", "#FE3F6F"],
                     color: "white",
                     data: [this.cHombres,this.cMujeres]
                 }

@@ -17,6 +17,7 @@ class usuario(AbstractUser):
     fecha_nacimiento = models.DateField(null=True)
     ultima_activacion = models.DateField(default=datetime.date.today)
     activo = models.BooleanField(default=True)
+    intentos_loggeo = models.PositiveSmallIntegerField(default=0)
 
 
     @property

@@ -29,14 +29,12 @@ export default new Vuex.Store({
       state.listaUsuarios.push(usuario)
     },
     setPaciente(state, paciente){
-      console.log(paciente)
       state.paciente = paciente
     },
     setAuditoria(state,lista){
       state.listaAuditoria = lista
     },
     setParametrizacion(state,lista){
-      console.log(lista)
       state.listaParametrizacion = lista
     }
   },
@@ -71,7 +69,6 @@ export default new Vuex.Store({
       }
     },
     async getPaciente(context, idUsuario){
-      console.log(idUsuario)
       const req = await fetch(`http://127.0.0.1:8000/api/pacientes/${idUsuario}`,{
         method : 'GET',
         headers: {
@@ -176,7 +173,6 @@ export default new Vuex.Store({
       if (req.status === 201){
         const usuario_r = await req.json()
         context.commit('agregarUsuario', usuario_r)
-        console.log(usuario_r)
         if (usuario_r.rol === 1){
           datos.paciente.usuario_p = usuario_r.id
           await context.dispatch('crearPaciente', datos.paciente)
@@ -209,6 +205,9 @@ export default new Vuex.Store({
         },
         body: JSON.stringify(datos)
       })
+      if (!req.ok){
+        throw 'Error en el servidor. Intentalo mas tarde'
+      }
     },
     async getParametrizacion(context){
       const req = await fetch('http://127.0.0.1:8000/api/parametrizacion/',{
@@ -219,7 +218,6 @@ export default new Vuex.Store({
       })
       if (req.status === 200){
         const datos = await req.json()
-        console.log(datos)
         context.commit('setParametrizacion', datos)
       }
     },
@@ -231,7 +229,6 @@ export default new Vuex.Store({
           'Authorization': `Bearer ${window.localStorage.getItem('token')}`
         },
       })
-      console.log(req.status)
       if (req.status === 204){
         await context.dispatch('getParametrizacion')
         return 'Se ha eliminado correctamente'
@@ -241,7 +238,6 @@ export default new Vuex.Store({
       }
     },
     async modificarParametrizacion(context, datos){
-      console.log(datos)
       const req = await fetch(`http://127.0.0.1:8000/api/parametrizacion/${datos.id}/`,{
         method : 'PUT',
         headers : {
@@ -259,7 +255,6 @@ export default new Vuex.Store({
       }
     },
     async crearParametrizacion(context,datos){
-      console.log(datos)
       const req = await fetch('http://127.0.0.1:8000/api/parametrizacion/', {
         method : 'POST',
         headers: {
