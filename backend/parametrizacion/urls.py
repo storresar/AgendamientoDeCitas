@@ -1,4 +1,4 @@
-from rest_framework import routers, urlpatterns, viewsets
+from rest_framework import routers
 from .views import Parametrizacion_Viewset
 
 router = routers.DefaultRouter()

@@ -4,6 +4,7 @@ from .serializers import parametrizacion_serializer
 from django.utils import timezone
 from auditoria.models import auditoria
 
+
 class Parametrizacion_Viewset(viewsets.ModelViewSet):
     queryset = parametrizacion.objects.all()
     serializer_class = parametrizacion_serializer
@@ -42,10 +43,11 @@ class Parametrizacion_Viewset(viewsets.ModelViewSet):
         return super().update(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
+        cambio = parametrizacion.objects.get(id=kwargs['pk'])
         nueva_auditora = auditoria(
             tipo='Eliminación parametro',
             usuario_realiza= request.user,
-            usuario_cambio=request.data['nombre'],
+            usuario_cambio=cambio.nombre,
             ip=request.META.get('REMOTE_ADDR')
             )
         nueva_auditora.save()

@@ -90,7 +90,6 @@ class usuario_viewset(viewsets.ModelViewSet):
         except:
             c_dias_permitidos = 30
             
-        print(c_dias_permitidos)
         serializer = usuario_login_serializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             user, token = serializer.save()
