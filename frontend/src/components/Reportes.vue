@@ -38,6 +38,7 @@
         </tr>
         <tfoot>
           <tr>
+            <td></td>
             <td class="excel">
               <JsonExcel :data="JSON.parse(JSON.stringify(this.filtrarPorActivo))">
                 <button>
@@ -50,16 +51,19 @@
                 <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
               </button>
             </td>
+            <td>
+            </td>
+            <td>              
+            </td>
+            <td>
+              <button @click="restarPaginacion()" id="anterior"><<<<</button>
+            </td>
+            <td>
+              <button @click="sumarPainacion()" id="siguiente">>>>></button>
+            </td>
           </tr>
         </tfoot>
       </table>
-    </div>
-      
-    <div id="paginacion">
-      <ul>
-        <button @click="restarPaginacion()" id="anterior">Anterior</button>
-        <button @click="sumarPainacion()" id="siguiente">Siguiente</button>
-      </ul>
     </div>
     
   </div>
@@ -191,8 +195,9 @@ export default {
 <style scoped>
 h1 {
   float: left;
+  font-family: 'Lato', sans-serif; font-size: 35px; font-weight: 300; 
   margin-left: 1em;
-  font-size: 40px;
+  text-align: left;
 }
 #reporte{
   height: 80vh;
@@ -234,30 +239,20 @@ h1 {
   background-color: #063146;
   color: white;
 }
-#paginacion #anterior {
-  position: fixed;
-  top: 90%;
-  left: 30%;
-}
 
-#paginacion #siguiente {
-  position: fixed;
-  top: 90%;
-  left: 40%;
-}
-#paginacion button:hover {
-  background-color: gray;
-  color: white;
-}
-#paginacion button {
-  background-color: black;
-  color: white;
+#siguiente, #anterior{
+  background-color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
   border: none;
   padding: 10px;
   border-radius: 6px;
   font-family: "Karla", sans-serif;
   font-size: 15px;
   width: 100px;
+}
+#siguiente:hover,#anterior:hover {
+  background-color: gray;
+  color: white;
 }
 .reporte .filtros {
   float: left;
@@ -294,5 +289,39 @@ h1 {
   -moz-border-radius: 5px;
   border-radius: 5px;
   border: black solid 3px;
+}
+.reporte tfoot tr{
+  text-align: center;
+  background-color: black;
+  padding: 0;
+}
+.reporte tfoot tr:hover{
+  background-color: black;
+}
+.excel button{
+  width: 20%;
+  height: 100%;
+  border: none;
+  background-color: #10bd52;
+  color:white;
+  font-size: 30px;
+  border-radius:6px ;
+}
+.excel button:hover{
+  background-color: #3bd677;
+  cursor: pointer;
+}
+.pdf button{
+  width: 20%;
+  height: 100%;
+  border: none;
+  background-color: #bd1010;
+  color:white;
+  font-size: 30px;
+  border-radius:6px ;
+}
+.pdf button:hover{
+  background-color: #db3838;
+  cursor: pointer;
 }
 </style>

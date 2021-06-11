@@ -51,7 +51,7 @@
 	display: flex;
 	padding: 0;
 	width: 300%;
-	animation: cambio 20s infinite;
+	animation: cambio 15s infinite;
 }
 
 .slider li{
@@ -121,7 +121,7 @@ body{
 }
 .section{
 	width: 100%;
-	height: 100vh;
+	height: 55vh;
 	background-color: aliceblue;
 	display: flex;
 	justify-content: center;
