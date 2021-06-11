@@ -74,6 +74,7 @@ import { mapState } from "vuex";
 import JsonExcel from "vue-json-excel";
 import jsPDF from 'jspdf'
 import 'jspdf-autotable'
+import logoImagen from '../store/logo'
 
 export default {
   data() {
@@ -158,8 +159,7 @@ export default {
     },
     generarPDF() {
       const usuarios = []
-      console.log(this.filtrarPorActivo)
-      this.listaUsuarios.forEach(obj => {
+      this.filtrarPorActivo.forEach(obj => {
         usuarios.push([
             obj.id,
             `${obj.first_name} ${obj.last_name}`,
@@ -170,19 +170,17 @@ export default {
             obj.activo?'Activo':'Inactivo']
           )
       });
-      const doc = new jsPDF('landscape')
-      const time = new Date().toISOString().slice(0,10) + ' a las ' + new Date().toLocaleTimeString('en-US', {hour:'numeric', hour12:true, minute:'numeric'})
-      doc.setFontSize(26)
-      doc.text(20,20,'Reporte')
-      doc.setFontSize(16)
-      doc.text(20,32, `Este reporte fue generado por el usuario ${this.usuario.username} el día ${time}`)
-      doc.text(20,44, `Filtros aplicados para la busqueda: 
-      Busqueda por usuario: ${this.buscar===''?'ninguna':this.buscar}
-      Busqueda por Estado: ${this.activo}
-      Busqueda por Rol: ${this.tipo_usuario}`)
+      const doc = new jsPDF()
+      doc.addImage(logoImagen, 'JPEG', 130, 0, 70, 50)
+      const fecha = new Date().toISOString().slice(0,10)
+      const time = new Date().toLocaleTimeString('en-US', {hour:'numeric', hour12:true, minute:'numeric'})
+      doc.setFontSize(12)
+      doc.text(10,25, `Usuario: ${this.usuario.username}`)
+      doc.text(10,30, `Fecha: ${fecha} | ${time}`)
+      doc.text(10,290, `Tipo Usuario: ${this.buscar===''?'todos':this.buscar} | estado: ${this.activo} | rol: ${this.tipo_usuario===1?'Paciente':this.tipo_usuario===2?'Funcionario':this.tipo_usuario===3?'Admin':'todos'}`)
       doc.autoTable({
         head: [['ID','Nombre', 'Email', 'Usuario', 'Fecha Nacimiento', 'Rol', 'Estado']],
-        margin: {top:70},
+        margin: {top:50, bottom:35},
         body: usuarios
       })
       const pdf = doc.output('blob')

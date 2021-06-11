@@ -48,7 +48,6 @@ export default {
             cant.push(0)
         }
         const nuevo = rangos.map((rangodias) => new Date(this.anio+1900, mes, rangodias))
-        console.log(nuevo)
         this.listaUsuarios.map((obj) => {
             for (let i = 1; i < nuevo.length; i++) {
                 const fUsu = new Date(obj.date_joined)

@@ -81,7 +81,7 @@ class usuario_viewset(viewsets.ModelViewSet):
         else:
             return Response('Limite superado para la creación de administradores', status=401)
 
-    @action(detail=False, methods=['post'])
+    @action(detail=False, methods=['post'], permission_classes=[AllowAny])
     def login(self, request):
         c_dias_permitidos = parametrizacion.objects.filter(nombre='inactivar', estado=True)
         try:
@@ -96,8 +96,6 @@ class usuario_viewset(viewsets.ModelViewSet):
             if user.activo:
                 usuario = usuario_serializer(user).data
                 if usuario['ultima_activacion'] < c_dias_permitidos and usuario['intentos_loggeo'] < 3:
-                    usuario.intentos_loggeo = 0
-                    usuario.save()
                     data = {
                         'usuario': usuario,
                         'token': token
@@ -109,7 +107,7 @@ class usuario_viewset(viewsets.ModelViewSet):
                     user.save()
                     return Response(data='Usuario Bloqueado', status=401)
             else:
-                return Response(data='Usuario no activo', status=401)
+                return Response(data='Usuario Bloqueado', status=401)
         else:
             return Response(data='Fallo en las credenciales', status=401)
         

@@ -40,7 +40,6 @@ class usuario_serializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         instance.username = validated_data.get('username')
-        print(instance.check_password(validated_data.get('password')))
         if instance.check_password(validated_data.get('password')):
             instance.password = make_password(validated_data.get('password'))
         instance.first_name = validated_data.get('first_name')
@@ -65,7 +64,6 @@ class usuario_login_serializer(serializers.Serializer):
             try:
                 query = usuario.objects.filter(username=data['username'])
                 usu = get_object_or_404(query)
-                print(usu.check_password(data['password']))
                 if not usu.check_password(data['password']):
                     usu.intentos_loggeo += 1
                     usu.save()
