@@ -3,7 +3,7 @@ from .models import usuario,paciente
 from django.contrib.auth.hashers import make_password
 from django.core.mail import send_mail
 from datetime import date
-from django.contrib.auth import get_user, password_validation, authenticate
+from django.contrib.auth import authenticate
 from .utilities import get_token_for_user
 from django.shortcuts import get_object_or_404
 from parametrizacion.models import parametrizacion
@@ -14,8 +14,8 @@ class usuario_serializer(serializers.ModelSerializer):
 
     class Meta:
         model = usuario
-        fields = ('id','username','password','first_name', 'last_name', 'email','fecha_nacimiento','rol','ultima_activacion', 'activo', 'date_joined')
-        read_only_fields = ('date_joined',)
+        fields = ('id','username','password','first_name', 'last_name', 'email','fecha_nacimiento','rol','ultima_activacion', 'activo', 'date_joined','intentos_loggeo',)
+        read_only_fields = ('date_joined','intentos_loggeo',)
 
     def create(self, validated_data):
         mensaje = parametrizacion.objects.filter(nombre='correo', estado=True)
@@ -23,7 +23,7 @@ class usuario_serializer(serializers.ModelSerializer):
             mensaje = get_object_or_404(mensaje)
             mensaje = mensaje.valor
         except:
-            mensaje = 'Felicidades! Usted se ha registrado exitosamente en Sophy hostpital.\n'
+            mensaje = 'Felicidades! Usted se ha registrado exitosamente en Sofhy hostpital.\n'
             mensaje += 'A continuacion mostaremos sus credenciales, por favor no las difunda con nadie mas.'
         
         mensaje += '\nUsuario:  ' + validated_data['username'] + '\n'
@@ -40,7 +40,9 @@ class usuario_serializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         instance.username = validated_data.get('username')
-        instance.password = make_password(validated_data.get('password'))
+        print(instance.check_password(validated_data.get('password')))
+        if instance.check_password(validated_data.get('password')):
+            instance.password = make_password(validated_data.get('password'))
         instance.first_name = validated_data.get('first_name')
         instance.last_name = validated_data.get('last_name')
         instance.email = validated_data.get('email')
@@ -60,6 +62,16 @@ class usuario_login_serializer(serializers.Serializer):
     def validate(self, data):
         user = authenticate(username=data['username'], password=data['password'])
         if not user:
+            try:
+                query = usuario.objects.filter(username=data['username'])
+                usu = get_object_or_404(query)
+                print(usu.check_password(data['password']))
+                if not usu.check_password(data['password']):
+                    usu.intentos_loggeo += 1
+                    usu.save()
+                    raise serializers.ValidationError('La contraseña es invalida')
+            except:
+                serializers.ValidationError('Usuario no encontrado')
             raise serializers.ValidationError('Las credenciales son invalidas')
         self.context['user'] = user
         return data

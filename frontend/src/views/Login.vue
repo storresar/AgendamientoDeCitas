@@ -14,8 +14,7 @@
         theme="Dark">
         </VueRecaptcha>
         <button class="boton" @click="mandarDatos()">Ingresar</button>
-
-        <p>¿No tienes cuenta? <a href="#">Registrate aquí</a></p>
+        <router-link to="/recuperar_cuenta">Desbloquee su cuenta aqui</router-link>
     </section>
 </template>
 
@@ -85,7 +84,7 @@ export default {
     background: #042331;
     padding: 20px;
     margin: auto;
-    margin-top: 100px;
+    margin-top: 3em;
     font-family: 'Poppins', sans-serif;
     color: white;
 }

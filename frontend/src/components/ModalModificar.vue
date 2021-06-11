@@ -90,7 +90,7 @@
 </template>
 
 <script>
-import { required,minLength, email, sameAs, maxLength } from 'vuelidate/lib/validators'
+import { required, minLength, email, sameAs, maxLength } from 'vuelidate/lib/validators'
 import { mapActions } from 'vuex'
 import { esFuerte,noCaracteresEspeciales,noNumeros,contieneMayuscula,validacionFecha,contieneMinuscula } from '../validators/validator'
 

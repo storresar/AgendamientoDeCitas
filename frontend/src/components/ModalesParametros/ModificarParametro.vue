@@ -40,8 +40,8 @@
 </template>
 
 <script>
-    import { required } from 'vuelidate/lib/validators'
-    import { mapActions } from 'vuex'
+import { required } from 'vuelidate/lib/validators'
+import { mapActions } from 'vuex'
 export default {
     name: 'ModificarParametro',
     props: ['parametro'],

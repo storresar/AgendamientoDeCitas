@@ -90,13 +90,13 @@ export default new Vuex.Store({
         },
         body: JSON.stringify(datos),
       })
-      if (req.status === 201){
-        const data = await req.json()
+      const data = await req.json()
+      if (req.status === 201){ 
         context.commit('storeToken', {token:data.token, username:data.usuario.username})
         context.commit('setUsuario', data.usuario)
       }
       if (req.status === 401){
-        throw 'Error de Autenticación'
+        throw data;
       }
     },
     async validarToken(context, token){

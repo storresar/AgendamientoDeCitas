@@ -5,7 +5,7 @@ from rest_framework import viewsets
 from .serializers import usuario_serializer, usuario_login_serializer, paciente_serializer
 from .models import usuario,paciente
 from .permissions import IsUserOrAdmin
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.decorators import action, api_view, permission_classes
@@ -13,6 +13,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from auditoria.models import auditoria
 from parametrizacion.models import parametrizacion
+from django.contrib.auth.hashers import make_password
 import requests
 
 class usuario_viewset(viewsets.ModelViewSet):
@@ -66,7 +67,6 @@ class usuario_viewset(viewsets.ModelViewSet):
         c_admins_actuales = usuario.objects.filter(rol=3).count()
         if request.data['rol'] == 3:
             c_admins_actuales += 1
-        print(c_admins_permitidos)
         if c_admins_permitidos >= c_admins_actuales:
 
             nueva_auditora = auditoria(
@@ -91,11 +91,13 @@ class usuario_viewset(viewsets.ModelViewSet):
             c_dias_permitidos = 30
             
         serializer = usuario_login_serializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
+        if serializer.is_valid(raise_exception=False):
             user, token = serializer.save()
             if user.activo:
                 usuario = usuario_serializer(user).data
-                if usuario['ultima_activacion'] < c_dias_permitidos:
+                if usuario['ultima_activacion'] < c_dias_permitidos and usuario['intentos_loggeo'] < 3:
+                    usuario.intentos_loggeo = 0
+                    usuario.save()
                     data = {
                         'usuario': usuario,
                         'token': token
@@ -108,28 +110,37 @@ class usuario_viewset(viewsets.ModelViewSet):
                     return Response(data='Usuario Bloqueado', status=401)
             else:
                 return Response(data='Usuario no activo', status=401)
-        
-    @action(detail=False, methods=['post'])
-    def reactivar_usuario(self, request, pk=None):
-        queryset = usuario.objects.filter(username=pk)
-        user = get_object_or_404(queryset)
-        if request.data['clave'] == request.data['confirma']:
-            user.password = request.data['clave']
-            user.save()
-            return Response(data='Usuario actualizado exitosamente', status=200)
         else:
-            return Response('Error en la peticion', status=400)
+            return Response(data='Fallo en las credenciales', status=401)
+        
+@api_view(['POST'])
+@permission_classes((IsAuthenticated,))
+def reactivar_usuario(request):
+    queryset = usuario.objects.filter(username=request.data['username'])
+    user = get_object_or_404(queryset)
+    if request.data['clave'] == request.data['confirma']:
+        user.password = make_password(request.data['clave'])
+        user.activo = True
+        user.intentos_loggeo = 0
+        user.save()
+        return Response(data='Usuario actualizado exitosamente', status=200)
+    else:
+        return Response('Error en la peticion', status=400)
 
 @api_view(['POST'])
+@permission_classes((AllowAny,))
 def mandar_correo(request):
     usuario_bloqueado = usuario.objects.filter(email=request.data['email'])
-    usu = get_object_or_404(usuario_bloqueado)
-    nuevo_token = get_token_for_user(usu)
-    mensaje = f'Querido usuario ' + usu.username
-    mensaje += ' para desbloquear su cuenta acceda a este link a continuacion. Tienes 60 minutos. Que empiece el juego: \n'
-    mensaje += f'127.0.0.1:8080/reactivar_usuario/?key={nuevo_token}?user={usu.username}'
-    if (send_mail(subject='Desbloqueo',message=mensaje,from_email=None,recipient_list=[usu.email]) > 0):
-        return Response('Correo enviado', status=200)
+    try:
+        usu = get_object_or_404(usuario_bloqueado)
+        nuevo_token = get_token_for_user(usu)
+        mensaje = f'Querido usuario ' + usu.username
+        mensaje += ' para desbloquear su cuenta acceda a este link a continuacion. Tienes 60 minutos. Que empiece el juego: \n'
+        mensaje += f'127.0.0.1:8080/#/cambiar_clave/{nuevo_token}/{usu.username}'
+        if (send_mail(subject='Desbloqueo',message=mensaje,from_email=None,recipient_list=[usu.email]) > 0):
+            return Response('Correo enviado', status=200)
+    except:
+        return Response('Correo no encontrado', status=404)
 
 @api_view(['POST'])
 @permission_classes((AllowAny,))
@@ -160,7 +171,6 @@ class paciente_view(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def create(self, request, *args, **kwargs):
-        print(request.data.get('usuario_p'))
         user = usuario.objects.get(id=request.data.get('usuario_p'))
 
         nueva_auditora = auditoria(
@@ -175,7 +185,6 @@ class paciente_view(viewsets.ModelViewSet):
     def update(self, request, pk=None):
 
         user = usuario.objects.get(id=pk)
-        print('Siete')
 
         nueva_auditora = auditoria(
          tipo='Actualización Paciente',

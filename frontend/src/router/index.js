@@ -4,7 +4,7 @@ import Home from '../views/Home.vue'
 
 Vue.use(VueRouter)
 
-const paginasPublicas = ['/','/login','/registro']
+const paginasPrivadas = ['/admin']
 
 const routes = [
   {
@@ -26,7 +26,17 @@ const routes = [
     path: '/registro',
     name: 'Registro',
     component: () => import('../views/PaginaRegistro.vue')
-  }
+  },
+  {
+    path: '/cambiar_clave/:token/:nom_usuario',
+    name: 'CambiarClave',
+    component: () => import('../views/CambiarClave.vue')
+  },
+  {
+    path: '/recuperar_cuenta',
+    name: 'RecuperarCuenta',
+    component: () => import('../views/RecuperarCuenta.vue')
+  },
 
 ]
 
@@ -35,7 +45,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const requiereAutorizacion = !paginasPublicas.includes(to.path)
+  const requiereAutorizacion = paginasPrivadas.includes(to.path)
   const estaloggeado = window.localStorage.getItem('token')
   if (requiereAutorizacion && !estaloggeado){
     next('/')
