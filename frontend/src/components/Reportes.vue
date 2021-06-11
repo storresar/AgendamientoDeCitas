@@ -14,6 +14,8 @@
         <option value="inactivo">INACTIVO</option>
         <option value="todos">TODOS</option>
       </select>
+      <input type="date" v-model="fecha_ini">
+      <input type="date" v-model="fecha_fin">
     </div>
 
     <div>
@@ -84,6 +86,8 @@ export default {
       buscar: "",
       tipo_usuario: "todos",
       activo: "todos",
+      fecha_ini: "",
+      fecha_fin:""
     };
   },
   components: {
@@ -132,6 +136,10 @@ export default {
     },
     tiempoReal(){
       return new Date().toISOString().slice(0,10) + ' a las ' + new Date().toLocaleTimeString('en-US', {hour:'numeric', hour12:true, minute:'numeric'})
+    },
+    filtrarPorFecha(){
+      var lista = this.filtrarPorActivo
+      
     }
   },
   methods: {
@@ -290,11 +298,11 @@ h1 {
 }
 .reporte tfoot tr{
   text-align: center;
-  background-color: black;
+  background-color: rgb(100, 98, 98);
   padding: 0;
 }
 .reporte tfoot tr:hover{
-  background-color: black;
+  background-color: rgb(100, 98, 98);
 }
 .excel button{
   width: 20%;

@@ -71,13 +71,21 @@
                     <td><button id="modificar" @click="modificar(usuarioL)"><i class="fa fa-pencil"></i> <div id="texto">Modificar</div> </button></td>
                     <td><button id="eliminar" @click="eliminar(usuarioL.username)"><i class="fa fa-times"></i><div id="texto">Eliminar</div></button></td>
                 </tr>
+                <tfoot>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <button @click="restarPaginacion()" id="anterior">Anterior</button>
+                    </td>
+                    <td>
+                        <button @click="sumarPainacion()" id="siguiente">Siguiente</button>
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tfoot>
             </table>
-            <div id="paginacion">
-                <ul>
-                    <button @click="restarPaginacion()" id="anterior">Anterior</button>
-                    <button @click="sumarPainacion()" id="siguiente">Siguiente</button>
-                </ul>
-            </div>
         </div>
         <ModalRegistro v-show="mostrarModal" @close="mostrarModal = false"/>
         <ModalModificar
@@ -487,7 +495,16 @@ ul li:hover a{
     font-size: 15px;
     width: 100px;
 }
-
+#siguiente, #anterior{
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    font-family: 'Karla', sans-serif;
+    font-size: 15px;
+    width: 100px;
+}
 #paginacion #anterior{
     position: relative;
     top: 90%;
@@ -502,6 +519,9 @@ ul li:hover a{
 #paginacion button:hover{
     background-color: gray;
     color: white;
+}
+tfoot{
+    background-color: grey;
 }
 .audi h1{
     font-family: 'Lato', sans-serif; font-size: 30px; font-weight: 300; 
