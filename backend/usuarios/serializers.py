@@ -48,6 +48,8 @@ class usuario_serializer(serializers.ModelSerializer):
         instance.fecha_nacimiento = validated_data.get('fecha_nacimiento')
         instance.activo = validated_data.get('activo')
         instance.rol = validated_data.get('rol')
+        if instance.activo:
+            instance.intentos_loggeo = 0
         instance.save()
         return instance
         
