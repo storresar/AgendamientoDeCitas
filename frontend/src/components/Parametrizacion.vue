@@ -90,6 +90,12 @@ export default {
 </script>
 
 <style scoped>
+    .parametrizacion h1{
+        float: left;
+        font-family: 'Lato', sans-serif; font-size: 30px; font-weight: 300; 
+        margin-left: 1em;
+        text-align: left;
+    }
     .parametrizacion table{
     width: 80%;
     background-color: rgb(85, 82, 82);
@@ -164,14 +170,14 @@ export default {
     background-color: rgb(0, 0, 0);
     color: white;
     border: none;
-    padding: 20px;
+    position: relative;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    left: -5%;
     border-radius: 6px;
     font-family: 'Karla', sans-serif;
-    font-size: 15px;
-    width: 300px;
-    position: fixed;
-    left: 2em;
-    top: 6em;
+    font-size: 18px;
+    width: 25%;
     }
     #agregar:hover{
     background-color: rgb(109, 128, 129);

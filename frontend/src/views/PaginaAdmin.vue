@@ -1,16 +1,13 @@
 <template>
     <div id="admin">
     <div class="sidebar">
-            <header><img src="https://images.vexels.com/media/users/3/144204/isolated/preview/f6d082b22c3fbdc5d2927ff1c7cd57d4-icono-de-edificio-de-hospital-by-vexels.png"></header>
+            <header><img src="@/assets/logocitas.png"></header>
             <ul>
                 <li>
                     <a @click="showDivInfo()"><i class="fa fa-info"></i>MI INFORMACIÓN</a>
                 </li>
                 <li>                   
                     <a @click="showDivUsuarios()"><i class="fa fa-users"></i>GESTIÓN DE USUARIOS</a>
-                </li>
-                <li>
-                    <a onclick=""><i class="fa fa-calendar"></i>GESTIÓN DE CITAS</a>
                 </li>
                 <li>
                     <a @click="showDivAuditoria()"><i class="fa fa-address-book"></i>AUDITORIA</a>
@@ -59,10 +56,10 @@
         </div>
         <div id="usuarios" style="display: none;" class="listaUsu">
                 <h1>LISTA DE USUARIOS EN EL SISTEMA</h1>
-                <button id="agregar" @click="mostrarModal = true">AGREGAR USUARIO</button>
+                <button id="agregar" @click="mostrarModal = true"><i class="fa fa-plus-circle"> </i> Agregar</button>
                 <table>
                 <thead>
-                    <th>ID</th><th>NOMBRE</th><th>EMAIL</th><th>USUARIO</th><th>FECHA NACIMIENTO</th><th>ROL</th><th>MODIFICAR</th><th>ELIMINAR</th>
+                    <th>Id</th><th>Nombre</th><th>Email</th><th>Usuario</th><th>Fecha Nacimiento</th><th>Rol</th><th></th><th></th>
                 </thead>
                 <tr v-for="usuarioL in paginated" :key="usuarioL.username">
                     <td>{{usuarioL.id}}</td>
@@ -71,8 +68,8 @@
                     <td>{{usuarioL.username}}</td>
                     <td>{{usuarioL.fecha_nacimiento}}</td>
                     <td>{{mostrarRol(usuarioL.rol)}}</td>
-                    <td><button id="modificar" @click="modificar(usuarioL)"><i class="fa fa-pencil"></i>Modificar</button></td>
-                    <td><button id="eliminar" @click="eliminar(usuarioL.username)"><i class="fa fa-times"></i>Eliminar</button></td>
+                    <td><button id="modificar" @click="modificar(usuarioL)"><i class="fa fa-pencil"></i> <div id="texto">Modificar</div> </button></td>
+                    <td><button id="eliminar" @click="eliminar(usuarioL.username)"><i class="fa fa-times"></i><div id="texto">Eliminar</div></button></td>
                 </tr>
             </table>
             <div id="paginacion">
@@ -92,7 +89,7 @@
                     <h1>AUDITORIA DE LA APLICACIÓN</h1>
                     <table>
                     <thead>
-                        <th>ID</th><th>FECHA</th><th>TIPO</th><th>USUARIO AFECTADO</th><th>USUARIO</th><th>IP</th>
+                        <th>Id</th><th>Fecha</th><th>Tipo</th><th>Usuario Afectado</th><th>Usuario</th><th>IP</th>
                     </thead>
                     <tr v-for="auditoria in paginatedA" :key="auditoria.fecha">
                         <td>{{auditoria.id}}</td>
@@ -184,6 +181,7 @@ export default {
             document.getElementById('usuarios').style.display='None';
             document.getElementById('auditoria').style.display='None';
             document.getElementById('reportes').style.display='None';
+            document.getElementById('parametrizacion').style.display='None';
             this.mostrarGraficas = false
         },
         showDivUsuarios(){
@@ -304,7 +302,7 @@ export default {
     position: fixed;
     right: 0;
     top: 0;
-    width: 250px;
+    width: 19%;
     height: 100%;
     background-color:#042331;
 }
@@ -321,15 +319,14 @@ export default {
     user-select: none;
 }
 .sidebar header img{
-    width: 150px;
-    height: 150px; 
-    
+    width: 250px;
+    height: 130px; 
 }
 .sidebar ul a{
     display: block;
     width: 100%;
     height: 100%;
-    line-height: 67px;
+    line-height: 60px;
     font-size: 15px;
     color: white;
     padding-left: 0px;
@@ -383,22 +380,26 @@ ul li:hover a{
     margin-bottom: 1em;
     line-height: 30%;
 }
+
 .listaUsu h1{
+    float: left;
+    font-family: 'Lato', sans-serif; font-size: 30px; font-weight: 300; 
+    margin-left: 1em;
+    text-transform: uppercase;
     text-align: left;
-    padding-left: 30px;
 }
 .listaUsu #agregar{
     background-color: rgb(20, 149, 158);
     color: white;
     border: none;
-    padding: 20px;
+    position: relative;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    left: -5%;
     border-radius: 6px;
     font-family: 'Karla', sans-serif;
-    font-size: 15px;
-    width: 300px;
-    position: relative;
-    left: 17em;
-    top: -3em;
+    font-size: 18px;
+    width: 25%;
 }
 .listaUsu #agregar:hover{
     background-color: rgb(38, 193, 204);
@@ -408,15 +409,17 @@ ul li:hover a{
     background-color: white;
     text-align: left;
     color: black;
-    top: 20%;
+    top: 15%;
     left:11px;
     border-collapse: collapse;
-    position: fixed;
+    position: relative;
+    font-size: 18px;
 }
 .listaUsu th,td{
-    padding: 15px;
+    padding: 1.5%;
 }
 .listaUsu thead{
+    font-size: 100%;
     background-color: #063146;
     color: white;
     border-bottom: solid 5px black;
@@ -431,15 +434,35 @@ ul li:hover a{
 .listaUsu button{
     width: 100%;
     border: none;
-    padding: 10px;
     border-radius: 6px;
     font-family: 'Karla', sans-serif;
-    font-size: 15px;
+}
+#texto{
+    float: right;
+    font-size: 14px;
+}
+@media screen and (max-width: 1600px)
+{
+    #texto{
+        display: none;
+        
+    }
+    #modificar{
+        font-size: 150%;
+    }
+
+    #eliminar{
+        font-size: 150%;
+    }
+    .listaUsu table{
+        font-size: 90%;
+    }
 }
 .listaUsu button i{
-    margin-right: 16px;
+    margin-right: 0px;
 }
 #modificar{
+    padding: 10%;
     background-color: rgb(20, 94, 20);
     color: white;
 }
@@ -447,6 +470,7 @@ ul li:hover a{
     background-color: rgb(23, 158, 23);
 }
 #eliminar{
+    padding: 10%;
     background-color: rgb(202, 59, 59);
     color: white;
 }
@@ -465,21 +489,22 @@ ul li:hover a{
 }
 
 #paginacion #anterior{
-    position: fixed;
+    position: relative;
     top: 90%;
-    left: 30%;
+    left: -10%;
 }
 
 #paginacion #siguiente{
-    position: fixed;
+    position: relative;
     top: 90%;
-    left: 40%;
+    left: -5%;
 }
 #paginacion button:hover{
     background-color: gray;
     color: white;
 }
 .audi h1{
+    font-family: 'Lato', sans-serif; font-size: 30px; font-weight: 300; 
     text-align: left;
     padding-left: 30px;
 }

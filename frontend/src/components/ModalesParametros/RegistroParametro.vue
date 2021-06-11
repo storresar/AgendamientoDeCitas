@@ -26,7 +26,7 @@
                 <input type="text" v-model.trim="$v.valor.$model" id="usuario"  autocomplete="off">
             </div>
             <div v-if="nombre != 'correo'">
-                <input type="number" v-model.trim="$v.valor.$model" id="usuario"  autocomplete="off">
+                <input type="number" v-model.trim="$v.valor.$model" id="usuario" min="0" autocomplete="off">
             </div>
         </section>
 
