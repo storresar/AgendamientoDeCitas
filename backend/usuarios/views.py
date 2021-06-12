@@ -103,6 +103,13 @@ class usuario_viewset(viewsets.ModelViewSet):
                     return Response(data, status=201)
                 else:
                     #Bloqueo Usuario
+                    nueva_auditora = auditoria(
+                    tipo='Usuario bloqueado',
+                    usuario_realiza= 'Automatico',
+                    usuario_cambio=usuario['username'],
+                    ip=request.META.get('REMOTE_ADDR')
+                    )
+                    nueva_auditora.save()
                     user.activo = False
                     user.save()
                     return Response(data='Usuario Bloqueado', status=401)
@@ -117,6 +124,13 @@ def reactivar_usuario(request):
     queryset = usuario.objects.filter(username=request.data['username'])
     user = get_object_or_404(queryset)
     if request.data['clave'] == request.data['confirma']:
+        nueva_auditora = auditoria(
+        tipo='Usuario desbloquedo',
+        usuario_realiza= 'Automatico',
+        usuario_cambio= user.username,
+        ip=request.META.get('REMOTE_ADDR')
+        )
+        nueva_auditora.save()
         user.password = make_password(request.data['clave'])
         user.activo = True
         user.intentos_loggeo = 0
