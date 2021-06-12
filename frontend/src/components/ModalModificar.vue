@@ -12,72 +12,77 @@
         </header>
 
         <section class="modal-body">
-                <label>Usuario:</label>
-                <input type="text" v-model.trim="$v.nombreUsuario.$model" autocomplete="off" readonly>
-                <div class="error" v-if="!$v.nombreUsuario.minLength">Este campo requiere minimo 8 caracteres</div>
-                <div class="error" v-if="!$v.nombreUsuario.contieneMayuscula">Tiene que escribir todo en minuscula</div>
-                <label for="">Correo:</label>
-                <input type="text" v-model.trim="$v.correo.$model" autocomplete="off" readonly>
-                <div class="error" v-if="!$v.correo.email">Este correo es invalido</div>
-                <label>Nombre:</label>
-                <input type="text" v-model.trim="$v.nombre.$model" id="nombre"  autocomplete="off">
-                <div class="error" v-if="!$v.nombre.minLength">Este campo requiere minimo 3 caracteres</div>
-                <div class="error" v-if="!$v.nombre.noNumeros">No se admiten numeros</div>
-                <div class="error" v-if="!$v.nombre.noCaracteresEspeciales">No se admiten caracteres especiales</div>
-                <label>Apellido:</label>
-                <input type="text" v-model.trim="$v.apellido.$model" id="apellido"  autocomplete="off">
-                <div class="error" v-if="!$v.apellido.minLength">Este campo requiere minimo 8 caracteres</div>
-                <div class="error" v-if="!$v.apellido.noNumeros">No se admiten numeros</div>
-                <div class="error" v-if="!$v.apellido.noCaracteresEspeciales">No se admiten caracteres especiales</div>
-                <label>Fecha Nacimiento:</label>
-                <input type="date" v-model.trim="$v.fecha.$model" id="fecha" min="1905-01-01">
-                <div class="error" v-if="!$v.fecha.required">Este campo es obligatorio</div>
-                <div class="error" v-if="!$v.fecha.validacionFecha">Esta fecha no es valida</div>
-                <label for="">Contraseña</label>
-                <input type="password" v-model.trim="$v.clave.$model" id="" maxlength="8">
-                <div class="error" v-if="!$v.clave.minLength">Este campo requiere minimo 8 caracteres</div>
-                <div class="error" v-if="!$v.clave.esFuerte">La contraseña debe contener una mayuscula, una minuscula y un numero</div>
-                <label for="">Confima la contraseña</label>
-                <input type="password" v-model.trim="$v.confirma.$model" id="">
-                <div class="error" v-if="!$v.confirma.required">Este campo es obligatorio</div>
-                <div class="error" v-if="!$v.confirma.sameAsClave">Las claves no coinciden</div>
-                <label for="">Tipo Usuario</label>
-                <select v-model="tipo_usuario">
-                    <option value="1">PACIENTE</option>
-                    <option value="2">FUNCIONARIO</option>
-                    <option value="3">ADMINISTRADOR</option>
+            <label>Usuario:</label>
+            <input type="text" v-model.trim="$v.nombreUsuario.$model" autocomplete="off" readonly>
+            <div class="error" v-if="!$v.nombreUsuario.minLength">Este campo requiere minimo 8 caracteres</div>
+            <div class="error" v-if="!$v.nombreUsuario.contieneMayuscula">Tiene que escribir todo en minuscula</div>
+            <label for="">Correo:</label>
+            <input type="text" v-model.trim="$v.correo.$model" autocomplete="off" readonly>
+            <div class="error" v-if="!$v.correo.email">Este correo es invalido</div>
+            <label>Nombre:</label>
+            <input type="text" v-model.trim="$v.nombre.$model" id="nombre"  autocomplete="off">
+            <div class="error" v-if="!$v.nombre.minLength">Este campo requiere minimo 3 caracteres</div>
+            <div class="error" v-if="!$v.nombre.noNumeros">No se admiten numeros</div>
+            <div class="error" v-if="!$v.nombre.noCaracteresEspeciales">No se admiten caracteres especiales</div>
+            <label>Apellido:</label>
+            <input type="text" v-model.trim="$v.apellido.$model" id="apellido"  autocomplete="off">
+            <div class="error" v-if="!$v.apellido.minLength">Este campo requiere minimo 8 caracteres</div>
+            <div class="error" v-if="!$v.apellido.noNumeros">No se admiten numeros</div>
+            <div class="error" v-if="!$v.apellido.noCaracteresEspeciales">No se admiten caracteres especiales</div>
+            <label>Fecha Nacimiento:</label>
+            <input type="date" v-model.trim="$v.fecha.$model" id="fecha" min="1905-01-01">
+            <div class="error" v-if="!$v.fecha.required">Este campo es obligatorio</div>
+            <div class="error" v-if="!$v.fecha.validacionFecha">Esta fecha no es valida</div>
+            <label for="">Contraseña</label>
+            <input type="password" v-model.trim="$v.clave.$model" id="" maxlength="8">
+            <div class="error" v-if="!$v.clave.minLength">Este campo requiere minimo 8 caracteres</div>
+            <div class="error" v-if="!$v.clave.esFuerte">La contraseña debe contener una mayuscula, una minuscula y un numero</div>
+            <label for="">Confima la contraseña</label>
+            <input type="password" v-model.trim="$v.confirma.$model" id="">
+            <div class="error" v-if="!$v.confirma.required">Este campo es obligatorio</div>
+            <div class="error" v-if="!$v.confirma.sameAsClave">Las claves no coinciden</div>
+            <label for="">Estado</label>
+            <div class="activo-form">
+                <input type="checkbox" v-model="estado" id="">
+                <label for="checkbox">{{estado?'Activo':'Inactivo'}}</label>
+            </div>
+            <label for="">Tipo Usuario</label>
+            <select v-model="tipo_usuario">
+                <option value="1">PACIENTE</option>
+                <option value="2">FUNCIONARIO</option>
+                <option value="3">ADMINISTRADOR</option>
+            </select>
+            <div v-if="tipo_usuario == 1" class="if-paciente">
+                <label for="">RH</label>
+                <select v-model="rh">
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
                 </select>
-                <div v-if="tipo_usuario == 1" class="if-paciente">
-                    <label for="">RH</label>
-                    <select v-model="rh">
-                        <option value="O+">O+</option>
-                        <option value="O-">O-</option>
-                        <option value="A+">A+</option>
-                        <option value="A-">A-</option>
-                        <option value="AB+">AB+</option>
-                        <option value="AB-">AB-</option>
-                        <option value="B+">B+</option>
-                        <option value="B-">B-</option>
-                    </select>
-                    <div class="error" v-if="!$v.rh.required">Este campo es obligatorio</div>
-                    <label for="">Sexo</label>
-                    <select v-model="sexo">
-                        <option value="M">Masculino</option>
-                        <option value="F">Femenino</option>
-                    </select>
-                    <label for="">Tipo de identificacion</label>
-                    <select v-model="tId">
-                        <option value="1">Cedula</option>
-                        <option value="2">Tarjeta de Identidad</option>
-                        <option value="3">Pasaporte</option>
-                    </select>
-                    <label for="">Identificacion</label>
-                    <input type="text" v-model.trim="$v.id.$model" id="">
-                    <div class="error" v-if="!$v.id.minLength">No es una tarjeta valida</div>
-                    <div class="error" v-if="!$v.id.maxLength">No es una tarjeta valida</div>
-                    <div class="error" v-if="!$v.id.contieneMayuscula">No puede ingresar letras</div>
-                    <div class="error" v-if="!$v.id.contieneMinuscula">No puede ingresar letras</div>
-                </div>
+                <div class="error" v-if="!$v.rh.required">Este campo es obligatorio</div>
+                <label for="">Sexo</label>
+                <select v-model="sexo">
+                    <option value="M">Masculino</option>
+                    <option value="F">Femenino</option>
+                </select>
+                <label for="">Tipo de identificacion</label>
+                <select v-model="tId">
+                    <option value="1">Cedula</option>
+                    <option value="2">Tarjeta de Identidad</option>
+                    <option value="3">Pasaporte</option>
+                </select>
+                <label for="">Identificacion</label>
+                <input type="text" v-model.trim="$v.id.$model" id="">
+                <div class="error" v-if="!$v.id.minLength">No es una tarjeta valida</div>
+                <div class="error" v-if="!$v.id.maxLength">No es una tarjeta valida</div>
+                <div class="error" v-if="!$v.id.contieneMayuscula">No puede ingresar letras</div>
+                <div class="error" v-if="!$v.id.contieneMinuscula">No puede ingresar letras</div>
+            </div>
         </section>
 
         <footer class="modal-footer">
@@ -299,5 +304,13 @@ export default {
 .modal-fade-enter-active,
 .modal-fade-leave-active {
     transition: opacity .3s ease;
+}
+.activo-form{
+    display: flex;
+}
+
+.activo-form input{
+    margin: 1em;
+    width: 40px;
 }
 </style>

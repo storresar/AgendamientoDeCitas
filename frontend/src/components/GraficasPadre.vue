@@ -88,7 +88,7 @@ export default {
 .componente{
     font-family: "Open Sans", sans-serif; 
     display: grid;
-    grid-template-rows: 20vh 50vh 50vh;
+    grid-template-rows: 20vh 64vh 50vh;
     grid-template-columns: 100vw;
     grid-gap: 1em;
     background-color: black;
@@ -109,8 +109,8 @@ export default {
 }
 .grafica-fila2{
     display: grid;
-    grid-gap: 2em; 
-    grid-template-columns: 31.2% 31.2% 31.2%;
+    column-gap: 1em; 
+    grid-template-columns: 33% 31% 33%;
 }
 .info-general{
     display: grid;
@@ -151,5 +151,19 @@ export default {
 .grafica {
     padding-top: 1em;
     padding-bottom: 1em;
+}
+
+/* On screens that are 1440px wide or less, make the columns stack on top of each other instead of next to each other */
+@media screen and (min-width: 1440px) {
+    .componente{
+      grid-template-rows: 15vh 45vh 50vh;
+      grid-template-columns: 95vw;
+    }
+    .grafica-fila1{
+        grid-template-columns: 59.7% 38%;
+    }
+    .grafica-fila2{
+        grid-template-columns: 33% 31.5% 33%;
+    }
 }
 </style>
