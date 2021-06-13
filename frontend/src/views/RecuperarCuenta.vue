@@ -47,7 +47,7 @@ export default {
                 .then(res => {
                     if (res.ok) {
                         this.$alert('Se ha enviado unas instrucciones a su correo. Reviselas por favor','Exito','success')
-                        this.$router.push('/login')
+                        this.$router.push('/')
                     } else {
                         res.json()
                         .then((msg) => this.$alert(msg,'Fallo','error'))
