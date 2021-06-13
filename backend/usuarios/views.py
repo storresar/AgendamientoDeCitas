@@ -103,7 +103,7 @@ class usuario_viewset(viewsets.ModelViewSet):
         serializer = usuario_login_serializer(data=request.data)
         if serializer.is_valid(raise_exception=False):
             user, token = serializer.save()
-            if user.activo:
+            if user.activo:# holiiii :3 el mas piton 3=)
                 usuario = usuario_serializer(user).data
                 if usuario['ultima_activacion'] < c_dias_permitidos and usuario['intentos_loggeo'] < 3:
                     data = {
@@ -155,14 +155,17 @@ def mandar_correo(request):
     usuario_bloqueado = usuario.objects.filter(email=request.data['email'])
     try:
         usu = get_object_or_404(usuario_bloqueado)
-        nuevo_token = get_token_for_user(usu)
-        mensaje = f'Querido usuario ' + usu.username
-        mensaje += ' para desbloquear su cuenta acceda a este link a continuacion. Tienes 60 minutos. Que empiece el juego: \n'
-        mensaje += f'127.0.0.1:8080/#/cambiar_clave/{nuevo_token}/{usu.username}'
-        if (send_mail(subject='Desbloqueo',message=mensaje,from_email=None,recipient_list=[usu.email]) > 0):
-            return Response('Correo enviado', status=200)
+        if usu.activo == False:
+            nuevo_token = get_token_for_user(usu)
+            mensaje = f'Querido usuario {usu.username}'
+            mensaje += ' para desbloquear su cuenta acceda a este link a continuacion. Tienes 60 minutos. Que empiece el juego: \n'
+            mensaje += f'127.0.0.1:8080/#/cambiar_clave/{nuevo_token}/{usu.username}'
+            if send_mail(subject='Desbloqueo',message=mensaje,from_email=None,recipient_list=[usu.email]) > 0:
+                return Response('Correo enviado', status=200)
+        else:
+            return Response('Este usuario esta activo', status=404)
     except:
-        return Response('Correo no encontrado', status=404)
+        return Response('El usuario asociado a este correo no esta registrado', status=404)
 
 @api_view(['POST'])
 @permission_classes((AllowAny,))
