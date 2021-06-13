@@ -189,7 +189,12 @@ export default {
       doc.setFontSize(12)
       doc.text(10,25, `Usuario: ${this.usuario.username}`)
       doc.text(10,30, `Fecha: ${fecha} | ${time}`)
-      doc.text(10,290, `Tipo Usuario: ${this.buscar===''?'todos':this.buscar} | estado: ${this.activo} | rol: ${this.tipo_usuario===1?'Paciente':this.tipo_usuario===2?'Funcionario':this.tipo_usuario===3?'Admin':'todos'}`)
+      const fIni = `Tipo Usuario: ${this.buscar===''?'todos':this.buscar} | estado: ${this.activo} | rol: ${this.tipo_usuario===1?'Paciente':this.tipo_usuario===2?'Funcionario':this.tipo_usuario===3?'Admin':'todos'}`
+      var filto = fIni;
+      if(this.fecha_fin || this.fecha_ini){
+        filto += ` | fecha registro de ${this.fecha_ini} a ${this.fecha_fin}`
+      }
+      doc.text(10,290, filto)
       doc.autoTable({
         head: [['ID','Nombre', 'Email', 'Usuario', 'Fecha Nacimiento', 'Rol', 'Estado']],
         margin: {top:50, bottom:35},

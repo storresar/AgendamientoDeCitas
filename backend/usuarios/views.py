@@ -103,7 +103,8 @@ class usuario_viewset(viewsets.ModelViewSet):
         serializer = usuario_login_serializer(data=request.data)
         if serializer.is_valid(raise_exception=False):
             user, token = serializer.save()
-            if user.activo:# holiiii :3 el mas piton 3=)
+            print('Usuario', user.activo)
+            if user.activo:
                 usuario = usuario_serializer(user).data
                 if usuario['ultima_activacion'] < c_dias_permitidos and usuario['intentos_loggeo'] < 3:
                     data = {
@@ -144,6 +145,7 @@ def reactivar_usuario(request):
         user.password = make_password(request.data['clave'])
         user.activo = True
         user.intentos_loggeo = 0
+        user.ultima_activacion = 0
         user.save()
         return Response(data='Usuario actualizado exitosamente', status=200)
     else:

@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import usuario,paciente
 from django.contrib.auth.hashers import make_password
 from django.core.mail import send_mail
-from datetime import date
+from datetime import date, datetime
 from django.contrib.auth import authenticate
 from .utilities import get_token_for_user
 from django.shortcuts import get_object_or_404
@@ -40,12 +40,14 @@ class usuario_serializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         instance.username = validated_data.get('username')
-        if instance.check_password(validated_data.get('password')):
+        if not instance.check_password(validated_data.get('password')) or instance.password != validated_data.get('password'):
             instance.password = make_password(validated_data.get('password'))
         instance.first_name = validated_data.get('first_name')
         instance.last_name = validated_data.get('last_name')
         instance.email = validated_data.get('email')
         instance.fecha_nacimiento = validated_data.get('fecha_nacimiento')
+        if  instance.activo == False and validated_data.get('activo') == True:
+            instance.ultima_activacion = datetime.now().date()
         instance.activo = validated_data.get('activo')
         instance.rol = validated_data.get('rol')
         if instance.activo:
