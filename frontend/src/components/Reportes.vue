@@ -3,19 +3,19 @@
     <h1 id = "titulo-reporte">REPORTE</h1>
     <div class="filtros">
       <input type="text" placeholder="Buscar Por Usuario" v-model="buscar" />
+      <input type="date" v-model="fecha_ini" placeholder="FECHA INCIAL">
+      <input type="date" v-model="fecha_fin" placeholder="Fecha Final">
       <select v-model="tipo_usuario">
         <option value="1">PACIENTE</option>
         <option value="2">FUNCIONARIO</option>
         <option value="3">ADMINISTRADOR</option>
-        <option value="todos">TODOS</option>
+        <option value="todos">TODOS LOS TIPOS</option>
       </select>
       <select v-model="activo">
         <option value="activo">ACTIVO</option>
         <option value="inactivo">INACTIVO</option>
-        <option value="todos">TODOS</option>
+        <option value="todos">TODOS LOS ESTADOS</option>
       </select>
-      <input type="date" v-model="fecha_ini">
-      <input type="date" v-model="fecha_fin">
     </div>
 
     <div>
@@ -87,7 +87,7 @@ export default {
       tipo_usuario: "todos",
       activo: "todos",
       fecha_ini: "",
-      fecha_fin:""
+      fecha_fin: ""
     };
   },
   components: {
@@ -102,7 +102,7 @@ export default {
       return this.indexStart + this.nPaginacion;
     },
     paginated() {
-      return this.filtrarPorActivo.slice(this.indexStart, this.indexEnd);
+      return this.filtrarPorFecha.slice(this.indexStart, this.indexEnd);
     },
     filtrarPorUsuario() {
       var lista = this.listaUsuarios;
@@ -139,7 +139,11 @@ export default {
     },
     filtrarPorFecha(){
       var lista = this.filtrarPorActivo
-      
+      if(this.fecha_ini == "" || this.fecha_fin == ""){
+        return lista
+      }else{
+        return lista.filter((objeto) => (new Date(this.fecha_ini).getTime() <= new Date(objeto.date_joined.substring(0,10)).getTime() && new Date(objeto.date_joined.substring(0,10)).getTime() <= new Date(this.fecha_fin).getTime()))
+      }
     }
   },
   methods: {
@@ -167,7 +171,7 @@ export default {
     },
     generarPDF() {
       const usuarios = []
-      this.filtrarPorActivo.forEach(obj => {
+      this.filtrarPorFecha.forEach(obj => {
         usuarios.push([
             obj.id,
             `${obj.first_name} ${obj.last_name}`,
@@ -200,7 +204,6 @@ export default {
 
 <style scoped>
 h1 {
-  float: left;
   font-family: 'Lato', sans-serif; font-size: 35px; font-weight: 300; 
   margin-left: 1em;
   text-align: left;
@@ -260,14 +263,28 @@ h1 {
   background-color: gray;
   color: white;
 }
+@media screen and (max-width: 1600px){
+  .reporte .filtros {
+    margin-top: 0em;
+    margin-left: 0em;
+  }
+}
+.reporte{
+  position: fixed;
+}
 .reporte .filtros {
-  float: left;
-  margin-left: 2em;
-  margin-top: 2em;
   display: inline-block;
+  margin-top: 1em;
+  margin-left: 2em;
+}
+@media screen and (max-width: 1600px){
+  .reporte .filtros {
+    margin-top: 0em;
+    margin-left: 0em;
+  }
 }
 .reporte input {
-  margin-left: 3em;
+  margin-left: 0em;
   width: 200px;
   height: 30px;
   background: white;
@@ -275,14 +292,13 @@ h1 {
   font-size: 10pt;
   float: left;
   color: black;
-  padding-left: 45px;
+  padding-left: 30px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
   border: black solid 3px;
 }
 .reporte select {
-  margin-left: 2em;
   width: 200px;
   height: 38px;
   background: white;
@@ -290,7 +306,6 @@ h1 {
   font-size: 10pt;
   float: left;
   color: black;
-  padding-left: 45px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
