@@ -47,10 +47,10 @@ export default {
                 .then(res => {
                     if (res.ok) {
                         this.$alert('Se ha enviado unas instrucciones a su correo. Reviselas por favor','Exito','success')
-                        this.$router.push('/login')
-                    } else {
-                        this.$alert('Fallo en el servidor, intentelo nuevamente mas tarde','Error','error')
                         this.$router.push('/')
+                    } else {
+                        res.json()
+                        .then((msg) => this.$alert(msg,'Fallo','error'))
                     }
                 })
                 .catch(() => {
