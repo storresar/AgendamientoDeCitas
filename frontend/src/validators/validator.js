@@ -7,6 +7,8 @@ const contieneMayuscula = (valor) => !/[A-Z]/.test(valor)
 
 const contieneMinuscula = (valor) => !/[a-z]/.test(valor)
 
+const espositivo = (valor) => (valor >= 0)
+
 function esFuerte(clave){
     var mayuscula = false
     var minuscula = false
@@ -62,4 +64,4 @@ function validacionFecha(fecha){
     return true
 }
 
-export {esFuerte,noCaracteresEspeciales,noNumeros,contieneMayuscula,validacionFecha,contieneMinuscula}
+export {esFuerte,noCaracteresEspeciales,noNumeros,contieneMayuscula,validacionFecha,contieneMinuscula,espositivo}

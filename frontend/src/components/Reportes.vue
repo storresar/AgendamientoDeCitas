@@ -42,7 +42,7 @@
           <tr>
             <td></td>
             <td class="excel">
-              <JsonExcel :data="JSON.parse(JSON.stringify(this.filtrarPorActivo))">
+              <JsonExcel :data="JSON.parse(JSON.stringify(this.filtrarPorFecha))">
                 <button>
                   <i class="fa fa-file-excel-o" aria-hidden="true"></i>
                 </button>

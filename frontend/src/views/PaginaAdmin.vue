@@ -101,7 +101,7 @@
                     </thead>
                     <tr v-for="auditoria in paginatedA" :key="auditoria.fecha">
                         <td>{{auditoria.id}}</td>
-                        <td>{{auditoria.fecha}}</td>
+                        <td>{{auditoria.fecha.substring(0,10)}}</td>
                         <td>{{auditoria.tipo}}</td>
                         <td>{{auditoria.usuario_cambio}}</td>
                         <td>{{auditoria.usuario_realiza}}</td>

@@ -15,6 +15,7 @@
                 <input type="text" v-model.trim="$v.nombreUsuario.$model" autocomplete="off">
                 <div class="error" v-if="!$v.nombreUsuario.minLength">Este campo requiere minimo 8 caracteres</div>
                 <div class="error" v-if="!$v.nombreUsuario.contieneMayuscula">Tiene que escribir todo en minuscula</div>
+                <div class="error" v-if="!$v.nombreUsuario.noCaracteresEspeciales">No se admiten caracteres especiales</div>
                 <label for="">Correo:</label>
                 <input type="text" v-model.trim="$v.correo.$model" autocomplete="off">
                 <div class="error" v-if="!$v.correo.email">Este correo es invalido</div>
@@ -76,6 +77,7 @@
                     <div class="error" v-if="!$v.id.maxLength">No es una tarjeta valida</div>
                     <div class="error" v-if="!$v.id.contieneMayuscula">No puede ingresar letras</div>
                     <div class="error" v-if="!$v.id.contieneMinuscula">No puede ingresar letras</div>
+                    <div class="error" v-if="!$v.id.noCaracteresEspeciales">No puede ingresar caracteres especiales</div>
                 </div>
         </section>
 

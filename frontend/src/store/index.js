@@ -180,10 +180,11 @@ export default new Vuex.Store({
         }
         return 'Se ha creado el usuario correctamente'
       }
-      if (req.status === 401){
-
+      if (req.status === 405){
         const res = await req.json()
         throw res
+      }else{
+        throw "Fallo en la creación del usuario"
       }
     },
     async crearPaciente(context, paciente){

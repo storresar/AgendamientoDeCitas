@@ -67,19 +67,29 @@ class usuario_viewset(viewsets.ModelViewSet):
         c_admins_actuales = usuario.objects.filter(rol=3).count()
         if request.data['rol'] == 3:
             c_admins_actuales += 1
-        if c_admins_permitidos >= c_admins_actuales:
+            if c_admins_permitidos >= c_admins_actuales:
 
+                nueva_auditora = auditoria(
+                tipo='Creación usuario',
+                usuario_realiza= request.user,
+                usuario_cambio=request.data['username'],
+                ip=request.META.get('REMOTE_ADDR')
+                )
+                nueva_auditora.save()
+
+                return super().create(request)
+            else:
+                return Response('Limite superado para la creación de administradores', status=405)
+        else:
             nueva_auditora = auditoria(
-            tipo='Creación usuario',
-            usuario_realiza= request.user,
-            usuario_cambio=request.data['username'],
-            ip=request.META.get('REMOTE_ADDR')
-            )
+                tipo='Creación usuario',
+                usuario_realiza= request.user,
+                usuario_cambio=request.data['username'],
+                ip=request.META.get('REMOTE_ADDR')
+                )
             nueva_auditora.save()
 
             return super().create(request)
-        else:
-            return Response('Limite superado para la creación de administradores', status=401)
 
     @action(detail=False, methods=['post'], permission_classes=[AllowAny])
     def login(self, request):
