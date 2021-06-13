@@ -50,7 +50,7 @@ export default {
                         this.$router.push('/login')
                     } else {
                         res.json()
-                        .then((msg) => this.$alert(msg,'Error','error'))
+                        .then((msg) => this.$alert(msg,'Fallo','error'))
                     }
                 })
                 .catch(() => {
