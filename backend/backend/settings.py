@@ -26,7 +26,7 @@ SECRET_KEY = 'f_k)hk+4sfz^jy35^9gdo@%ackd9qkp-26n2o%^ku(uji6drjr'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['rolito.site','127.0.0.1']
 
 AUTH_USER_MODEL = 'usuarios.usuario'
 
@@ -105,8 +105,12 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql', 
+        'NAME': 'freedbtech_sophydbmuypro',
+        'USER': 'freedbtech_sophydb',
+        'PASSWORD': 'admin1234',
+        'HOST': 'freedb.tech',
+        'PORT': '3306',
     }
 }
 
