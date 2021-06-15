@@ -8,7 +8,7 @@ class IsUserOrAdmin(permissions.BasePermission):
             return True
         
         if type(request.user) is not AnonymousUser:
-            if str(request.user.rol) == 'Administrador':
+            if str(request.user.rol) == 'Administrador' or request.user.is_staff:
                 return True
             # Instance must have an attribute named `owner`.
             return obj == request.user

@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import VueRecaptcha from 'vue-recaptcha';
 
 export default {
@@ -34,6 +34,9 @@ export default {
     components:{
         VueRecaptcha,
     },
+    computed: {
+        ...mapState(['url'])
+    },
     methods:{
         ...mapActions(['autenticar']),
         mandarDatos(){
@@ -47,7 +50,7 @@ export default {
             }
         },
         onVerify(response) {
-            fetch('http://127.0.0.1:8000/api/verificar_captcha/',{
+            fetch(`${this.url}/verificar_captcha/`,{
                 method:'POST',
                 headers: {
                     'Content-Type': 'application/json',
