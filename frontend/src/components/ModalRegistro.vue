@@ -21,13 +21,13 @@
                 <input type="text" v-model.trim="$v.correo.$model" autocomplete="off">
                 <div class="error" v-if="!$v.correo.email">Este correo es invalido</div>
                 <label>Nombre:</label>
-                <input type="text" v-model.trim="$v.nombre.$model" id="nombre"  autocomplete="off" pattern="[A-Za-z]{1,15}">
+                <input type="text" v-model.trim="$v.nombre.$model" id="nombre"  autocomplete="off">
                 <div class="error" v-if="!$v.nombre.minLength">Este campo requiere minimo 3 caracteres</div>
-                <div class="error" v-if="!$v.nombre.noNumeros">No se admiten numeros</div>
+                <div class="error" v-if="!$v.nombre.noCaracteresEspeciales">No se admiten caracteres especiales ni numeros</div>
                 <label>Apellido:</label>
                 <input type="text" v-model.trim="$v.apellido.$model" id="apellido"  autocomplete="off">
                 <div class="error" v-if="!$v.apellido.minLength">Este campo requiere minimo 8 caracteres</div>
-                <div class="error" v-if="!$v.apellido.noNumeros">No se admiten numeros</div>
+                <div class="error" v-if="!$v.apellido.noCaracteresEspeciales">No se admiten caracteres especiales ni numeros</div>
                 <label>Fecha Nacimiento:</label>
                 <input type="date" v-model.trim="$v.fecha.$model" id="fecha" min="1905-01-01">
                 <div class="error" v-if="!$v.fecha.required">Este campo es obligatorio</div>
@@ -91,19 +91,19 @@
 <script>
 
 import { mapActions } from 'vuex'
-import { required,minLength, email, sameAs, maxLength } from 'vuelidate/lib/validators'
+import { required,minLength, email, sameAs, maxLength, alphaNum } from 'vuelidate/lib/validators'
 import { esFuerte,noCaracteresEspeciales,noNumeros,contieneMayuscula,validacionFecha,contieneMinuscula,noEspacios } from '../validators/validator'
 export default {
     name: 'Modal',
     data(){
         return{
-            nombre: 'Luis',
-            apellido: 'Becerra',
-            fecha: '1962-01-31',
-            nombreUsuario: 'lucho123',
-            correo: 'jfquintero62_62@hotmail.com',
-            clave: 'Champion1',
-            confirma: 'Champion1',
+            nombre: '',
+            apellido: '',
+            fecha: '',
+            nombreUsuario: '',
+            correo: '',
+            clave: '',
+            confirma: '',
             tipo_usuario: '3',
             rh: '',
             sexo: 'M',
@@ -116,12 +116,12 @@ export default {
             nombre: {
                 required,
                 minLength: minLength(3),
-                noNumeros,
+                noCaracteresEspeciales,
             },
             apellido: {
                 required,
                 minLength: minLength(3),
-                noNumeros,
+                noCaracteresEspeciales,
             },
             fecha:{
                 required,
@@ -131,7 +131,7 @@ export default {
                 required,
                 minLength: minLength(5),
                 contieneMayuscula,
-                noCaracteresEspeciales,
+                noCaracteresEspeciales: alphaNum,
                 noEspacios
             },
             correo: {

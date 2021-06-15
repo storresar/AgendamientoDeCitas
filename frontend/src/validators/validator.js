@@ -1,5 +1,10 @@
-
-const noCaracteresEspeciales = (valor) => !(/\W|_/.test(valor.replace(" ","")))
+function noCaracteresEspeciales(inputtxt){
+    var letters = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
+    if(inputtxt.match(letters)){
+        return true
+    }
+    return false
+}
 
 const noEspacios = (valor) => !valor.includes(" ")
 

@@ -187,6 +187,7 @@ export default {
         },
         showDivInfo(){
             document.getElementById('verinformacion').style.display='';
+            document.getElementById('usuarios').style.display='None';
             this.mostrarAuditoria = false
             document.getElementById('reportes').style.display='None';
             document.getElementById('parametrizacion').style.display='None';

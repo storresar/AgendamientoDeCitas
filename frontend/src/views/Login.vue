@@ -25,8 +25,8 @@ import VueRecaptcha from 'vue-recaptcha';
 export default {
     data(){
         return {
-            nombre: 'admin',
-            clave: 'Santi123',
+            nombre: '',
+            clave: '',
             check: false,
             verificado: false,
         }

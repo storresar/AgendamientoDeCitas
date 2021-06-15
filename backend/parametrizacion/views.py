@@ -30,6 +30,7 @@ class Parametrizacion_Viewset(viewsets.ModelViewSet):
             ip=request.META.get('REMOTE_ADDR')
             )
         nueva_auditora.save()
+        print('Paso auditoria')
         return super().create(request, *args, **kwargs)
 
     def update(self, request, *args, **kwargs):

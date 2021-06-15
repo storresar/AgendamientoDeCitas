@@ -16,19 +16,18 @@
             <input type="text" v-model.trim="$v.nombreUsuario.$model" autocomplete="off" readonly>
             <div class="error" v-if="!$v.nombreUsuario.minLength">Este campo requiere minimo 8 caracteres</div>
             <div class="error" v-if="!$v.nombreUsuario.contieneMayuscula">Tiene que escribir todo en minuscula</div>
+            <div class="error" v-if="!$v.nombreUsuario.noCaracteresEspeciales">No se permiten caracteres especiales</div>
             <label for="">Correo:</label>
             <input type="text" v-model.trim="$v.correo.$model" autocomplete="off" readonly>
             <div class="error" v-if="!$v.correo.email">Este correo es invalido</div>
             <label>Nombre:</label>
             <input type="text" v-model.trim="$v.nombre.$model" id="nombre"  autocomplete="off">
             <div class="error" v-if="!$v.nombre.minLength">Este campo requiere minimo 3 caracteres</div>
-            <div class="error" v-if="!$v.nombre.noNumeros">No se admiten numeros</div>
-            <div class="error" v-if="!$v.nombre.noCaracteresEspeciales">No se admiten caracteres especiales</div>
+            <div class="error" v-if="!$v.nombre.noCaracteresEspeciales">No se admiten caracteres especiales ni numeros</div>
             <label>Apellido:</label>
             <input type="text" v-model.trim="$v.apellido.$model" id="apellido"  autocomplete="off">
             <div class="error" v-if="!$v.apellido.minLength">Este campo requiere minimo 8 caracteres</div>
-            <div class="error" v-if="!$v.apellido.noNumeros">No se admiten numeros</div>
-            <div class="error" v-if="!$v.apellido.noCaracteresEspeciales">No se admiten caracteres especiales</div>
+            <div class="error" v-if="!$v.apellido.noCaracteresEspeciales">No se admiten caracteres especiales ni numeros</div>
             <label>Fecha Nacimiento:</label>
             <input type="date" v-model.trim="$v.fecha.$model" id="fecha" min="1905-01-01">
             <div class="error" v-if="!$v.fecha.required">Este campo es obligatorio</div>
@@ -95,9 +94,9 @@
 </template>
 
 <script>
-import { required, minLength, email, sameAs, maxLength } from 'vuelidate/lib/validators'
+import { required, minLength, email, sameAs, maxLength, alphaNum } from 'vuelidate/lib/validators'
 import { mapActions } from 'vuex'
-import { esFuerte,noCaracteresEspeciales,noNumeros,contieneMayuscula,validacionFecha,contieneMinuscula,noEspacios } from '../validators/validator'
+import { esFuerte,noCaracteresEspeciales,contieneMayuscula,validacionFecha,contieneMinuscula,noEspacios } from '../validators/validator'
 
  
 export default {
@@ -112,8 +111,8 @@ export default {
             nombreUsuario: this.usuario.username,
             correo: this.usuario.email,
             estado: this.usuario.activo,
-            clave:'Gambito1',
-            confirma:'Gambito1',
+            clave:'',
+            confirma:'',
             rh: this.paciente.RH,
             sexo: this.paciente.sexo,
             tId: this.paciente.tipo_identificacion,
@@ -159,13 +158,11 @@ export default {
                 required,
                 minLength: minLength(3),
                 noCaracteresEspeciales,
-                noNumeros,
             },
             apellido: {
                 required,
                 minLength: minLength(3),
                 noCaracteresEspeciales,
-                noNumeros,
             },
             fecha:{
                 required,
@@ -175,7 +172,7 @@ export default {
                 required,
                 minLength: minLength(8),
                 contieneMayuscula,
-                noCaracteresEspeciales,
+                noCaracteresEspeciales: alphaNum,
                 noEspacios
             },
             correo: {

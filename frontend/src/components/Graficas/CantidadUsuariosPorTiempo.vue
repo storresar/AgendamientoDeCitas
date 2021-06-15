@@ -37,14 +37,8 @@ export default {
         this.diasMes = new Date(this.anio, mes +1, 0).getDate()
         const rangos = []
         const cant = []
-        for (let i = 0; i <= this.diasMes; i++) {
-            if (i%5 == 0){
-                rangos.push(i + 1)
-                cant.push(0)
-            }
-        }
-        if (this.diasMes % 5 != 0){
-            rangos.push(this.diasMes)
+        for (let i = 0; i < this.diasMes; i++) {
+            rangos.push(i + 1)
             cant.push(0)
         }
         const nuevo = rangos.map((rangodias) => new Date(this.anio+1900, mes, rangodias))
@@ -52,7 +46,7 @@ export default {
             for (let i = 1; i < nuevo.length; i++) {
                 const fUsu = new Date(obj.date_joined)
                 if (fUsu >= nuevo[i-1] && nuevo[i] > fUsu){
-                    cant[i]++
+                    cant[i-1]++
                 }
             }
         })

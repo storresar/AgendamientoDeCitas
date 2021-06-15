@@ -10,7 +10,7 @@ export default new Vuex.Store({
     listaUsuarios: [],
     listaAuditoria: [],
     listaParametrizacion: [],
-    url: 'https://rolito.site/api/',
+    url: 'http://127.0.0.1:8000/api/',
   },
   mutations: {
     storeToken(state, data){
@@ -268,8 +268,7 @@ export default new Vuex.Store({
       if (req.status === 201){
         await context.dispatch('getParametrizacion')
         return 'Se ha creado el usuario correctamente'
-      }
-      if (req.status === 400){
+      }else {
         const res = await req.json()
         throw res
       }
