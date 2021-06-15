@@ -158,7 +158,7 @@ export default {
                 required,
                 minLength: minLength(8),
                 maxLength: maxLength(10),
-                noCaracteresEspeciales,
+                noCaracteresEspeciales: alphaNum,
                 contieneMayuscula,
                 contieneMinuscula,
             }
