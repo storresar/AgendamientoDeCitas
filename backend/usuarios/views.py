@@ -163,7 +163,7 @@ def mandar_correo(request):
             nuevo_token = get_token_for_user(usu)
             mensaje = f'Querido usuario {usu.username}'
             mensaje += ' para desbloquear su cuenta acceda a este link a continuacion. Tienes 60 minutos. Que empiece el juego: \n'
-            mensaje += f'https://sofhyhospital.ga/#/cambiar_clave/{nuevo_token}/{usu.username}'
+            mensaje += f'https://sophyhospital.vercel.app/#/cambiar_clave/{nuevo_token}/{usu.username}'
             if send_mail(subject='Desbloqueo',message=mensaje,from_email=None,recipient_list=[usu.email]) > 0:
                 return Response('Correo enviado', status=200)
         else:
