@@ -17,6 +17,7 @@
 
 import { required, minLength, sameAs } from 'vuelidate/lib/validators'
 import { esFuerte } from '../validators/validator'
+import { mapState } from 'vuex'
 
 export default {
     data(){
@@ -40,13 +41,16 @@ export default {
             },
         }
     },
+    computed:{
+        ...mapState(['url'])
+    },
     methods: {
         reactivarUsuario(){
             this.$v.$touch()
             if (this.$v.$invalid){
                 this.$alert('Llene los datos adecuadamente','Error en el formulario','warning')
             } else  {
-                fetch(`http://127.0.0.1:8000/api/reactivar_usuario/` , {
+                fetch(`${this.url}reactivar_usuario/` , {
                     method : 'POST',
                     headers: {
                     'Content-Type': 'application/json',

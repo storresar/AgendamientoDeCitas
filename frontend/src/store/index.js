@@ -9,7 +9,8 @@ export default new Vuex.Store({
     paciente: '',
     listaUsuarios: [],
     listaAuditoria: [],
-    listaParametrizacion: []
+    listaParametrizacion: [],
+    url: 'https://rolito.site/api/',
   },
   mutations: {
     storeToken(state, data){
@@ -40,7 +41,7 @@ export default new Vuex.Store({
   },
   actions: {
     async getUsuario(context, datos){
-      const req = await fetch(`http://127.0.0.1:8000/api/usuarios/${datos}`)
+      const req = await fetch(`${context.state.url}usuarios/${datos}`)
       if (req.status === 200){
         const datosUsuario = await req.json()
         context.commit('setUsuario', datosUsuario)
@@ -50,14 +51,14 @@ export default new Vuex.Store({
       }
     },
     async getListaUsuarios(context){
-      const req = await fetch('http://127.0.0.1:8000/api/usuarios/')
+      const req = await fetch(`${context.state.url}usuarios/`)
       if (req.status === 200){
         const datos = await req.json()
         context.commit('setListaUsuarios', datos)
       }
     },
     async getAuditoria(context){
-      const req = await fetch('http://127.0.0.1:8000/api/auditoria/',{
+      const req = await fetch(`${context.state.url}auditoria/`,{
         method : 'GET',
         headers: {
           'Authorization': `Bearer ${window.localStorage.getItem('token')}`
@@ -69,7 +70,7 @@ export default new Vuex.Store({
       }
     },
     async getPaciente(context, idUsuario){
-      const req = await fetch(`http://127.0.0.1:8000/api/pacientes/${idUsuario}`,{
+      const req = await fetch(`${context.state.url}pacientes/${idUsuario}`,{
         method : 'GET',
         headers: {
           'Authorization': `Bearer ${window.localStorage.getItem('token')}`
@@ -83,7 +84,7 @@ export default new Vuex.Store({
       }
     },
     async autenticar(context, datos){
-      const req = await fetch('http://127.0.0.1:8000/api/usuarios/login/', {
+      const req = await fetch(`${context.state.url}usuarios/login/`, {
         method : 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -100,7 +101,7 @@ export default new Vuex.Store({
       }
     },
     async validarToken(context, token){
-      const req = await fetch('http://127.0.0.1:8000/api/token/verify/', {
+      const req = await fetch(`${context.state.url}token/verify/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -116,7 +117,7 @@ export default new Vuex.Store({
       }
     },
     async eliminarUsuario(context, nombreUsuario){
-      const req = await fetch(`http://127.0.0.1:8000/api/usuarios/${nombreUsuario}`, {
+      const req = await fetch(`${context.state.url}usuarios/${nombreUsuario}`, {
         method : 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -135,7 +136,7 @@ export default new Vuex.Store({
     async modificarUsuario(context, datos){
       const usuarioM = datos.usuario
       const pacienteM = datos.paciente
-      const req = await fetch(`http://127.0.0.1:8000/api/usuarios/${usuarioM.username}/`,{
+      const req = await fetch(`${context.state.url}usuarios/${usuarioM.username}/`,{
         method : 'PUT',
         headers : {
           'Content-Type': 'application/json',
@@ -161,7 +162,7 @@ export default new Vuex.Store({
     },
     async crearUsuario(context, datos){
       const usuario = datos.usuario
-      const req = await fetch('http://127.0.0.1:8000/api/usuarios/', {
+      const req = await fetch(`${context.state.url}usuarios/`, {
         method : 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -188,7 +189,7 @@ export default new Vuex.Store({
       }
     },
     async crearPaciente(context, paciente){
-      await fetch('http://127.0.0.1:8000/api/pacientes/', {
+      await fetch(`${context.state.url}pacientes/`, {
         method : 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -198,7 +199,7 @@ export default new Vuex.Store({
       })
     },
     async modificarPaciente(context, datos){
-      const req = await fetch(`http://127.0.0.1:8000/api/pacientes/${datos.usuario_p}/`,{
+      const req = await fetch(`${context.state.url}pacientes/${datos.usuario_p}/`,{
         method : 'PUT',
         headers : {
           'Content-Type': 'application/json',
@@ -211,7 +212,7 @@ export default new Vuex.Store({
       }
     },
     async getParametrizacion(context){
-      const req = await fetch('http://127.0.0.1:8000/api/parametrizacion/',{
+      const req = await fetch(`${context.state.url}parametrizacion/`,{
         method : 'GET',
         headers: {
           'Authorization': `Bearer ${window.localStorage.getItem('token')}`
@@ -223,7 +224,7 @@ export default new Vuex.Store({
       }
     },
     async eliminarParametrizacion(context,parametro){
-      const req = await fetch(`http://127.0.0.1:8000/api/parametrizacion/${parametro.id}`, {
+      const req = await fetch(`${context.state.url}parametrizacion/${parametro.id}`, {
         method : 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -239,7 +240,7 @@ export default new Vuex.Store({
       }
     },
     async modificarParametrizacion(context, datos){
-      const req = await fetch(`http://127.0.0.1:8000/api/parametrizacion/${datos.id}/`,{
+      const req = await fetch(`${context.state.url}parametrizacion/${datos.id}/`,{
         method : 'PUT',
         headers : {
           'Content-Type': 'application/json',
@@ -256,7 +257,7 @@ export default new Vuex.Store({
       }
     },
     async crearParametrizacion(context,datos){
-      const req = await fetch('http://127.0.0.1:8000/api/parametrizacion/', {
+      const req = await fetch(`${context.state.url}parametrizacion/`, {
         method : 'POST',
         headers: {
           'Content-Type': 'application/json',
