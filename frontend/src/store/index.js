@@ -10,7 +10,7 @@ export default new Vuex.Store({
     listaUsuarios: [],
     listaAuditoria: [],
     listaParametrizacion: [],
-    url: 'https://rolito.site/api/',
+    url: 'http://127.0.0.1:8000/api/',
   },
   mutations: {
     storeToken(state, data){

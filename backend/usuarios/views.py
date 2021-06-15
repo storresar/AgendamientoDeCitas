@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.db.models import query
 from rest_framework import response
 from .utilities import get_token_for_user
@@ -134,6 +135,7 @@ class usuario_viewset(viewsets.ModelViewSet):
 def reactivar_usuario(request):
     queryset = usuario.objects.filter(username=request.data['username'])
     user = get_object_or_404(queryset)
+    print(user)
     if request.data['clave'] == request.data['confirma']:
         nueva_auditora = auditoria(
         tipo='Usuario desbloquedo',
@@ -145,7 +147,7 @@ def reactivar_usuario(request):
         user.password = make_password(request.data['clave'])
         user.activo = True
         user.intentos_loggeo = 0
-        user.ultima_activacion = 0
+        user.ultima_activacion = datetime.now()
         user.save()
         return Response(data='Usuario actualizado exitosamente', status=200)
     else:

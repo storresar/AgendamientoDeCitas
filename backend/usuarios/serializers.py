@@ -40,7 +40,7 @@ class usuario_serializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         instance.username = validated_data.get('username')
-        if not instance.check_password(validated_data.get('password')) or instance.password != validated_data.get('password'):
+        if instance.password != validated_data.get('password'):
             instance.password = make_password(validated_data.get('password'))
         instance.first_name = validated_data.get('first_name')
         instance.last_name = validated_data.get('last_name')
