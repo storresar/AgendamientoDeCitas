@@ -93,7 +93,7 @@
         @close="mostrarModalModificar = false"
         :usuario="usuarioModificar"
         :paciente="pacienteModificar"/>
-        <div id="auditoria" style="display: none;" class="audi">
+        <div v-if="mostrarAuditoria" class="audi">
                     <h1>AUDITORIA DE LA APLICACIÓN</h1>
                     <table>
                     <thead>
@@ -147,6 +147,7 @@ export default {
             usuarioModificar : '',
             pacienteModificar : '',
             mostrarGraficas: false,
+            mostrarAuditoria: false
         }
     },
     components:{
@@ -158,7 +159,7 @@ export default {
     },
 
     computed:{
-        ...mapState(['usuario', 'listaUsuarios','listaAuditoria', 'paciente']),
+        ...mapState(['usuario', 'listaUsuarios','listaAuditoria', 'paciente','getAuditoria']),
         indexStart() {
             return this.nActual * this.nPaginacion
         },
@@ -186,8 +187,7 @@ export default {
         },
         showDivInfo(){
             document.getElementById('verinformacion').style.display='';
-            document.getElementById('usuarios').style.display='None';
-            document.getElementById('auditoria').style.display='None';
+            this.mostrarAuditoria = false
             document.getElementById('reportes').style.display='None';
             document.getElementById('parametrizacion').style.display='None';
             this.mostrarGraficas = false
@@ -195,7 +195,7 @@ export default {
         showDivUsuarios(){
             document.getElementById('verinformacion').style.display='none';
             document.getElementById('usuarios').style.display='';
-            document.getElementById('auditoria').style.display='none';
+            this.mostrarAuditoria = false
             document.getElementById('reportes').style.display='None';
             document.getElementById('parametrizacion').style.display='None';
             this.mostrarGraficas = false
@@ -207,11 +207,13 @@ export default {
             document.getElementById('reportes').style.display='None';
             document.getElementById('parametrizacion').style.display='None';
             this.mostrarGraficas = false
+            this.getAuditoria()
+            .then(() => this.mostrarAuditoria = true)
         },
         showDivGraficas(){
             document.getElementById('verinformacion').style.display='None';
             document.getElementById('usuarios').style.display='None';
-            document.getElementById('auditoria').style.display='None';
+            this.mostrarAuditoria = false
             document.getElementById('reportes').style.display='None';
             document.getElementById('parametrizacion').style.display='None';
             this.mostrarGraficas = true
@@ -219,7 +221,7 @@ export default {
         showDivReportes(){
             document.getElementById('verinformacion').style.display='None';
             document.getElementById('usuarios').style.display='None';
-            document.getElementById('auditoria').style.display='None';
+            this.mostrarAuditoria = false
             document.getElementById('reportes').style.display='';
             document.getElementById('parametrizacion').style.display='None';
             this.mostrarGraficas = false
@@ -227,7 +229,7 @@ export default {
         showDivPara(){
             document.getElementById('verinformacion').style.display='None';
             document.getElementById('usuarios').style.display='None';
-            document.getElementById('auditoria').style.display='None';
+            this.mostrarAuditoria = false
             document.getElementById('reportes').style.display='None';
             document.getElementById('parametrizacion').style.display='';
             this.mostrarGraficas = false
