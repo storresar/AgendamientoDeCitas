@@ -50,7 +50,7 @@ export default {
             }
         },
         onVerify(response) {
-            fetch(`${this.url}/verificar_captcha/`,{
+            fetch(`${this.url}verificar_captcha/`,{
                 method:'POST',
                 headers: {
                     'Content-Type': 'application/json',
