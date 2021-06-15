@@ -97,7 +97,7 @@
 <script>
 import { required, minLength, email, sameAs, maxLength } from 'vuelidate/lib/validators'
 import { mapActions } from 'vuex'
-import { esFuerte,noCaracteresEspeciales,noNumeros,contieneMayuscula,validacionFecha,contieneMinuscula } from '../validators/validator'
+import { esFuerte,noCaracteresEspeciales,noNumeros,contieneMayuscula,validacionFecha,contieneMinuscula,noEspacios } from '../validators/validator'
 
  
 export default {
@@ -175,13 +175,16 @@ export default {
                 required,
                 minLength: minLength(8),
                 contieneMayuscula,
+                noCaracteresEspeciales,
+                noEspacios
             },
             correo: {
                 email
             },
             clave:{
                 required,
-                minLength: minLength(8),
+                minLength: minLength(5),
+                maxLength: maxLength(8),                
                 esFuerte,
             },
             confirma: {

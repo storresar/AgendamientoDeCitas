@@ -33,7 +33,7 @@ export default new Vuex.Store({
       state.paciente = paciente
     },
     setAuditoria(state,lista){
-      state.listaAuditoria = lista
+      state.listaAuditoria = lista.reverse()
     },
     setParametrizacion(state,lista){
       state.listaParametrizacion = lista

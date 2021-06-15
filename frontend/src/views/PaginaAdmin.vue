@@ -159,7 +159,7 @@ export default {
     },
 
     computed:{
-        ...mapState(['usuario', 'listaUsuarios','listaAuditoria', 'paciente','getAuditoria']),
+        ...mapState(['usuario', 'listaUsuarios','listaAuditoria', 'paciente']),
         indexStart() {
             return this.nActual * this.nPaginacion
         },
@@ -203,7 +203,6 @@ export default {
         showDivAuditoria(){
             document.getElementById('verinformacion').style.display='None';
             document.getElementById('usuarios').style.display='None';
-            document.getElementById('auditoria').style.display='';
             document.getElementById('reportes').style.display='None';
             document.getElementById('parametrizacion').style.display='None';
             this.mostrarGraficas = false

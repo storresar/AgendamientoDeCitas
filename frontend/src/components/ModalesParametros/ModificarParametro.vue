@@ -27,6 +27,7 @@
             </div>
             <div v-if="nombre != 'correo'">
                 <input type="number" v-model.trim="$v.valor.$model" id="usuario" min="0" autocomplete="off">
+                <div class="error" v-if="!$v.valor.espositivo">Solo se puede con numeros positivos</div>
             </div>
         </section>
 
@@ -42,6 +43,7 @@
 <script>
 import { required } from 'vuelidate/lib/validators'
 import { mapActions } from 'vuex'
+import { espositivo } from '../../validators/validator'
 export default {
     name: 'ModificarParametro',
     props: ['parametro'],
@@ -79,20 +81,28 @@ export default {
         }
     },
     validations(){
-        return{
-            nombre: {
+        var validaciones = {
+                nombre: {
                 required
-            },
-            fecha_ini: {
-                required
-            },
-            fecha_fin:{
-                required
-            },
-            valor:{
-                required
+                },
+                fecha_ini: {
+                    required
+                },
+                fecha_fin:{
+                    required
+                },
+                valor:{
+                    required,
+                }
             }
-        }
+            
+            if(this.nombre != 'correo'){
+                validaciones.valor = {
+                    required,
+                    espositivo
+                }
+            }
+            return validaciones
     }
 }
 </script>

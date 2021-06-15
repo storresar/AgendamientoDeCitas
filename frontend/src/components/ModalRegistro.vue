@@ -16,26 +16,25 @@
                 <div class="error" v-if="!$v.nombreUsuario.minLength">Este campo requiere minimo 8 caracteres</div>
                 <div class="error" v-if="!$v.nombreUsuario.contieneMayuscula">Tiene que escribir todo en minuscula</div>
                 <div class="error" v-if="!$v.nombreUsuario.noCaracteresEspeciales">No se admiten caracteres especiales</div>
+                <div class="error" v-if="!$v.nombreUsuario.noEspacios">No se admiten espacios</div>
                 <label for="">Correo:</label>
                 <input type="text" v-model.trim="$v.correo.$model" autocomplete="off">
                 <div class="error" v-if="!$v.correo.email">Este correo es invalido</div>
                 <label>Nombre:</label>
-                <input type="text" v-model.trim="$v.nombre.$model" id="nombre"  autocomplete="off">
+                <input type="text" v-model.trim="$v.nombre.$model" id="nombre"  autocomplete="off" pattern="[A-Za-z]{1,15}">
                 <div class="error" v-if="!$v.nombre.minLength">Este campo requiere minimo 3 caracteres</div>
                 <div class="error" v-if="!$v.nombre.noNumeros">No se admiten numeros</div>
-                <div class="error" v-if="!$v.nombre.noCaracteresEspeciales">No se admiten caracteres especiales</div>
                 <label>Apellido:</label>
                 <input type="text" v-model.trim="$v.apellido.$model" id="apellido"  autocomplete="off">
                 <div class="error" v-if="!$v.apellido.minLength">Este campo requiere minimo 8 caracteres</div>
                 <div class="error" v-if="!$v.apellido.noNumeros">No se admiten numeros</div>
-                <div class="error" v-if="!$v.apellido.noCaracteresEspeciales">No se admiten caracteres especiales</div>
                 <label>Fecha Nacimiento:</label>
                 <input type="date" v-model.trim="$v.fecha.$model" id="fecha" min="1905-01-01">
                 <div class="error" v-if="!$v.fecha.required">Este campo es obligatorio</div>
                 <div class="error" v-if="!$v.fecha.validacionFecha">Esta fecha no es valida</div>
                 <label for="">Contraseña</label>
-                <input type="password" v-model.trim="$v.clave.$model" id="" maxlength="10" minlength="5">
-                <div class="error" v-if="!$v.clave.minLength">Este campo requiere minimo 8 caracteres</div>
+                <input type="password" v-model.trim="$v.clave.$model" id="" maxlength="8" minlength="5">
+                <div class="error" v-if="!$v.clave.minLength">Este campo requiere minimo 5 caracteres</div>
                 <div class="error" v-if="!$v.clave.esFuerte">La contraseña debe contener una mayuscula, una minuscula y un numero</div>
                 <label for="">Confima la contraseña</label>
                 <input type="password" v-model.trim="$v.confirma.$model" id="">
@@ -93,7 +92,7 @@
 
 import { mapActions } from 'vuex'
 import { required,minLength, email, sameAs, maxLength } from 'vuelidate/lib/validators'
-import { esFuerte,noCaracteresEspeciales,noNumeros,contieneMayuscula,validacionFecha,contieneMinuscula } from '../validators/validator'
+import { esFuerte,noCaracteresEspeciales,noNumeros,contieneMayuscula,validacionFecha,contieneMinuscula,noEspacios } from '../validators/validator'
 export default {
     name: 'Modal',
     data(){
@@ -117,13 +116,11 @@ export default {
             nombre: {
                 required,
                 minLength: minLength(3),
-                noCaracteresEspeciales,
                 noNumeros,
             },
             apellido: {
                 required,
                 minLength: minLength(3),
-                noCaracteresEspeciales,
                 noNumeros,
             },
             fecha:{
@@ -132,16 +129,18 @@ export default {
             },
             nombreUsuario:{
                 required,
-                minLength: minLength(8),
+                minLength: minLength(5),
                 contieneMayuscula,
-                noCaracteresEspeciales
+                noCaracteresEspeciales,
+                noEspacios
             },
             correo: {
                 email
             },
             clave:{
                 required,
-                minLength: minLength(8),
+                minLength: minLength(5),
+                maxLength: maxLength(8),
                 esFuerte,
             },
             confirma: {

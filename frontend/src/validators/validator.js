@@ -1,5 +1,7 @@
 
-const noCaracteresEspeciales = (valor) => !(/\W|_/.test(valor.replace(' ', '')))
+const noCaracteresEspeciales = (valor) => !(/\W|_/.test(valor.replace(" ","")))
+
+const noEspacios = (valor) => !valor.includes(" ")
 
 const noNumeros =  (valor) => !(/[0-9]/.test(valor))
 
@@ -64,4 +66,4 @@ function validacionFecha(fecha){
     return true
 }
 
-export {esFuerte,noCaracteresEspeciales,noNumeros,contieneMayuscula,validacionFecha,contieneMinuscula,espositivo}
+export {esFuerte,noCaracteresEspeciales,noNumeros,contieneMayuscula,validacionFecha,contieneMinuscula,espositivo,noEspacios}
