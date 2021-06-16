@@ -92,7 +92,7 @@
 
 import { mapActions } from 'vuex'
 import { required,minLength, email, sameAs, maxLength, alphaNum } from 'vuelidate/lib/validators'
-import { esFuerte,noCaracteresEspeciales,noNumeros,contieneMayuscula,validacionFecha,contieneMinuscula,noEspacios } from '../validators/validator'
+import { esFuerte,noCaracteresEspeciales,contieneMayuscula,validacionFecha,contieneMinuscula,noEspacios } from '../validators/validator'
 export default {
     name: 'Modal',
     data(){
@@ -104,7 +104,7 @@ export default {
             correo: '',
             clave: '',
             confirma: '',
-            tipo_usuario: '3',
+            tipo_usuario: '2',
             rh: '',
             sexo: 'M',
             tId: 1,
@@ -129,7 +129,7 @@ export default {
             },
             nombreUsuario:{
                 required,
-                minLength: minLength(5),
+                minLength: minLength(8),
                 contieneMayuscula,
                 noCaracteresEspeciales: alphaNum,
                 noEspacios
