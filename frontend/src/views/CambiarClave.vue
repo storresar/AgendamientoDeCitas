@@ -3,7 +3,7 @@
         <section class="form_registro">
             <h4>Recuperación cuenta</h4>
             <input class="control" type="password" placeholder="Ingrese su nueva clave" v-model.trim="$v.clave.$model" autocomplete="off">
-            <div class="error" v-if="!$v.clave.minLength">Su clave debe contener al menos 8 caracteres y uno de ellos numerico</div>
+            <div class="error" v-if="!$v.clave.maxLength">Su clave debe contener máximo 8 caracteres y uno de ellos numerico</div>
             <input class="control" type="password" placeholder="Confirme su clave" v-model.trim="$v.repita.$model" autocomplete="off">
             <div class="error" v-if="!$v.repita.sameAsClave">Las contraseñas no coinciden</div>
             <div class="submit">
@@ -15,7 +15,7 @@
 
 <script>
 
-import { required, minLength, sameAs } from 'vuelidate/lib/validators'
+import { required, maxLength, sameAs } from 'vuelidate/lib/validators'
 import { esFuerte } from '../validators/validator'
 import { mapState } from 'vuex'
 
@@ -32,7 +32,7 @@ export default {
         return {
             clave:{
                 required,
-                minLength: minLength(8),
+                maxLength: minLength(8),
                 esFuerte,
             },
             repita: {
