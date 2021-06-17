@@ -32,7 +32,7 @@ export default {
         return {
             clave:{
                 required,
-                maxLength: minLength(8),
+                maxLength: maxLength(8),
                 esFuerte,
             },
             repita: {
